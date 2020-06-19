@@ -11,6 +11,7 @@ import prWelcomeHandler from './prwelcomehandler';
 import prCommentHandler from './prcommenthandler';
 import prLabelHandler from './prlabelhandler';
 import prMergeHandler from './prmergerhandler';
+import prMergeOnScheduleHandler from './prmergeronschedulehandler';
 import { CoreModule, GitHubModule } from './types';
 import { ConfigHelper } from './classes';
 // import prHello from './hello'
@@ -40,6 +41,9 @@ export default async function main(core: CoreModule, github: GitHubModule) {
         case 'issue_comment':
             await prCommentHandler(core, github, config);
             await prMergeHandler(core, github, config);
+            break;
+        case 'schedule':
+            await prMergeOnScheduleHandler(core, github, config);
             break;
         // case 'push':
         // //     await pushHandler(client, github.context, config)

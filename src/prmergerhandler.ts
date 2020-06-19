@@ -32,59 +32,30 @@ export default async function prMergeHandler(core: CoreModule, github: GitHubMod
       const myToken = core.getInput('repo-token');
 
       const octokit = github.getOctokit(myToken);
-    
+      
       const { data: pullRequest } = await octokit.pulls.get({
-        ...github.context.repo,
-        pull_number: prnumber,
+          ...github.context.repo,
+          pull_number: prnumber,
       });
 
-      core.info('PR State: ' + pullRequest.state);
-      core.info('PR merged: ' + pullRequest.merged);
-      core.info('PR mergeable: ' + pullRequest.mergeable);
-      core.info('PR mergeable_state: ' + pullRequest.mergeable_state);
-      // make sure the PR is open
-      if (pullRequest.state !== 'closed') {
-        if (pullRequest.merged === false) {
-          if (pullRequest.mergeable === true && (pullRequest.mergeable_state === 'clean' || pullRequest.mergeable_state === 'unstable')) {
-            
-            // core.debug('prmerge check enabled');
-
-            console.log('config..readytomergelabel: ' + config.configuration.prmerge.labels.readytomergelabel);
-            console.log('config..reviewrequiredlabel: ' + config.configuration.prmerge.labels.reviewrequiredlabel);
-            console.log('config..onholdlabel: ' + config.configuration.prcomments.onholdlabel);
-            
-            // check the labels
-            const { data: issueLabelsData } = await octokit.issues.listLabelsOnIssue({
-              ...github.context.repo,
-              issue_number: prnumber,
-            });
-            var issueLabels = new IssueLabels(issueLabelsData);
-            const readyToMergeLabel = (issueLabels.hasLabelFromList([config.configuration.prmerge.labels.readytomergelabel]));
-            const NotReadyToMergeLabel = (issueLabels.hasLabelFromList([config.configuration.prmerge.labels.reviewrequiredlabel, config.configuration.prcomments.onholdlabel]));
-            
-            console.log('readyToMergeLabel:' + readyToMergeLabel);
-            console.log('NotReadyToMergeLabel:' + NotReadyToMergeLabel);
-            if (readyToMergeLabel && !NotReadyToMergeLabel) {
-
-              await octokit.pulls.merge({
-                owner: github.context.repo.owner,
-                repo: github.context.repo.repo,
-                pull_number: prnumber,
-                sha : pullRequest.head.sha, // safe guard no other pushes since starting action
-                merge_method: config.configuration.prmerge.mergemethod,
-              });
-            } else {
-              core.info(`PR #${prnumber} labels do not allow merge`);
-            }
-            
-          }
+      // merge the PR if criteria is met
+      if (prhelper.isMergeReadyByState(core, pullRequest)) {
+        if (await prhelper.isMergeReadyByLabel(core, github, config, pullRequest)) {
+          await octokit.pulls.merge({
+              owner: github.context.repo.owner,
+              repo: github.context.repo.repo,
+              pull_number: pullRequest.number,
+              sha : pullRequest.head.sha, // safe guard no other pushes since starting action
+              merge_method: config.configuration.prmerge.mergemethod,
+          });
+        } else {
+          core.info(`PR #${prnumber} labels do not allow merge`);
         }
       } else {
         core.info(`PR #${prnumber} is closed, no action taken`);
       }
     }
-  }
-  catch (error) {
+  } catch (error) {
     core.setFailed(error.message);
     throw error;
   }
