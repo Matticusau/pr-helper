@@ -38,6 +38,10 @@ export default async function prMergeHandler(core: CoreModule, github: GitHubMod
         pull_number: prnumber,
       });
 
+      core.info('PR State: ' + pullRequest.state);
+      core.info('PR merged: ' + pullRequest.merged);
+      core.info('PR mergeable: ' + pullRequest.mergeable);
+      core.info('PR mergeable_state: ' + pullRequest.mergeable_state);
       // make sure the PR is open
       if (pullRequest.state !== 'closed') {
         if (pullRequest.merged === false) {
