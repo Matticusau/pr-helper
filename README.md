@@ -50,7 +50,7 @@ The following yaml can be used to configure the Action's configuration file. The
 ```yml
 welcomemessage:
   check: false
-  message: Thanks for opening an issue! Make sure you've followed CONTRIBUTING.md.\n\nWhen you are ready mark the PR ready by commenting `#pr-ready`. If you still have work to do comment with `pr-onhold`.
+  message: "Thanks for opening an issue! Make sure you've followed CONTRIBUTING.md.\n\nWhen you are ready mark the PR ready by commenting `#pr-ready`. If you still have work to do comment with `pr-onhold`."
 prcomments:
   check: false
   prreadylabel: pr-ready
