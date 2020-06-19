@@ -45,9 +45,10 @@ export default async function prMergeHandler(core: CoreModule, github: GitHubMod
             
             // console.log('prmerge check enabled');
 
-            // console.log('config..readytomergelabel: ' + config.configuration.prmerge.labels.readytomergelabel);
-            // console.log('config..reviewrequiredlabel: ' + config.configuration.prmerge.labels.reviewrequiredlabel);
-            // console.log('config..onholdlabel: ' + config.configuration.prcomments.onholdlabel);
+            core.debug('config..readytomergelabel: ' + config.configuration.prmerge.labels.readytomergelabel);
+            core.debug('config..reviewrequiredlabel: ' + config.configuration.prmerge.labels.reviewrequiredlabel);
+            core.debug('config..onholdlabel: ' + config.configuration.prcomments.onholdlabel);
+            
             // check the labels
             const { data: issueLabelsData } = await octokit.issues.listLabelsOnIssue({
               ...github.context.repo,
@@ -57,6 +58,8 @@ export default async function prMergeHandler(core: CoreModule, github: GitHubMod
             const readyToMergeLabel = (issueLabels.hasLabelFromList([config.configuration.prmerge.labels.readytomergelabel]));
             const NotReadyToMergeLabel = (issueLabels.hasLabelFromList([config.configuration.prmerge.labels.reviewrequiredlabel, config.configuration.prcomments.onholdlabel]));
             
+            core.debug('readyToMergeLabel:' + readyToMergeLabel);
+            core.debug('NotReadyToMergeLabel:' + NotReadyToMergeLabel);
             if (readyToMergeLabel && !NotReadyToMergeLabel) {
 
               await octokit.pulls.merge({
