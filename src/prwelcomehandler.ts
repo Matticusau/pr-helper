@@ -13,23 +13,23 @@ import { PRHelper, ConfigHelper } from './classes';
 export default async function prWelcomeHandler(core: CoreModule, github: GitHubModule, config: ConfigHelper) {
 
   try {
-    const prhelper = new PRHelper;
-    const prnumber = prhelper.getPrNumber(github.context);
-    if (!prnumber) {
-      console.log('Could not get pull request number from context, exiting');
-      return;
-    }
-    console.log(`Processing PR ${prnumber}!`);
-  
-    // check if this is a new PR
-    // if (github.context.eventName === 'pull_request' && github.context.payload.action !== 'opened') {
-    //   console.log('No issue or pull request was opened, skipping');
-    //   return;
-    // }
-
     // check if the welcome message is to be processed
-    if (config.configuration.welcomemessage.check) {
+    if (config.configuration.welcomemessage.check === true) {
 
+      const prhelper = new PRHelper;
+      const prnumber = prhelper.getPrNumber(github.context);
+      if (!prnumber) {
+        console.log('Could not get pull request number from context, exiting');
+        return;
+      }
+      console.log(`Processing PR ${prnumber}!`);
+    
+      // check if this is a new PR
+      // if (github.context.eventName === 'pull_request' && github.context.payload.action !== 'opened') {
+      //   console.log('No issue or pull request was opened, skipping');
+      //   return;
+      // }
+      
       const welcomeMessage = config.configuration.welcomemessage.message; // core.getInput('welcome-message');
       const myToken = core.getInput('repo-token');
 

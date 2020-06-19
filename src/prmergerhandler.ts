@@ -13,35 +13,36 @@ import { IssueLabels, PRHelper, ConfigHelper } from './classes';
 export default async function prMergeHandler(core: CoreModule, github: GitHubModule, config: ConfigHelper) {
 
   try {
-    const prhelper = new PRHelper;
-    const prnumber = prhelper.getPrNumber(github.context);
-    if (!prnumber) {
-      console.log('Could not get pull request number from context, may not be a pull request event, exiting');
-      return;
-    }
-    console.log(`Processing PR ${prnumber}!`);
-  
-    // This should be a token with access to your repository scoped in as a secret.
-    // The YML workflow will need to set myToken with the GitHub Secret Token
-    // myToken: ${{ secrets.GITHUB_TOKEN }}
-    // https://help.github.com/en/actions/automating-your-workflow-with-github-actions/authenticating-with-the-github_token#about-the-github_token-secret
-    const myToken = core.getInput('repo-token');
+    
+    // make sure we should proceed
+    // console.log('config.configuration.prmerge.check: ' + JSON.stringify(config.configuration.prmerge.check));
+    if (config.configuration.prmerge.check === true) {
+      const prhelper = new PRHelper;
+      const prnumber = prhelper.getPrNumber(github.context);
+      if (!prnumber) {
+        console.log('Could not get pull request number from context, may not be a pull request event, exiting');
+        return;
+      }
+      console.log(`Processing PR ${prnumber}!`);
+    
+      // This should be a token with access to your repository scoped in as a secret.
+      // The YML workflow will need to set myToken with the GitHub Secret Token
+      // myToken: ${{ secrets.GITHUB_TOKEN }}
+      // https://help.github.com/en/actions/automating-your-workflow-with-github-actions/authenticating-with-the-github_token#about-the-github_token-secret
+      const myToken = core.getInput('repo-token');
 
-    const octokit = github.getOctokit(myToken);
-  
-    const { data: pullRequest } = await octokit.pulls.get({
-      ...github.context.repo,
-      pull_number: prnumber,
-    });
+      const octokit = github.getOctokit(myToken);
+    
+      const { data: pullRequest } = await octokit.pulls.get({
+        ...github.context.repo,
+        pull_number: prnumber,
+      });
 
-    // make sure the PR is open
-    if (pullRequest.state !== 'closed') {
-      if (pullRequest.merged === false) {
-        if (pullRequest.mergeable === true && (pullRequest.mergeable_state === 'clean' || pullRequest.mergeable_state === 'unstable')) {
-          
-          // make sure we should proceed
-          // console.log('config.configuration.prmerge.check: ' + JSON.stringify(config.configuration.prmerge.check));
-          if (config.configuration.prmerge.check === true) {
+      // make sure the PR is open
+      if (pullRequest.state !== 'closed') {
+        if (pullRequest.merged === false) {
+          if (pullRequest.mergeable === true && (pullRequest.mergeable_state === 'clean' || pullRequest.mergeable_state === 'unstable')) {
+            
             // console.log('prmerge check enabled');
 
             // console.log('config..readytomergelabel: ' + config.configuration.prmerge.labels.readytomergelabel);
@@ -68,13 +69,13 @@ export default async function prMergeHandler(core: CoreModule, github: GitHubMod
             } else {
               core.info(`PR #${prnumber} labels do not allow merge`);
             }
+            
           }
         }
+      } else {
+        core.info(`PR #${prnumber} is closed, no action taken`);
       }
-    } else {
-      core.info(`PR #${prnumber} is closed, no action taken`);
     }
-      
   }
   catch (error) {
     core.setFailed(error.message);
