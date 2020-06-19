@@ -1,10 +1,10 @@
 welcomemessage:
   check: false
-  message: 
+  message: Thanks for opening an issue! Make sure you've followed CONTRIBUTING.md.\n\nWhen you are ready mark the PR ready by commenting `#pr-ready`. If you still have work to do comment with `pr-onhold`.
 prcomments:
   check: false
-  signofflabel: pr-ready
-  holdofflabel: pr-onhold
+  prreadylabel: pr-ready
+  onholdlabel: pr-onhold
 prmerge:
   check: false
   labels:

@@ -6,7 +6,7 @@ A [GitHub Action](https://github.com/features/actions) to help with managing PRs
 
 ## Inputs
 
-Set the following inputs in the 
+Set the following inputs in the workflow file
 
 ### `configuration-path`
 
@@ -42,6 +42,28 @@ jobs:
 ```
 
 > Note: The `uses` syntax includes tag/branch specification. For the latest release see [tags](https://github.com/Matticusau/pr-helper/tags).
+
+## Configuration file
+
+The following yaml can be used to configure the Action's configuration file. The default path is `.github/prhelper.yml`, which can be overridden through the workflow config file. A sample of this file is also contained in this repo.
+
+```yml
+welcomemessage:
+  check: false
+  message: Thanks for opening an issue! Make sure you've followed CONTRIBUTING.md.\n\nWhen you are ready mark the PR ready by commenting `#pr-ready`. If you still have work to do comment with `pr-onhold`.
+prcomments:
+  check: false
+  prreadylabel: pr-ready
+  onholdlabel: pr-onhold
+prmerge:
+  check: false
+  labels:
+    initiallabel : pr-onhold
+    automergelabel : auto-merge
+    readytomergelabel : pr-ready
+    reviewrequiredlabel : review-required
+  mergemethod: merge
+```
 
 ## Known issues
 
