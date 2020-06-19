@@ -1,0 +1,16 @@
+name: 'PR Helper'
+description: 'Automate PR labels and more'
+author: 'MatticusAu'
+inputs:
+  configuration-path:
+    description: 'The path for the label and action configurations'
+    default: '.github/prhelper.yml'
+  repo-token:
+    description: 'The GITHUB_TOKEN secret'
+    required: true
+runs:
+  using: 'node12'
+  main: 'lib/index.js'
+branding:
+  icon: git-merge
+  color: green

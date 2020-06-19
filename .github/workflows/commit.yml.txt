@@ -1,0 +1,18 @@
+name: Hello world
+
+on: [push]
+
+jobs:
+  prhelper_job:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Run PR Helper
+      id: hello
+      uses: Matticusau/pr-helper@master
+      with:
+        who-to-greet: Matt
+        repo-token: ${{ secrets.GITHUB_TOKEN }},
+        config-path: '.github/pr-helper.yml'
+    # Use the output from the `hello` step
+    - name: Get the output time
+      run: echo "The time was ${{ steps.hello.outputs.time }}"

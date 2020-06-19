@@ -1,0 +1,14 @@
+name: PR Helper
+
+on: [pull_request, pull_request_review, issue_comment]
+
+jobs:
+  prhelper_job:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Run PR Helper
+      id: runprhelper
+      uses: Matticusau/pr-helper@master
+      with:
+        repo-token: ${{ secrets.GITHUB_TOKEN }}
+        configuration-path: '.github/prhelper.yml'

@@ -1,0 +1,15 @@
+welcomemessage:
+  check: false
+  message: 
+prcomments:
+  check: false
+  signofflabel: pr-ready
+  holdofflabel: pr-onhold
+prmerge:
+  check: false
+  labels:
+    initiallabel : pr-onhold
+    automergelabel : auto-merge
+    readytomergelabel : pr-ready
+    reviewrequiredlabel : review-required
+  mergemethod: merge
