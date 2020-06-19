@@ -19,14 +19,14 @@ export default async function prWelcomeHandler(core: CoreModule, github: GitHubM
       const prhelper = new PRHelper;
       const prnumber = prhelper.getPrNumber(github.context);
       if (!prnumber) {
-        console.log('Could not get pull request number from context, exiting');
+        core.info('Could not get pull request number from context, exiting');
         return;
       }
-      console.log(`Processing PR ${prnumber}!`);
+      core.info(`Processing PR ${prnumber}!`);
     
       // check if this is a new PR
       // if (github.context.eventName === 'pull_request' && github.context.payload.action !== 'opened') {
-      //   console.log('No issue or pull request was opened, skipping');
+      //   core.debug('No issue or pull request was opened, skipping');
       //   return;
       // }
       

@@ -18,7 +18,7 @@ export default async function prCommentHandler(core: CoreModule, github: GitHubM
         // make sure we should proceed
         if (config.configuration.prcomments.check === true) {
         
-            // console.log('context: ' + JSON.stringify(github.context));
+            // core.debug('context: ' + JSON.stringify(github.context));
             const prhelper = new PRHelper;
             const issuenumber = prhelper.getPrNumber(github.context);
             if (!issuenumber) {
@@ -41,7 +41,7 @@ export default async function prCommentHandler(core: CoreModule, github: GitHubM
             const myToken = core.getInput('repo-token');
 
             const octokit = github.getOctokit(myToken);
-            // console.log('octokit: ' + JSON.stringify(octokit));
+            // core.debug('octokit: ' + JSON.stringify(octokit));
 
             // check if this is a new comment
             core.info('github.context.payload.action: ' + github.context.payload.action);
@@ -66,7 +66,7 @@ export default async function prCommentHandler(core: CoreModule, github: GitHubM
                         ...github.context.repo,
                         comment_id: commentnumber,
                     });
-                    // console.log('got the pr comment');
+                    // core.debug('got the pr comment');
 
                     const { data: issueLabelsData } = await octokit.issues.listLabelsOnIssue({
                         ...github.context.repo,
@@ -85,7 +85,7 @@ export default async function prCommentHandler(core: CoreModule, github: GitHubM
 
                         var issueLabels = new IssueLabels(issueLabelsData);
 
-                        // console.log('body: ' + prComment.body);
+                        // core.debug('body: ' + prComment.body);
                         if (prComment.body.includes('#pr-ready')) {
                             // make sure the PR is mergable
                             if (pullRequest.mergeable !== true || pullRequest.mergeable_state === 'dirty') {
@@ -98,23 +98,23 @@ export default async function prCommentHandler(core: CoreModule, github: GitHubM
                                 });
                             } else {
                                 // update the labels
-                                core.info('1 issueLabels.labels: ' + JSON.stringify(issueLabels.labels));
+                                core.debug('1 issueLabels.labels: ' + JSON.stringify(issueLabels.labels));
                                 issueLabels.removeLabel(config.configuration.prcomments.onholdlabel);
-                                core.info('2 issueLabels.labels: ' + JSON.stringify(issueLabels.labels));
+                                core.debug('2 issueLabels.labels: ' + JSON.stringify(issueLabels.labels));
                                 issueLabels.addLabel(config.configuration.prcomments.prreadylabel);
-                                core.info('3 issueLabels.labels: ' + JSON.stringify(issueLabels.labels));
+                                core.debug('3 issueLabels.labels: ' + JSON.stringify(issueLabels.labels));
                             }
                         } else if (prComment.body.includes('#pr-onhold')) {
                             // // clear labels
-                            core.info('4 issueLabels.labels: ' + JSON.stringify(issueLabels.labels));
+                            core.debug('4 issueLabels.labels: ' + JSON.stringify(issueLabels.labels));
                             issueLabels.removeLabel(config.configuration.prcomments.prreadylabel);
-                            core.info('5 issueLabels.labels: ' + JSON.stringify(issueLabels.labels));
+                            core.debug('5 issueLabels.labels: ' + JSON.stringify(issueLabels.labels));
                             issueLabels.addLabel(config.configuration.prcomments.onholdlabel);
-                            core.info('6 issueLabels.labels: ' + JSON.stringify(issueLabels.labels));
+                            core.debug('6 issueLabels.labels: ' + JSON.stringify(issueLabels.labels));
                         }
 
-                        core.info('issueLabels.haschanges: ' + issueLabels.haschanges);
-                        core.info('issueLabels.labels: ' + JSON.stringify(issueLabels.labels));
+                        core.debug('issueLabels.haschanges: ' + issueLabels.haschanges);
+                        core.debug('issueLabels.labels: ' + JSON.stringify(issueLabels.labels));
 
                         if (issueLabels.haschanges) {
                             

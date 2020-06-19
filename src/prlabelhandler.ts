@@ -20,10 +20,10 @@ export default async function prLabelHandler(core: CoreModule, github: GitHubMod
       const prhelper = new PRHelper;
       const prnumber = prhelper.getPrNumber(github.context);
       if (!prnumber) {
-        console.log('Could not get pull request number from context, exiting');
+        core.info('Could not get pull request number from context, exiting');
         return;
       }
-      console.log(`Processing PR ${prnumber}!`);
+      core.info(`Processing PR ${prnumber}!`);
     
       // This should be a token with access to your repository scoped in as a secret.
       // The YML workflow will need to set myToken with the GitHub Secret Token
@@ -41,9 +41,9 @@ export default async function prLabelHandler(core: CoreModule, github: GitHubMod
         ...github.context.repo,
         pull_number: prnumber,
       });
-      // console.log('<< start PR payload >>');
-      // console.log(pullRequest);
-      // console.log('<< end PR payload >>');
+      // core.debug('<< start PR payload >>');
+      // core.debug(pullRequest);
+      // core.debug('<< end PR payload >>');
       
       // make sure the PR is open
       if (pullRequest.state !== 'closed') {

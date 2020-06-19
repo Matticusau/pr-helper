@@ -19,8 +19,8 @@ export default async function main(core: CoreModule, github: GitHubModule) {
     // get the config
     const config = new ConfigHelper(core, github);
     await config.loadConfig(core, github);
-    // console.log('config loaded');
-    // console.log('config: ' + JSON.stringify(config.configuration));
+    // core.debug('config loaded');
+    // core.debug('config: ' + JSON.stringify(config.configuration));
         
     const event = github.context.eventName
     switch (event) {

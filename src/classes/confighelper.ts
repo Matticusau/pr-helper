@@ -61,7 +61,7 @@ export class ConfigHelper {
             // loads (hopefully) a `{[label:string]: string | StringOrMatchConfig[]}`, but is `any`:
             const configObject: any = yaml.safeLoad(configurationContent);
         
-            // console.log('configObject: ' + JSON.stringify(configObject));
+            // core.debug('configObject: ' + JSON.stringify(configObject));
             // transform `any` => `Map<string,StringOrMatchConfig[]>` or throw if yaml is malformed:
             // return getLabelGlobMapFromObject(configObject);
             // return configObject;
@@ -96,7 +96,7 @@ export class ConfigHelper {
         const configurationPath = core.getInput('configuration-path');
         const myToken = core.getInput('repo-token');
         const octokit = github.getOctokit(myToken);
-        console.log('configurationPath: ' + configurationPath);
+        core.debug('configurationPath: ' + configurationPath);
 
         // make sure we have a config path
         if (configurationPath.length === 0) {
@@ -108,7 +108,7 @@ export class ConfigHelper {
                 ref: github.context.sha,
                 path: configurationPath,
             });
-            // console.log('fetchContent response: ' + JSON.stringify(response));
+            // core.debug('fetchContent response: ' + JSON.stringify(response));
             
             return Buffer.from(response.data.content, response.data.encoding).toString();
         }

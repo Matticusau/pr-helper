@@ -15,15 +15,15 @@ export default async function prMergeHandler(core: CoreModule, github: GitHubMod
   try {
     
     // make sure we should proceed
-    // console.log('config.configuration.prmerge.check: ' + JSON.stringify(config.configuration.prmerge.check));
+    // core.debug('config.configuration.prmerge.check: ' + JSON.stringify(config.configuration.prmerge.check));
     if (config.configuration.prmerge.check === true) {
       const prhelper = new PRHelper;
       const prnumber = prhelper.getPrNumber(github.context);
       if (!prnumber) {
-        console.log('Could not get pull request number from context, may not be a pull request event, exiting');
+        core.info('Could not get pull request number from context, may not be a pull request event, exiting');
         return;
       }
-      console.log(`Processing PR ${prnumber}!`);
+      core.info(`Processing PR ${prnumber}!`);
     
       // This should be a token with access to your repository scoped in as a secret.
       // The YML workflow will need to set myToken with the GitHub Secret Token
@@ -38,21 +38,16 @@ export default async function prMergeHandler(core: CoreModule, github: GitHubMod
         pull_number: prnumber,
       });
 
-      console.log('pullRequest.state: ' + pullRequest.state);
-      console.log('pullRequest.merged: ' + pullRequest.merged);
-      console.log('pullRequest.mergeable: ' + pullRequest.mergeable);
-      console.log('pullRequest.mergeable_state: ' + pullRequest.mergeable_state);
-
       // make sure the PR is open
       if (pullRequest.state !== 'closed') {
         if (pullRequest.merged === false) {
           if (pullRequest.mergeable === true && (pullRequest.mergeable_state === 'clean' || pullRequest.mergeable_state === 'unstable')) {
             
-            // console.log('prmerge check enabled');
+            // core.debug('prmerge check enabled');
 
-            console.log('config..readytomergelabel: ' + config.configuration.prmerge.labels.readytomergelabel);
-            console.log('config..reviewrequiredlabel: ' + config.configuration.prmerge.labels.reviewrequiredlabel);
-            console.log('config..onholdlabel: ' + config.configuration.prcomments.onholdlabel);
+            core.debug('config..readytomergelabel: ' + config.configuration.prmerge.labels.readytomergelabel);
+            core.debug('config..reviewrequiredlabel: ' + config.configuration.prmerge.labels.reviewrequiredlabel);
+            core.debug('config..onholdlabel: ' + config.configuration.prcomments.onholdlabel);
             
             // check the labels
             const { data: issueLabelsData } = await octokit.issues.listLabelsOnIssue({
@@ -63,8 +58,8 @@ export default async function prMergeHandler(core: CoreModule, github: GitHubMod
             const readyToMergeLabel = (issueLabels.hasLabelFromList([config.configuration.prmerge.labels.readytomergelabel]));
             const NotReadyToMergeLabel = (issueLabels.hasLabelFromList([config.configuration.prmerge.labels.reviewrequiredlabel, config.configuration.prcomments.onholdlabel]));
             
-            console.log('readyToMergeLabel:' + readyToMergeLabel);
-            console.log('NotReadyToMergeLabel:' + NotReadyToMergeLabel);
+            core.debug('readyToMergeLabel:' + readyToMergeLabel);
+            core.debug('NotReadyToMergeLabel:' + NotReadyToMergeLabel);
             if (readyToMergeLabel && !NotReadyToMergeLabel) {
 
               await octokit.pulls.merge({

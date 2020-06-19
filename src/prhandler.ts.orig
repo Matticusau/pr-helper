@@ -15,10 +15,10 @@ export default async function prHandler(core: CoreModule, github: GitHubModule) 
 
     const prnumber = getPrNumber(github.context);
     if (!prnumber) {
-      console.log('Could not get pull request number from context, exiting');
+      core.debug('Could not get pull request number from context, exiting');
       return;
     }
-    console.log(`Processing PR ${prnumber}!`);
+    core.debug(`Processing PR ${prnumber}!`);
   
     // This should be a token with access to your repository scoped in as a secret.
     // The YML workflow will need to set myToken with the GitHub Secret Token
@@ -27,19 +27,19 @@ export default async function prHandler(core: CoreModule, github: GitHubModule) 
     const myToken = core.getInput('repo-token');
 
     const octokit = github.getOctokit(myToken);
-    // console.log('octokit: ' + JSON.stringify(octokit));
+    // core.debug('octokit: ' + JSON.stringify(octokit));
 
     // You can also pass in additional options as a second parameter to getOctokit
     // const octokit = github.getOctokit(myToken, {userAgent: "MyActionVersion1"});
 
-    // console.log('client.pulls.list()');
+    // core.debug('client.pulls.list()');
     // const { data: pullRequestList } = await octokit.pulls.list({
     //   // ...context.repo,
     //   owner: github.context.repo.owner,
     //   repo: github.context.repo.repo,
     //   state: "all"
     // });
-    // console.log('pullRequestList: ' + JSON.stringify(pullRequestList));
+    // core.debug('pullRequestList: ' + JSON.stringify(pullRequestList));
 
     // add the welcome message if needed
     // check if this is a new PR
@@ -69,13 +69,13 @@ function getPrNumber(context: Context): number | undefined {
 async function addWelcomeMessage(core: CoreModule, github: GitHubModule, prnumber: number) {
 
   try {
-    console.log('Called addWelcomeMessage()');
+    core.debug('Called addWelcomeMessage()');
     const welcomeMessage = core.getInput('welcome-message');
     const myToken = core.getInput('repo-token');
 
     // check if this is a new PR
     if (github.context.eventName === 'pull_request' && github.context.payload.action !== 'opened') {
-      console.log('No issue or pull request was opened, skipping');
+      core.debug('No issue or pull request was opened, skipping');
       return;
     }
 
@@ -104,10 +104,10 @@ async function assignLabelStates(core: CoreModule, github: GitHubModule, prnumbe
     const myToken = core.getInput('repo-token');
     const octokit = github.getOctokit(myToken);
 
-    // console.log('octokit.pulls.get()');
-    // console.log('owner: ' + github.context.repo.owner);
-    // console.log('repo: ' + github.context.repo.repo);
-    // console.log('pull_number: ' + prnumber);
+    // core.debug('octokit.pulls.get()');
+    // core.debug('owner: ' + github.context.repo.owner);
+    // core.debug('repo: ' + github.context.repo.repo);
+    // core.debug('pull_number: ' + prnumber);
     const { data: pullRequest } = await octokit.pulls.get({
       ...github.context.repo,
       pull_number: prnumber,
@@ -116,15 +116,15 @@ async function assignLabelStates(core: CoreModule, github: GitHubModule, prnumbe
       ...github.context.repo,
       pull_number: prnumber,
     });
-    // console.log('<< start PR payload >>');
-    // console.log(pullRequest);
-    // console.log('<< end PR payload >>');
+    // core.debug('<< start PR payload >>');
+    // core.debug(pullRequest);
+    // core.debug('<< end PR payload >>');
     
     // make sure the PR is open
     if (pullRequest.state !== 'closed') {
 
       // check if still open
-      console.log('github.context.payload.action: ' + github.context.payload.action);
+      core.debug('github.context.payload.action: ' + github.context.payload.action);
       // if (github.context.payload.action !== 'closed') {
         if (pullRequest.merged === false) {
           if (pullRequest.mergeable === true && (pullRequest.mergeable_state === 'clean' || pullRequest.mergeable_state === 'unstable')) {
