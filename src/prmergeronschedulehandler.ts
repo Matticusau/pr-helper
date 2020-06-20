@@ -34,7 +34,7 @@ export default async function prMergeOnScheduleHandler(core: CoreModule, github:
           pull_number: pullRequestList[iPr].number,
         });
         
-        core.debug('\n\npullRequest: ' + JSON.stringify(pullRequest));
+        core.info('\n\npullRequest: ' + JSON.stringify(pullRequest));
 
         // merge the PR if criteria is met
         if (prhelper.isMergeReadyByState(core, pullRequest)) {
@@ -51,7 +51,7 @@ export default async function prMergeOnScheduleHandler(core: CoreModule, github:
             core.info(`PR #${pullRequest.number} labels do not allow merge`);
           }
         } else {
-          core.info(`PR #${pullRequest.number} is closed, no action taken`);
+          core.info(`PR #${pullRequest.number} state does not allow merge, no action taken`);
         }
       }
     }
