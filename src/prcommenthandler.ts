@@ -52,7 +52,6 @@ export default async function prCommentHandler(core: CoreModule, github: GitHubM
             if (github.context.payload.action === 'created') {
 
                 // get the PR
-                core.info('getting pullRequest');
                 const { data: pullRequest } = await octokit.pulls.get({
                     ...github.context.repo,
                     pull_number: issuenumber,
@@ -67,14 +66,12 @@ export default async function prCommentHandler(core: CoreModule, github: GitHubM
                 if (pullRequest.state !== 'closed') {
 
                     // get the pr comment
-                    core.info('getting prComment');
                     const { data: prComment } = await octokit.issues.getComment({
                         ...github.context.repo,
                         comment_id: commentnumber,
                     });
                     // core.debug('got the pr comment');
 
-                    core.info('getting issueLabelsData');
                     const { data: issueLabelsData } = await octokit.issues.listLabelsOnIssue({
                         ...github.context.repo,
                         issue_number: issuenumber,
@@ -88,17 +85,8 @@ export default async function prCommentHandler(core: CoreModule, github: GitHubM
                         core.error('Could not get pull request labels, exiting');
                         return;
                     }
-                    // var labelArray = [];
-                    // for (var i=0; i < issueLabelsData.length; i++) {
-                    //     labelArray.push(issueLabelsData[i].name);
-                    // }
-                                    
-                    // var labelsChanged = false;
 
                     // make sure this is the same person that authored the PR
-                    core.info('testing user is author');
-                    core.info('pullRequest.user.id: ' + JSON.stringify(pullRequest.user.id));
-                    core.info('prComment.user.id: ' + JSON.stringify(prComment.user.id));
                     if (pullRequest.user.id === prComment.user.id) {
 
                         var issueLabels = new IssueLabels(issueLabelsData);
@@ -116,18 +104,12 @@ export default async function prCommentHandler(core: CoreModule, github: GitHubM
                                 });
                             } else {
                                 // update the labels
-                                core.info('1 issueLabels.labels: ' + JSON.stringify(issueLabels.labels));
                                 issueLabels.removeLabel(core.getInput('prlabel-onhold'));
-                                core.info('2 issueLabels.labels: ' + JSON.stringify(issueLabels.labels));
                                 issueLabels.addLabel(core.getInput('prlabel-ready'));
-                                core.info('3 issueLabels.labels: ' + JSON.stringify(issueLabels.labels));
                             }
                         } else if (prComment.body.includes('#pr-onhold')) {
-                            core.info('4 issueLabels.labels: ' + JSON.stringify(issueLabels.labels));
                             issueLabels.removeLabel(core.getInput('prlabel-ready'));
-                            core.info('5 issueLabels.labels: ' + JSON.stringify(issueLabels.labels));
                             issueLabels.addLabel(core.getInput('prlabel-onhold'));
-                            core.info('6 issueLabels.labels: ' + JSON.stringify(issueLabels.labels));
                         }
 
                         core.debug('issueLabels.haschanges: ' + issueLabels.haschanges);
