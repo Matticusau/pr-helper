@@ -161,7 +161,7 @@ export class PRHelper {
                 }
             }
             // check for reviews, and make sure no non-approved reviews
-            if (reviews.total > 0 && (reviews.total === reviews.approved) && (requiredReviewCount >= 0 && reviews.total > requiredReviewCount)) {
+            if (reviews.total > 0 && (reviews.total === reviews.approved) && ((requiredReviewCount >= 0 && reviews.total > requiredReviewCount) || requiredReviewCount < 0)) {
                 core.info(`PR #${pullRequest.number} is mergable based on reviews`);
                 result = true;
             }

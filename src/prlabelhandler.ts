@@ -9,7 +9,7 @@
 //
 
 import { CoreModule, GitHubModule, Context } from './types' // , Client
-import { PRHelper, ConfigHelper, MessageHelper } from './classes';
+import { PRHelper, MessageHelper, IssueLabels } from './classes';
 
 export default async function prLabelHandler(core: CoreModule, github: GitHubModule) {
 
@@ -33,17 +33,24 @@ export default async function prLabelHandler(core: CoreModule, github: GitHubMod
       // myToken: ${{ secrets.GITHUB_TOKEN }}
       // https://help.github.com/en/actions/automating-your-workflow-with-github-actions/authenticating-with-the-github_token#about-the-github_token-secret
       const myToken = core.getInput('repo-token');
-
       const octokit = github.getOctokit(myToken);
 
       const { data: pullRequest } = await octokit.pulls.get({
         ...github.context.repo,
         pull_number: prnumber,
       });
-      const { data: pullRequestReviews } = await octokit.pulls.listReviews({
+      // const { data: pullRequestReviews } = await octokit.pulls.listReviews({
+      //   ...github.context.repo,
+      //   pull_number: prnumber,
+      // });
+      
+      // get the current labels
+      const { data: issueLabelsData } = await octokit.issues.listLabelsOnIssue({
         ...github.context.repo,
-        pull_number: prnumber,
+        issue_number: prnumber,
       });
+      var issueLabels = new IssueLabels(issueLabelsData);
+
       // core.debug('<< start PR payload >>');
       // core.debug(pullRequest);
       // core.debug('<< end PR payload >>');
@@ -54,20 +61,27 @@ export default async function prLabelHandler(core: CoreModule, github: GitHubMod
         // make sure it hasn't merged
         if (pullRequest.merged === false) {
           if (pullRequest.mergeable === true && (pullRequest.mergeable_state === 'clean' || pullRequest.mergeable_state === 'unstable')) {
-            await octokit.issues.addLabels({
-              owner: github.context.repo.owner,
-              repo: github.context.repo.repo,
-              issue_number: prnumber,
-              labels: [core.getInput('prlabel-automerge')]
+            issueLabels.addLabel(core.getInput('prlabel-automerge'));
+          }
+          
+          // check if we need reviews
+          if (await prhelper.isMergeReadyByReview(core, github, pullRequest)) {
+            issueLabels.removeLabel(core.getInput('prlabel-reviewrequired'));
+          } else {
+            issueLabels.addLabel(core.getInput('prlabel-reviewrequired'));
+          }
+
+          core.debug('issueLabels.haschanges: ' + issueLabels.haschanges);
+          core.debug('issueLabels.labels: ' + JSON.stringify(issueLabels.labels));
+
+          if (issueLabels.haschanges) {
+            // set the label
+            await octokit.issues.setLabels({
+                owner: github.context.repo.owner,
+                repo: github.context.repo.repo,
+                issue_number: prnumber,
+                labels: issueLabels.labels
             });
-          } else if (pullRequest.requested_reviewers.length >= 0 && pullRequestReviews.length === 0) {
-            await octokit.issues.addLabels({
-              owner: github.context.repo.owner,
-              repo: github.context.repo.repo,
-              issue_number: prnumber,
-              labels: [core.getInput('prlabel-reviewrequired')]
-            });
-            
           }
         } else {
           core.info(`PR #${prnumber} is merged, no action taken`);
