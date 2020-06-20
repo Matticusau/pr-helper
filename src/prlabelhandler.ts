@@ -5,17 +5,20 @@
 //
 // When         Who         What
 // ------------------------------------------------------------------------------------------
+// 2020-06-20   MLavery     Config moved back to workflow file #3
 //
 
 import { CoreModule, GitHubModule, Context } from './types' // , Client
-import { PRHelper, ConfigHelper } from './classes';
+import { PRHelper, ConfigHelper, MessageHelper } from './classes';
 
-export default async function prLabelHandler(core: CoreModule, github: GitHubModule, config: ConfigHelper) {
+export default async function prLabelHandler(core: CoreModule, github: GitHubModule) {
 
   try {
     
+    const messageHelper = new MessageHelper;
+
     // make sure we should proceed
-    if (config.configuration.prmerge.check === true) {
+    if (core.getInput('enable-prlabel-automation') === 'true') {
 
       const prhelper = new PRHelper;
       const prnumber = prhelper.getPrNumber(github.context);
@@ -55,14 +58,14 @@ export default async function prLabelHandler(core: CoreModule, github: GitHubMod
               owner: github.context.repo.owner,
               repo: github.context.repo.repo,
               issue_number: prnumber,
-              labels: [config.configuration.prmerge.labels.automergelabel]
+              labels: [core.getInput('prlabel-automerge')]
             });
           } else if (pullRequest.requested_reviewers.length >= 0 && pullRequestReviews.length === 0) {
             await octokit.issues.addLabels({
               owner: github.context.repo.owner,
               repo: github.context.repo.repo,
               issue_number: prnumber,
-              labels: [config.configuration.prmerge.labels.reviewrequiredlabel]
+              labels: [core.getInput('prlabel-reviewrequired')]
             });
             
           }

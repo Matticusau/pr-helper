@@ -5,18 +5,22 @@
 //
 // When         Who         What
 // ------------------------------------------------------------------------------------------
+// 2020-06-20   MLavery     Config moved back to workflow file #3
 //
 
 import { CoreModule, GitHubModule, Context } from './types'; // , Client
-import { IssueLabels, PRHelper, ConfigHelper } from './classes';
+import { IssueLabels, PRHelper, MessageHelper } from './classes';
 
 // export default async function prHandler(core: CoreModule, context: Context, client: Client) { //, octokit: Client
-export default async function prCommentHandler(core: CoreModule, github: GitHubModule, config: ConfigHelper) {
+export default async function prCommentHandler(core: CoreModule, github: GitHubModule) {
 
     try {
 
+        const messageHelper = new MessageHelper;
+
         // make sure we should proceed
-        if (config.configuration.prcomments.check === true) {
+        // if (config.configuration.prcomments.check === true) {
+        if (core.getInput('enable-prcomment-automation') === 'true'){
         
             // core.debug('context: ' + JSON.stringify(github.context));
             const prhelper = new PRHelper;
@@ -94,23 +98,27 @@ export default async function prCommentHandler(core: CoreModule, github: GitHubM
                                     owner: github.context.repo.owner,
                                     repo: github.context.repo.repo,
                                     issue_number: issuenumber,
-                                    body: 'Pull request is not mergable, please resolve any conflicts/issues first'
+                                    body: messageHelper.prcommentautomationdirtypr
                                 });
                             } else {
                                 // update the labels
-                                core.debug('1 issueLabels.labels: ' + JSON.stringify(issueLabels.labels));
-                                issueLabels.removeLabel(config.configuration.prcomments.onholdlabel);
-                                core.debug('2 issueLabels.labels: ' + JSON.stringify(issueLabels.labels));
-                                issueLabels.addLabel(config.configuration.prcomments.prreadylabel);
-                                core.debug('3 issueLabels.labels: ' + JSON.stringify(issueLabels.labels));
+                                // core.debug('1 issueLabels.labels: ' + JSON.stringify(issueLabels.labels));
+                                // issueLabels.removeLabel(config.configuration.prcomments.onholdlabel);
+                                // core.debug('2 issueLabels.labels: ' + JSON.stringify(issueLabels.labels));
+                                // issueLabels.addLabel(config.configuration.prcomments.prreadylabel);
+                                // core.debug('3 issueLabels.labels: ' + JSON.stringify(issueLabels.labels));
+                                issueLabels.removeLabel(core.getInput('prlabel-onhold'));
+                                issueLabels.addLabel(core.getInput('prlabel-ready'));
                             }
                         } else if (prComment.body.includes('#pr-onhold')) {
                             // // clear labels
-                            core.debug('4 issueLabels.labels: ' + JSON.stringify(issueLabels.labels));
-                            issueLabels.removeLabel(config.configuration.prcomments.prreadylabel);
-                            core.debug('5 issueLabels.labels: ' + JSON.stringify(issueLabels.labels));
-                            issueLabels.addLabel(config.configuration.prcomments.onholdlabel);
-                            core.debug('6 issueLabels.labels: ' + JSON.stringify(issueLabels.labels));
+                            // core.debug('4 issueLabels.labels: ' + JSON.stringify(issueLabels.labels));
+                            // issueLabels.removeLabel(config.configuration.prcomments.prreadylabel);
+                            // core.debug('5 issueLabels.labels: ' + JSON.stringify(issueLabels.labels));
+                            // issueLabels.addLabel(config.configuration.prcomments.onholdlabel);
+                            // core.debug('6 issueLabels.labels: ' + JSON.stringify(issueLabels.labels));
+                            issueLabels.removeLabel(core.getInput('prlabel-ready'));
+                            issueLabels.addLabel(core.getInput('prlabel-onhold'));
                         }
 
                         core.debug('issueLabels.haschanges: ' + issueLabels.haschanges);

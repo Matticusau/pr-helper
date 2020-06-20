@@ -5,41 +5,42 @@
 //
 // When         Who         What
 // ------------------------------------------------------------------------------------------
+// 2020-06-20   MLavery     Config moved back to workflow file #3
 //
 
 import { CoreModule, GitHubModule, Context } from './types' // , Client
-import { PRHelper, ConfigHelper } from './classes';
+import { PRHelper, MessageHelper } from './classes';
 
-export default async function prWelcomeHandler(core: CoreModule, github: GitHubModule, config: ConfigHelper) {
+export default async function prWelcomeHandler(core: CoreModule, github: GitHubModule) {
 
   try {
-    // check if the welcome message is to be processed
-    if (config.configuration.welcomemessage.check === true) {
+    const prhelper = new PRHelper;
+    const messagehelper = new MessageHelper;
+    const prnumber = prhelper.getPrNumber(github.context);
+    if (!prnumber) {
+      core.info('Could not get pull request number from context, exiting');
+      return;
+    }
+    core.info(`Processing PR ${prnumber}!`);
+  
+    const welcomeMessage = core.getInput('welcome-message');
+    const myToken = core.getInput('repo-token');
+    const octokit = github.getOctokit(myToken);
 
-      const prhelper = new PRHelper;
-      const prnumber = prhelper.getPrNumber(github.context);
-      if (!prnumber) {
-        core.info('Could not get pull request number from context, exiting');
-        return;
-      }
-      core.info(`Processing PR ${prnumber}!`);
-    
+    // check if the welcome message is to be processed
+    if (core.getInput('enable-welcomemessage') === 'true') {
+
       // check if this is a new PR
       // if (github.context.eventName === 'pull_request' && github.context.payload.action !== 'opened') {
       //   core.debug('No issue or pull request was opened, skipping');
       //   return;
       // }
       
-      const welcomeMessage = config.configuration.welcomemessage.message; // core.getInput('welcome-message');
-      const myToken = core.getInput('repo-token');
-
       // add the welcome message if needed
       // check if this is a new PR
       if (github.context.eventName === 'pull_request' 
         && github.context.payload.action === 'opened'
         && welcomeMessage.length > 0) {
-        
-        const octokit = github.getOctokit(myToken);
         
         // const octokit = github.getOctokit(myToken);
         await octokit.issues.createComment({
@@ -50,6 +51,20 @@ export default async function prWelcomeHandler(core: CoreModule, github: GitHubM
         });
       }
     }
+      
+      
+    // check if we should add the comment automation message
+    if (core.getInput('enable-prcomment-automation') === 'true') {
+      
+      // const octokit = github.getOctokit(myToken);
+      await octokit.issues.createComment({
+        owner: github.context.repo.owner,
+        repo: github.context.repo.repo,
+        issue_number: prnumber,
+        body: messagehelper.prcommentautomationwelcome
+      });
+    }
+    
   }
   catch (error) {
     core.setFailed(error.message);
@@ -59,11 +74,11 @@ export default async function prWelcomeHandler(core: CoreModule, github: GitHubM
 }
 
 
-function getPrNumber(context: Context): number | undefined {
-  const pullRequest = context.payload.pull_request;
-  if (!pullRequest) {
-    return undefined;
-  }
+// function getPrNumber(context: Context): number | undefined {
+//   const pullRequest = context.payload.pull_request;
+//   if (!pullRequest) {
+//     return undefined;
+//   }
 
-  return pullRequest.number;
-}
+//   return pullRequest.number;
+// }

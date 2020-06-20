@@ -25,15 +25,19 @@ export class IssueLabels {
 
     // add a label to the array in memory. Use octokit.issues.setLabels() to save
     addLabel(label : string) : void {
-        this.labels.push(label);
-        this.haschanges = true;
+        if(label.length > 0) {
+            this.labels.push(label);
+            this.haschanges = true;
+        }
     }
 
     // removes a label from the array in memory. Use octokit.issues.setLabels() to save
     removeLabel(label : string) : void {
-        if (this.labels.indexOf(label) >= 0) {
-            this.labels.splice(this.labels.indexOf(label), 1);
-            this.haschanges = true;
+        if(label.length > 0) {
+            if (this.labels.indexOf(label) >= 0) {
+                this.labels.splice(this.labels.indexOf(label), 1);
+                this.haschanges = true;
+            }
         }
     }
 

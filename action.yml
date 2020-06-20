@@ -2,12 +2,57 @@ name: 'PR Helper'
 description: 'Automate PR labels and more'
 author: 'MatticusAu'
 inputs:
-  configuration-path:
-    description: 'The path for the label and action configurations'
-    default: '.github/prhelper.yml'
   repo-token:
-    description: 'The GITHUB_TOKEN secret'
+    description: 'The GITHUB_TOKEN secret to use with authenticating. If you require additional permissions use a PAT stored as a secret on your repo.'
     required: true
+  enable-prmerge-automation:
+    description: 'Set to true to enable the auto merge capabilities'
+    required: true
+  enable-prcomment-automation:
+    description: 'Set to true to enable the PR/Issue comment automation'
+    required: true
+  enable-prlabel-automation:
+    description: 'Set to true to enable the PR label automation'
+    required: true
+  enable-welcomemessage:
+    description: 'Set to true to automatically send a welcome message to new contributors'
+    required: true
+  welcome-message:
+    description: 'The custom welcome message to send to new contributors'
+    default: "Thanks for opening an issue! Make sure you've followed CONTRIBUTING.md."
+    required: false
+  prmerge-requireallchecks:
+    description: 'Set to true if all checks need to complete before auto merging'
+    default: false
+    required: false
+  prmerge-requirereviewcount:
+    description: 'Should match the setting in your GitHub repo. Set it to -1 to disable.'
+    default: '-1'
+    required: false
+  permerge-method:
+    description: 'The method to use when merging the PRs'
+    default: 'merge'
+    required: false
+  prlabel-default:
+    description: 'The initial label to set on PRs when first created'
+    default: 'pr-onhold'
+    required: false
+  prlabel-ready:
+    description: 'The label to use when the PR has been signed off and ready for merge'
+    default: 'pr-ready'
+    required: false
+  prlabel-onhold:
+    description: 'The label to use when the PR is on hold'
+    default: 'pr-onhold'
+    required: false
+  prlabel-reviewrequired:
+    description: 'The label to use when the PR requires reviews'
+    default: 'review-required'
+    required: false
+  prlabel-automerge:
+    description: 'The label to set on PRs when it qualifies for automatic merge by this action'
+    default: 'auto-merge'
+    required: false
 runs:
   using: 'node12'
   main: 'lib/index.js'
