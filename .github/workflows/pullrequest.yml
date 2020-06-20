@@ -3,23 +3,23 @@ name: PR Helper
 on:
   pull_request:
     branches:
-      - master
+      - main
   pull_request_review:
     branches:
-      - master
+      - main
   issue_comment:
     branches:
-      - master
+      - main
 jobs:
   prhelper_job:
     runs-on: ubuntu-latest
     steps:
     - name: Run PR Helper
       id: runprhelper
-      uses: Matticusau/pr-helper@dev
+      uses: Matticusau/pr-helper@v0.1
       with:
         repo-token: ${{ secrets.GITHUB_TOKEN }}
-        enable-prmerge-automation: true
+        enable-prmerge-automation: false
         enable-prcomment-automation: true
         enable-prlabel-automation: true
         enable-welcomemessage: true
