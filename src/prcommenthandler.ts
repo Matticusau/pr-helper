@@ -51,7 +51,8 @@ export default async function prCommentHandler(core: CoreModule, github: GitHubM
             core.info('github.context.payload.action: ' + github.context.payload.action);
             if (github.context.payload.action === 'created') {
 
-                // get the PR 
+                // get the PR
+                core.info('getting pullRequest');
                 const { data: pullRequest } = await octokit.pulls.get({
                     ...github.context.repo,
                     pull_number: issuenumber,
@@ -66,12 +67,14 @@ export default async function prCommentHandler(core: CoreModule, github: GitHubM
                 if (pullRequest.state !== 'closed') {
 
                     // get the pr comment
+                    core.info('getting prComment');
                     const { data: prComment } = await octokit.issues.getComment({
                         ...github.context.repo,
                         comment_id: commentnumber,
                     });
                     // core.debug('got the pr comment');
 
+                    core.info('getting issueLabelsData');
                     const { data: issueLabelsData } = await octokit.issues.listLabelsOnIssue({
                         ...github.context.repo,
                         issue_number: issuenumber,
