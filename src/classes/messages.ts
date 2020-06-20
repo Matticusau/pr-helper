@@ -14,7 +14,7 @@ export class MessageHelper {
 
 
     constructor() {
-        this.prcommentautomationwelcome = "# Tip\n\nWhen you are ready for your PR to be processed, mark the PR ready by commenting with `#pr-ready`.\n\nIf you still have work to do, even after marking this ready, you can pu the PR on hold by commenting with `#pr-onhold`.";
+        this.prcommentautomationwelcome = "### Hello from PR Helper\n\nIs your PR ready for review and processing? Mark the PR ready by including `#pr-ready` in a comment.\n\nIf you still have work to do, even after marking this ready. Put the PR on hold by including `#pr-onhold` in a comment.";
         this.prcommentautomationdirtypr = "Pull request is not mergable, please resolve any conflicts/issues first";
         
     }

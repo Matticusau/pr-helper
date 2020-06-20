@@ -79,7 +79,7 @@ export class PRHelper {
                         return true;
                     }
 
-                    // if blocked check for pending reviewers
+                    // if blocked check for pending reviewers (this doesn't factor in that the review is approved or not)
                     if (pullRequest.mergeable_state === 'blocked' && (pullRequest.requested_reviewers.length === 0 && pullRequest.requested_teams.length === 0)) {
                         core.info(`PR #${pullRequest.number} is blocked but has no outstanding reviews`);
                         return true;
@@ -149,7 +149,7 @@ export class PRHelper {
             };
             let result : boolean = false;
 
-            // No outstanding reviews (this doesn't check for approval vs comment)
+            // No outstanding reviews (this doesn't check for approval vs comment so only valid if requiredReviewCount disabled)
             if (pullRequest.requested_reviewers.length === 0 && pullRequest.requested_teams.length === 0 && requiredReviewCount < 0) {
                 result = true;
             }
