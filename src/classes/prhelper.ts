@@ -149,8 +149,8 @@ export class PRHelper {
             };
             let result : boolean = false;
 
-            // No outstanding reviews
-            if (pullRequest.requested_reviewers.length === 0 && pullRequest.requested_teams.length === 0) {
+            // No outstanding reviews (this doesn't check for approval vs comment)
+            if (pullRequest.requested_reviewers.length === 0 && pullRequest.requested_teams.length === 0 && requiredReviewCount < 0) {
                 result = true;
             }
             
@@ -161,7 +161,7 @@ export class PRHelper {
                 }
             }
             // check for reviews, and make sure no non-approved reviews
-            if (reviews.total > 0 && (reviews.total === reviews.approved) && ((requiredReviewCount >= 0 && reviews.total > requiredReviewCount) || requiredReviewCount < 0)) {
+            if (reviews.total > 0 && (reviews.total === reviews.approved) && ((requiredReviewCount >= 0 && reviews.approved >= requiredReviewCount) || requiredReviewCount < 0)) {
                 core.info(`PR #${pullRequest.number} is mergable based on reviews`);
                 result = true;
             }
@@ -170,7 +170,7 @@ export class PRHelper {
             if (requiredReviewCount >= 0 && reviews.approved >= requiredReviewCount) {
                 core.info(`PR #${pullRequest.number} is mergable based on minimum required reviews`);
                 result = true;
-            }            
+            }
             
             return result;
 
