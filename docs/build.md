@@ -19,6 +19,15 @@ So to build the javascript package file just run
 npm run-script build
 ```
 
+## Releasing
+
+When time comes for a release assign a tag
+
+```bash
+git tag -a v0.1 -m "Release v0.1"
+git push --follow-tags
+```
+
 ## Related resources
 
 These resources were referenced in the creation of this package.
