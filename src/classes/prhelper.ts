@@ -55,6 +55,7 @@ export class PRHelper {
 
     isMergeReadyByState(core: CoreModule, pullRequest: PullsGetResponseData) {
         try {
+            core.debug('>> isMergeReadyByState()');
             core.info('PR State: ' + pullRequest.state);
             core.info('PR merged: ' + pullRequest.merged);
             core.info('PR mergeable: ' + pullRequest.mergeable);
@@ -76,6 +77,7 @@ export class PRHelper {
 
     async isMergeReadyByLabel(core: CoreModule, github: GitHubModule, config: ConfigHelper, pullRequest: PullsGetResponseData) {
         try {
+            core.debug('>> isMergeReadyByLabel()');
             console.log('config..readytomergelabel: ' + config.configuration.prmerge.labels.readytomergelabel);
             console.log('config..reviewrequiredlabel: ' + config.configuration.prmerge.labels.reviewrequiredlabel);
             console.log('config..onholdlabel: ' + config.configuration.prcomments.onholdlabel);

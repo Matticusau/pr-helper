@@ -34,9 +34,12 @@ export default async function prMergeOnScheduleHandler(core: CoreModule, github:
           pull_number: pullRequestList[iPr].number,
         });
         
+        core.debug('\n\npullRequest: ' + JSON.stringify(pullRequest));
+
         // merge the PR if criteria is met
         if (prhelper.isMergeReadyByState(core, pullRequest)) {
           if (await prhelper.isMergeReadyByLabel(core, github, config, pullRequest)) {
+            core.info(`Merged PR #${pullRequest.number}`);
             await octokit.pulls.merge({
                 owner: github.context.repo.owner,
                 repo: github.context.repo.repo,
