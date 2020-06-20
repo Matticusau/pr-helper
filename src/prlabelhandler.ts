@@ -5,69 +5,91 @@
 //
 // When         Who         What
 // ------------------------------------------------------------------------------------------
+// 2020-06-20   MLavery     Config moved back to workflow file #3
 //
 
 import { CoreModule, GitHubModule, Context } from './types' // , Client
-import { PRHelper, ConfigHelper } from './classes';
+import { PRHelper, MessageHelper, IssueLabels } from './classes';
 
-export default async function prLabelHandler(core: CoreModule, github: GitHubModule, config: ConfigHelper) {
+export default async function prLabelHandler(core: CoreModule, github: GitHubModule) {
 
   try {
-    const prhelper = new PRHelper;
-    const prnumber = prhelper.getPrNumber(github.context);
-    if (!prnumber) {
-      console.log('Could not get pull request number from context, exiting');
-      return;
-    }
-    console.log(`Processing PR ${prnumber}!`);
-  
-    // This should be a token with access to your repository scoped in as a secret.
-    // The YML workflow will need to set myToken with the GitHub Secret Token
-    // myToken: ${{ secrets.GITHUB_TOKEN }}
-    // https://help.github.com/en/actions/automating-your-workflow-with-github-actions/authenticating-with-the-github_token#about-the-github_token-secret
-    const myToken = core.getInput('repo-token');
+    
+    const messageHelper = new MessageHelper;
 
-    const octokit = github.getOctokit(myToken);
+    // make sure we should proceed
+    if (core.getInput('enable-prlabel-automation') === 'true') {
 
-    const { data: pullRequest } = await octokit.pulls.get({
-      ...github.context.repo,
-      pull_number: prnumber,
-    });
-    const { data: pullRequestReviews } = await octokit.pulls.listReviews({
-      ...github.context.repo,
-      pull_number: prnumber,
-    });
-    // console.log('<< start PR payload >>');
-    // console.log(pullRequest);
-    // console.log('<< end PR payload >>');
+      const prhelper = new PRHelper;
+      const prnumber = prhelper.getPrNumber(github.context);
+      if (!prnumber) {
+        core.info('Could not get pull request number from context, exiting');
+        return;
+      }
+      core.info(`Processing PR ${prnumber}!`);
+    
+      // This should be a token with access to your repository scoped in as a secret.
+      // The YML workflow will need to set myToken with the GitHub Secret Token
+      // myToken: ${{ secrets.GITHUB_TOKEN }}
+      // https://help.github.com/en/actions/automating-your-workflow-with-github-actions/authenticating-with-the-github_token#about-the-github_token-secret
+      const myToken = core.getInput('repo-token');
+      const octokit = github.getOctokit(myToken);
+
+      const { data: pullRequest } = await octokit.pulls.get({
+        ...github.context.repo,
+        pull_number: prnumber,
+      });
+      // const { data: pullRequestReviews } = await octokit.pulls.listReviews({
+      //   ...github.context.repo,
+      //   pull_number: prnumber,
+      // });
       
-    // make sure the PR is open
-    if (pullRequest.state !== 'closed') {
+      // get the current labels
+      const { data: issueLabelsData } = await octokit.issues.listLabelsOnIssue({
+        ...github.context.repo,
+        issue_number: prnumber,
+      });
+      var issueLabels = new IssueLabels(issueLabelsData);
 
-      // make sure it hasn't merged
-      if (pullRequest.merged === false) {
-        if (pullRequest.mergeable === true && (pullRequest.mergeable_state === 'clean' || pullRequest.mergeable_state === 'unstable')) {
-          await octokit.issues.addLabels({
-            owner: github.context.repo.owner,
-            repo: github.context.repo.repo,
-            issue_number: prnumber,
-            labels: [config.configuration.prmerge.labels.automergelabel]
-          });
-        } else if (pullRequest.requested_reviewers.length >= 0 && pullRequestReviews.length === 0) {
-          await octokit.issues.addLabels({
-            owner: github.context.repo.owner,
-            repo: github.context.repo.repo,
-            issue_number: prnumber,
-            labels: [config.configuration.prmerge.labels.reviewrequiredlabel]
-          });
+      // core.debug('<< start PR payload >>');
+      // core.debug(pullRequest);
+      // core.debug('<< end PR payload >>');
+      
+      // make sure the PR is open
+      if (pullRequest.state !== 'closed') {
+
+        // make sure it hasn't merged
+        if (pullRequest.merged === false) {
+          if (pullRequest.mergeable === true && (pullRequest.mergeable_state === 'clean' || pullRequest.mergeable_state === 'unstable')) {
+            issueLabels.addLabel(core.getInput('prlabel-automerge'));
+          }
           
+          // check if we need reviews
+          if (await prhelper.isMergeReadyByReview(core, github, pullRequest)) {
+            issueLabels.removeLabel(core.getInput('prlabel-reviewrequired'));
+          } else {
+            issueLabels.addLabel(core.getInput('prlabel-reviewrequired'));
+          }
+
+          core.debug('issueLabels.haschanges: ' + issueLabels.haschanges);
+          core.debug('issueLabels.labels: ' + JSON.stringify(issueLabels.labels));
+
+          if (issueLabels.haschanges) {
+            // set the label
+            await octokit.issues.setLabels({
+                owner: github.context.repo.owner,
+                repo: github.context.repo.repo,
+                issue_number: prnumber,
+                labels: issueLabels.labels
+            });
+          }
+        } else {
+          core.info(`PR #${prnumber} is merged, no action taken`);
+
         }
       } else {
-        core.info(`PR #${prnumber} is merged, no action taken`);
-
+        core.info(`PR #${prnumber} is closed, no action taken`);
       }
-    } else {
-      core.info(`PR #${prnumber} is closed, no action taken`);
     }
       
   }

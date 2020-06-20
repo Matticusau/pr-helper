@@ -13,6 +13,6 @@ import * as core from '@actions/core';
 import main from './main'
 
 main(core, github).catch((error: Error) => {
-    console.log('Error: ' + error.message);
+    core.info('Error: ' + error.message);
     core.setFailed(error.message);
 })

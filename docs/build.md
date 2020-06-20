@@ -25,3 +25,9 @@ These resources were referenced in the creation of this package.
 
 - https://help.github.com/en/actions/creating-actions/creating-a-javascript-action
 - https://developer.github.com/webhooks/event-payloads/
+
+Additional Actions used as inspiration or that have overlapping functionality:
+
+- https://github.com/actions/labeler
+- https://github.com/srvaroa/labeler
+- https://github.com/marketplace/actions/pr-merge-bot [GitHub](https://github.com/squalrus/merge-bot)
