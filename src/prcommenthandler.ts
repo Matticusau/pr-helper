@@ -77,6 +77,14 @@ export default async function prCommentHandler(core: CoreModule, github: GitHubM
                         issue_number: issuenumber,
                     });
 
+                    if (!prComment) {
+                        core.error('Could not get pull request comment, exiting');
+                        return;
+                    }
+                    if (!issueLabelsData) {
+                        core.error('Could not get pull request labels, exiting');
+                        return;
+                    }
                     // var labelArray = [];
                     // for (var i=0; i < issueLabelsData.length; i++) {
                     //     labelArray.push(issueLabelsData[i].name);
@@ -85,6 +93,9 @@ export default async function prCommentHandler(core: CoreModule, github: GitHubM
                     // var labelsChanged = false;
 
                     // make sure this is the same person that authored the PR
+                    core.info('testing user is author');
+                    core.info('pullRequest.user.id: ' + JSON.stringify(pullRequest.user.id));
+                    core.info('prComment.user.id: ' + JSON.stringify(prComment.user.id));
                     if (pullRequest.user.id === prComment.user.id) {
 
                         var issueLabels = new IssueLabels(issueLabelsData);
@@ -102,23 +113,18 @@ export default async function prCommentHandler(core: CoreModule, github: GitHubM
                                 });
                             } else {
                                 // update the labels
-                                // core.debug('1 issueLabels.labels: ' + JSON.stringify(issueLabels.labels));
-                                // issueLabels.removeLabel(config.configuration.prcomments.onholdlabel);
-                                // core.debug('2 issueLabels.labels: ' + JSON.stringify(issueLabels.labels));
-                                // issueLabels.addLabel(config.configuration.prcomments.prreadylabel);
-                                // core.debug('3 issueLabels.labels: ' + JSON.stringify(issueLabels.labels));
+                                core.info('1 issueLabels.labels: ' + JSON.stringify(issueLabels.labels));
                                 issueLabels.removeLabel(core.getInput('prlabel-onhold'));
+                                core.info('2 issueLabels.labels: ' + JSON.stringify(issueLabels.labels));
                                 issueLabels.addLabel(core.getInput('prlabel-ready'));
+                                core.info('3 issueLabels.labels: ' + JSON.stringify(issueLabels.labels));
                             }
                         } else if (prComment.body.includes('#pr-onhold')) {
-                            // // clear labels
-                            // core.debug('4 issueLabels.labels: ' + JSON.stringify(issueLabels.labels));
-                            // issueLabels.removeLabel(config.configuration.prcomments.prreadylabel);
-                            // core.debug('5 issueLabels.labels: ' + JSON.stringify(issueLabels.labels));
-                            // issueLabels.addLabel(config.configuration.prcomments.onholdlabel);
-                            // core.debug('6 issueLabels.labels: ' + JSON.stringify(issueLabels.labels));
+                            core.info('4 issueLabels.labels: ' + JSON.stringify(issueLabels.labels));
                             issueLabels.removeLabel(core.getInput('prlabel-ready'));
+                            core.info('5 issueLabels.labels: ' + JSON.stringify(issueLabels.labels));
                             issueLabels.addLabel(core.getInput('prlabel-onhold'));
+                            core.info('6 issueLabels.labels: ' + JSON.stringify(issueLabels.labels));
                         }
 
                         core.debug('issueLabels.haschanges: ' + issueLabels.haschanges);
