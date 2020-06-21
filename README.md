@@ -163,6 +163,16 @@ with:
   prlabel-automerge: 'auto-merge'
 ```
 
+## Suggested Label Colors
+
+Labels will be created during the assignment if they do not exist. The following are suggested labels and colors:
+
+| Label | Color |
+| pr-onhold | #b60205 (red) |
+| review-required | #fbca04 (yellow) |
+| auto-merge | #0e8a16 (green) |
+| pr-ready | #0e8a16 (green) |
+
 ## Troubleshooting
 
 If you are having issues running the action enable the debug logs as some additional logging has been built into the Action.
