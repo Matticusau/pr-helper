@@ -1,3 +1,9 @@
+[![License](https://img.shields.io/github/license/Matticusau/pr-helper.svg?style=flat-square)](LICENSE)
+[![Last commit](https://img.shields.io/github/last-commit/Matticusau/pr-helper.svg?style=flat-square)](https://github.com/heinrichreimer/action-github-changelog-generator/commits)
+[![Latest tag](https://img.shields.io/github/tag/Matticusau/pr-helper.svg?style=flat-square)](https://github.com/heinrichreimer/action-github-changelog-generator/releases)
+[![Issues](https://img.shields.io/github/issues/Matticusau/pr-helper.svg?style=flat-square)](https://github.com/heinrichreimer/action-github-changelog-generator/issues)
+[![Pull requests](https://img.shields.io/github/issues-pr/Matticusau/pr-helper.svg?style=flat-square)](https://github.com/heinrichreimer/action-github-changelog-generator/pulls)
+
 # pr-helper
 
 A [GitHub Action](https://github.com/features/actions) to help with managing PRs through automation of common tasks. Currently supports the following functionality:
