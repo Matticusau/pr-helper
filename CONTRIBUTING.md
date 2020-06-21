@@ -40,6 +40,24 @@ git push --follow-tags
 
 The RELEASES.md should also be updated to describe the change log.
 
+### Change Log
+
+To generate the change log use the github-changelog-generator(https://github.com/github-changelog-generator/github-changelog-generator)
+
+Install the gem like:
+
+```bash
+$ gem install github_changelog_generator
+```
+
+Running with CLI:
+
+```bash
+github_changelog_generator -u github_username -p github_project
+```
+
+> ToDo: Look at automating the generation of this file [issue #11](https://github.com/Matticusau/pr-helper/issues/11)
+
 ## Related resources
 
 These resources were referenced in the creation of this package.
