@@ -1,5 +1,5 @@
 name: 'PR Helper'
-description: 'Managing Pull Requests through automation and interactions. Including automatic labeling, comment and review based automation, and automatic merge criteria.'
+description: 'Pull Request automation - auto labels, comment & review automation, auto merge on criteria'
 author: 'MatticusAu'
 inputs:
   repo-token:
