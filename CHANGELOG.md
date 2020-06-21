@@ -13,6 +13,10 @@
 
 - Add option to merge PRs on schedule [\#4](https://github.com/Matticusau/pr-helper/issues/4)
 
+**Merged pull requests:**
+
+- Fix labels on Feature Request template [\#12](https://github.com/Matticusau/pr-helper/pull/12) ([Matticusau](https://github.com/Matticusau))
+
 ## [v0.1](https://github.com/matticusau/pr-helper/tree/v0.1) (2020-06-20)
 
 [Full Changelog](https://github.com/matticusau/pr-helper/compare/37ebf728140f171cdf3adaae799d27975612e095...v0.1)
