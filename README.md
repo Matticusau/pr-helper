@@ -15,6 +15,15 @@ A [GitHub Action](https://github.com/features/actions) to help with managing PRs
   - Respect requested reviews (_i.e. CODEOWNERS_)
   - Respect a minimal review count (_for now configured by input param, repo setting on roadmap_)
 
+## Events
+
+The Action can respond to the following [workflow events](https://help.github.com/en/actions/reference/events-that-trigger-workflows):
+
+- pull_request
+- pull_request_review
+- issue_comment
+- schedule
+
 ## Inputs
 
 Set the following inputs in the workflow file
