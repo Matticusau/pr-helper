@@ -1,8 +1,8 @@
 ---
 name: "\U0001F4AC Question or Discussion"
-about: "I have a question about this project I would like to discuss."
+about: I have a question about this project I would like to discuss.
 title: ''
-labels: 'i: question, i: needs triage'
+labels: ''
 assignees: ''
 
 ---
