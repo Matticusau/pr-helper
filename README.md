@@ -175,7 +175,3 @@ If you are having issues running the action enable the debug logs as some additi
 ## Known issues
 
 None
-
-## Related resources
-
-- [Official GitHub Action docs](https://help.github.com/en/actions)
