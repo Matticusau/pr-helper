@@ -5,6 +5,7 @@
 //
 // When         Who         What
 // ------------------------------------------------------------------------------------------
+// 2020-06-22   Mlavery     Added check for Requested Changes in review #16
 //
 import { CoreModule, GitHubModule,Context, PullRequestPayload } from '../types';
 import { IssueLabels } from './index';
@@ -145,7 +146,8 @@ export class PRHelper {
 
             let reviews = {
                 total: reviewsData.length,
-                approved: 0
+                approved: 0,
+                request_changes: 0
             };
             let result : boolean = false;
 
@@ -158,16 +160,19 @@ export class PRHelper {
             for(var iReview = 0; iReview < reviewsData.length; iReview++){
                 if (reviewsData[iReview].state === 'APPROVED') {
                     reviews.approved++;
-                }
+                } else if (reviewsData[iReview].state === 'REQUEST_CHANGES') {
+                    reviews.request_changes++;
+                } 
             }
             // check for reviews, and make sure no non-approved reviews
-            if (reviews.total > 0 && (reviews.total === reviews.approved) && ((requiredReviewCount >= 0 && reviews.approved >= requiredReviewCount) || requiredReviewCount < 0)) {
+            // if (reviews.total > 0 && (reviews.total === reviews.approved) && ((requiredReviewCount >= 0 && reviews.approved >= requiredReviewCount) || requiredReviewCount < 0)) {
+            if (reviews.total > 0 && (reviews.total === reviews.approved) && (requiredReviewCount >= 0 && reviews.approved >= requiredReviewCount)) {
                 core.info(`PR #${pullRequest.number} is mergable based on reviews`);
                 result = true;
             }
 
-            // check for minimum number of required reviews
-            if (requiredReviewCount >= 0 && reviews.approved >= requiredReviewCount) {
+            // check for minimum number of required reviews (no requested changes)
+            if (requiredReviewCount >= 0 && reviews.approved >= requiredReviewCount && reviews.request_changes === 0) {
                 core.info(`PR #${pullRequest.number} is mergable based on minimum required reviews`);
                 result = true;
             }
