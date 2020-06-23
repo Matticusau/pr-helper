@@ -31,10 +31,10 @@ export class GlobHelper {
     matchConfigFromActionInputYaml(json: string) : MatchConfig[] {
       try{
         // convert json to string array
-        this.core.info('json: ' + json);
+        this.core.debug('json: ' + json);
         //let pattern : string[] = JSON.parse(json);
         let pattern : MatchConfig = JSON.parse(json);
-        this.core.info('json pattern: ' + JSON.stringify(pattern));
+        this.core.debug('json pattern: ' + JSON.stringify(pattern));
 
         // return the match config
         // return [{
