@@ -265,9 +265,9 @@ export class PRHelper {
       
         const changedFiles = listFilesResponse.data.map(f => f.filename);
       
-        core.debug('found changed files:');
+        core.info('found changed files:');
         for (const file of changedFiles) {
-          core.debug('  ' + file);
+          core.info('  ' + file);
         }
       
         return changedFiles;
