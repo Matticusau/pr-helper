@@ -48,6 +48,10 @@ Set the following inputs in the workflow file
 
 **Required** Set to true to enable the auto merge capabilities
 
+### `enable-prmerge-pathcheck`
+
+Set to true to require a path check for auto merge capabilities
+
 ### `enable-prcomment-automation`
 
 **Required** Set to true to enable the PR/Issue comment automation
@@ -75,6 +79,10 @@ Should match the setting in your GitHub repo. Set it to -1 to disable.
 ### `permerge-method`
 
 The method to use when merging the PRs
+
+### `permerge-allowpaths`
+
+Provide the path globs which will allow auto merge. JSON object as string, example format {"any":["docs/**"]}.
 
 ### `prlabel-default`
 

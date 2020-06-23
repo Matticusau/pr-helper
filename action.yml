@@ -37,7 +37,7 @@ inputs:
     default: 'merge'
     required: false
   permerge-allowpaths:
-    description: 'Provide the path globs which will allow auto merge'
+    description: 'Provide the path globs which will allow auto merge. JSON object as string, example format {"any":["docs/**"]}.'
     default: ''
     required: false
   prlabel-default:
