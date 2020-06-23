@@ -8,6 +8,9 @@ inputs:
   enable-prmerge-automation:
     description: 'Set to true to enable the auto merge capabilities'
     required: true
+  enable-prmerge-pathcheck:
+    description: 'Set to true to require a path check for auto merge capabilities'
+    required: false
   enable-prcomment-automation:
     description: 'Set to true to enable the PR/Issue comment automation'
     required: true
@@ -32,6 +35,10 @@ inputs:
   permerge-method:
     description: 'The method to use when merging the PRs'
     default: 'merge'
+    required: false
+  permerge-allowpaths:
+    description: 'Provide the path globs which will allow auto merge'
+    default: ''
     required: false
   prlabel-default:
     description: 'The initial label to set on PRs when first created'

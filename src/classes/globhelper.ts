@@ -28,15 +28,15 @@ export class GlobHelper {
         this.github = github;
     }
 
-    matchConfigFromActionInputYaml(json: string) : MatchConfig {
+    matchConfigFromActionInputYaml(json: string) : MatchConfig[] {
         // convert json to string array
         let pattern : string[] = JSON.parse(json);
         this.core.info('json pattern: ' + JSON.stringify(pattern));
 
         // return the match config
-        return {
+        return [{
             any: pattern
-        };
+        }];
     }
 
     checkGlobs(
@@ -47,7 +47,7 @@ export class GlobHelper {
             this.core.debug(` checking pattern ${JSON.stringify(glob)}`);
             const matchConfig = this.toMatchConfig(glob);
             if (this.checkMatch(changedFiles, matchConfig)) {
-            return true;
+              return true;
             }
         }
         return false;
