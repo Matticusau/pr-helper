@@ -250,4 +250,26 @@ export class PRHelper {
             throw error;
         }
     }
+
+    async getChangedFiles(core: CoreModule, github: GitHubModule, pullRequest: PullsGetResponseData): Promise<string[]> {
+        core.debug('>> getChangedFiles()');
+
+        const myToken = core.getInput('repo-token');
+        const octokit = github.getOctokit(myToken);
+
+        const listFilesResponse = await octokit.pulls.listFiles({
+          owner: github.context.repo.owner,
+          repo: github.context.repo.repo,
+          pull_number: pullRequest.number
+        });
+      
+        const changedFiles = listFilesResponse.data.map(f => f.filename);
+      
+        core.info('found changed files:');
+        for (const file of changedFiles) {
+          core.info('  ' + file);
+        }
+      
+        return changedFiles;
+    }
 }
