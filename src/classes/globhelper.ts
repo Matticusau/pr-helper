@@ -30,6 +30,7 @@ export class GlobHelper {
 
     matchConfigFromActionInputYaml(json: string) : MatchConfig[] {
         // convert json to string array
+        this.core.info('json: ' + json);
         let pattern : string[] = JSON.parse(json);
         this.core.info('json pattern: ' + JSON.stringify(pattern));
 
