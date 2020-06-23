@@ -29,16 +29,22 @@ export class GlobHelper {
     }
 
     matchConfigFromActionInputYaml(json: string) : MatchConfig[] {
+      try{
         // convert json to string array
         this.core.info('json: ' + json);
         //let pattern : string[] = JSON.parse(json);
-        let pattern : any = JSON.parse(json);
+        let pattern : MatchConfig = JSON.parse(json);
         this.core.info('json pattern: ' + JSON.stringify(pattern));
 
         // return the match config
-        return [{
-            any: pattern
-        }];
+        // return [{
+        //     any: pattern
+        // }];
+        return [pattern];
+      } catch (error) {
+        this.core.setFailed(error.message);
+        throw error;
+      }
     }
 
     checkGlobs(
