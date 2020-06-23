@@ -118,18 +118,34 @@ export class GlobHelper {
     }
 
     private isMatch(individualFile: string, matchers: IMinimatch[]): boolean {
-        this.core.debug(` matching patterns against file ${individualFile}`);
-        for (const matcher of matchers) {
-          this.core.debug(`  - ${this.printPattern(matcher)}`);
-          if (!matcher.match(individualFile)) {
-            this.core.debug(`   ${this.printPattern(matcher)} did not match`);
-            return false;
-          }
+      this.core.debug(` matching patterns against file ${individualFile}`);
+      for (const matcher of matchers) {
+        this.core.debug(`  - ${this.printPattern(matcher)}`);
+        // check for a match
+        if (matcher.match(individualFile)) {
+          this.core.debug(`   ${this.printPattern(matcher)} matched`);
+          return true;
         }
-      
-        this.core.debug(` all patterns matched`);
-        return true;
       }
+    
+      this.core.debug(` No patterns matched`);
+      return false;
+    }
+
+    private isMatchAllGlobs(individualFile: string, matchers: IMinimatch[]): boolean {
+      this.core.debug(` matching patterns against file ${individualFile}`);
+      for (const matcher of matchers) {
+        this.core.debug(`  - ${this.printPattern(matcher)}`);
+        // if we don't get a match then no reason continuing as ALL must match
+        if (!matcher.match(individualFile)) {
+          this.core.debug(`   ${this.printPattern(matcher)} did not match`);
+          return false;
+        }
+      }
+    
+      this.core.debug(` all patterns matched`);
+      return true;
+    }
 
     private printPattern(matcher: IMinimatch): string {
         return (matcher.negate ? "!" : "") + matcher.pattern;
