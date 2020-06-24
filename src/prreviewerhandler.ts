@@ -10,7 +10,7 @@
 import { CoreModule, GitHubModule, Context } from './types' // , Client
 import { PRHelper, MessageHelper, PRFileHelper } from './classes';
 
-export default async function prWelcomeHandler(core: CoreModule, github: GitHubModule) {
+export default async function prReviewHandler(core: CoreModule, github: GitHubModule) {
 
   try {
     // only on new PR
@@ -28,7 +28,6 @@ export default async function prWelcomeHandler(core: CoreModule, github: GitHubM
       }
       core.info(`Processing PR ${prnumber}!`);
   
-      const welcomeMessage = core.getInput('welcome-message');
       const myToken = core.getInput('repo-token');
       const octokit = github.getOctokit(myToken);
 
@@ -42,7 +41,8 @@ export default async function prWelcomeHandler(core: CoreModule, github: GitHubM
 
         const changedFiles = await filehelper.getChangedFiles(pullRequest);
         const reviewerList : string[] = [];
-
+        core.info('changedFiles: ' + JSON.stringify(changedFiles));
+        
         if (changedFiles) {
           for(let iFile = 0; iFile < changedFiles.data.length; iFile++) {
             const tmpReviewerList : string[] = await filehelper.getReviewerListFromFrontMatter(pullRequest, changedFiles.data[iFile]);

@@ -78,13 +78,16 @@ export class PRFileHelper {
     }
 
     async getReviewerListFromFrontMatter(pullRequest: PullsGetResponseData, file: PullRequestFilePayload): Promise<string[]> {
-        this.core.debug('>> getChangedFileContent()');
+        this.core.info('>> getChangedFileContent()');
 
         let results : string[] = [];
         const fileContents : string = await this.getChangedFileContent(pullRequest, file);
+        this.core.info('file contents: ' + fileContents);
 
         // get the frontmatter
         const frontmatter : FrontMatterResult<any> = fm(fileContents);
+        this.core.info('frontmatter: ' + JSON.stringify(frontmatter));
+
         if (frontmatter && frontmatter.attributes) {
             this.core.info('has attributes');
             // get the owner attribute
