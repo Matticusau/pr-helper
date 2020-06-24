@@ -69,7 +69,7 @@ export class PRFileHelper {
             ...this.github.context.repo
             , path: file.filename
             , mediaType: {format: 'raw'}
-            , ref: pullRequest.base.ref
+            , ref: pullRequest.base.label
         });
         this.core.info('fileContentsResponse: ' + JSON.stringify(fileContentsResponse));
         
