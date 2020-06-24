@@ -6,6 +6,7 @@
 //
 // When         Who         What
 // ------------------------------------------------------------------------------------------
+// 2020-06-24   MLavery     Added allall and anyall config options
 //
 import { CoreModule, GitHubModule,Context } from '../types';
 import {Minimatch, IMinimatch} from 'minimatch';
@@ -13,13 +14,15 @@ import {Minimatch, IMinimatch} from 'minimatch';
 interface MatchConfig {
     all?: string[];
     any?: string[];
+    allall?: string[];
+    anyall?: string[];
 }
 
 type StringOrMatchConfig = string | MatchConfig;
 
 export class GlobHelper {
     
-    // ToDo: properties
+    // properties
     private core: CoreModule;
     private github: GitHubModule;
 
@@ -83,6 +86,18 @@ export class GlobHelper {
             return false;
           }
         }
+
+        if (matchConfig.anyall !== undefined) {
+          if (!this.checkAnyAll(changedFiles, matchConfig.anyall)) {
+            return false;
+          }
+        }
+
+        if (matchConfig.allall !== undefined) {
+          if (!this.checkAllAll(changedFiles, matchConfig.allall)) {
+            return false;
+          }
+        }
       
         return true;
       }
@@ -130,6 +145,36 @@ export class GlobHelper {
     
       this.core.debug(` No patterns matched`);
       return false;
+    }
+
+    // equivalent to "Array.some()" but expanded for debugging and clarity
+    private checkAnyAll(changedFiles: string[], globs: string[]): boolean {
+      const matchers = globs.map(g => new Minimatch(g));
+      this.core.debug(`  checking "any" patterns`);
+      for (const changedFile of changedFiles) {
+          if (this.isMatchAllGlobs(changedFile, matchers)) {
+              this.core.debug(`  "any" patterns matched against ${changedFile}`);
+              return true;
+          }
+      }
+
+      this.core.debug(`  "any" patterns did not match any files`);
+      return false;
+    }
+
+    // equivalent to "Array.every()" but expanded for debugging and clarity
+    private checkAllAll(changedFiles: string[], globs: string[]): boolean {
+      const matchers = globs.map(g => new Minimatch(g));
+      this.core.debug(` checking "all" patterns`);
+      for (const changedFile of changedFiles) {
+          if (!this.isMatchAllGlobs(changedFile, matchers)) {
+              this.core.debug(`  "all" patterns did not match against ${changedFile}`);
+              return false;
+          }
+      }
+
+      this.core.debug(`  "all" patterns matched all files`);
+      return true;
     }
 
     private isMatchAllGlobs(individualFile: string, matchers: IMinimatch[]): boolean {

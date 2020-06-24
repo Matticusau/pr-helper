@@ -20,8 +20,8 @@ export default async function prMergeHandler(core: CoreModule, github: GitHubMod
     // make sure we should proceed
     // core.debug('config.configuration.prmerge.check: ' + JSON.stringify(config.configuration.prmerge.check));
     if (core.getInput('enable-prmerge-automation') === 'true') {
-      const prhelper = new PRHelper;
-      const prnumber = prhelper.getPrNumber(github.context);
+      const prhelper = new PRHelper(core, github);
+      const prnumber = prhelper.getPrNumber();
       if (!prnumber) {
         core.info('Could not get pull request number from context, may not be a pull request event, exiting');
         return;
@@ -45,10 +45,10 @@ export default async function prMergeHandler(core: CoreModule, github: GitHubMod
       prhelper.setMergeMethod(core.getInput('permerge-method'));
 
       // merge the PR if criteria is met
-      if (prhelper.isMergeReadyByState(core, pullRequest)) {
-        if (await prhelper.isMergeReadyByLabel(core, github, pullRequest)) {
-          if (await prhelper.isMergeReadyByChecks(core, github, pullRequest)){
-            if (await prhelper.isMergeReadyByReview(core, github, pullRequest)){
+      if (prhelper.isMergeReadyByState(pullRequest)) {
+        if (await prhelper.isMergeReadyByLabel(pullRequest)) {
+          if (await prhelper.isMergeReadyByChecks(pullRequest)){
+            if (await prhelper.isMergeReadyByReview(pullRequest)){
               core.info(`Merged PR #${pullRequest.number}`);
               await octokit.pulls.merge({
                 owner: github.context.repo.owner,

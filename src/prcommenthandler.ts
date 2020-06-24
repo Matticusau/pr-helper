@@ -23,15 +23,15 @@ export default async function prCommentHandler(core: CoreModule, github: GitHubM
         if (core.getInput('enable-prcomment-automation') === 'true'){
         
             // core.debug('context: ' + JSON.stringify(github.context));
-            const prhelper = new PRHelper;
-            const issuenumber = prhelper.getPrNumber(github.context);
+            const prhelper = new PRHelper(core, github);
+            const issuenumber = prhelper.getPrNumber();
             if (!issuenumber) {
                 core.error('Could not get issue number from context, exiting');
                 return;
             }
             core.info(`Processing Issue/PR ${issuenumber}!`);
 
-            const commentnumber = prhelper.getCommentNumber(github.context);
+            const commentnumber = prhelper.getCommentNumber();
             if (!commentnumber) {
                 core.error('Could not get comment number from context, exiting');
                 return;

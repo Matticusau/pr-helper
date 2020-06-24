@@ -20,8 +20,8 @@ export default async function prLabelHandler(core: CoreModule, github: GitHubMod
     // make sure we should proceed
     if (core.getInput('enable-prlabel-automation') === 'true') {
 
-      const prhelper = new PRHelper;
-      const prnumber = prhelper.getPrNumber(github.context);
+      const prhelper = new PRHelper(core, github);
+      const prnumber = prhelper.getPrNumber();
       if (!prnumber) {
         core.info('Could not get pull request number from context, exiting');
         return;
@@ -65,7 +65,7 @@ export default async function prLabelHandler(core: CoreModule, github: GitHubMod
             // should we check the glob paths
             if (core.getInput('enable-prmerge-automation') === 'true' && core.getInput('enable-prmerge-pathcheck') === 'true') {
               // get the changed files
-              const changedFiles: string[] = await prhelper.getChangedFiles(core, github, pullRequest);
+              const changedFiles: string[] = await prhelper.getChangedFiles(pullRequest);
 
               // check the glob paths
               let globHelper : GlobHelper = new GlobHelper(core, github);
@@ -86,7 +86,7 @@ export default async function prLabelHandler(core: CoreModule, github: GitHubMod
           }
           
           // check if we need reviews
-          if (await prhelper.isMergeReadyByReview(core, github, pullRequest)) {
+          if (await prhelper.isMergeReadyByReview(pullRequest)) {
             issueLabels.removeLabel(core.getInput('prlabel-reviewrequired'));
           } else {
             issueLabels.addLabel(core.getInput('prlabel-reviewrequired'));
