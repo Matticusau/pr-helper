@@ -68,7 +68,7 @@ export class PRFileHelper {
         const fileContentsResponse = await octokit.repos.getContent({
             ...this.github.context.repo
             , path: file.filename
-            , mediaType: {format: 'application/vnd.github.VERSION.raw'}
+            , mediaType: {format: 'application/vnd.github.v3.raw'}
         });
         
         if (fileContentsResponse && fileContentsResponse.data) {
