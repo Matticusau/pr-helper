@@ -48,7 +48,7 @@ export default async function prReviewHandler(core: CoreModule, github: GitHubMo
             const tmpReviewerList : string[] = await filehelper.getReviewerListFromFrontMatter(pullRequest, changedFiles.data[iFile]);
             // core.info('tmpReviewerList: ' + JSON.stringify(tmpReviewerList));
             tmpReviewerList.forEach(element => {
-              reviewerList.push(element);
+              reviewerList.push(element.trim());
             });
           }
         }
