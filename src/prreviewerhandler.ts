@@ -41,12 +41,12 @@ export default async function prReviewHandler(core: CoreModule, github: GitHubMo
 
         const changedFiles = await filehelper.getChangedFiles(pullRequest);
         const reviewerList : string[] = [];
-        core.info('changedFiles: ' + JSON.stringify(changedFiles));
+        // core.info('changedFiles: ' + JSON.stringify(changedFiles));
         
         if (changedFiles) {
           for(let iFile = 0; iFile < changedFiles.data.length; iFile++) {
             const tmpReviewerList : string[] = await filehelper.getReviewerListFromFrontMatter(pullRequest, changedFiles.data[iFile]);
-            core.info('tmpReviewerList: ' + JSON.stringify(tmpReviewerList));
+            // core.info('tmpReviewerList: ' + JSON.stringify(tmpReviewerList));
             tmpReviewerList.forEach(element => {
               reviewerList.push(element);
             });
@@ -55,15 +55,14 @@ export default async function prReviewHandler(core: CoreModule, github: GitHubMo
 
         // Add the reviewers
         if (github.context.eventName === 'pull_request' 
-          && github.context.payload.action === 'opened'
+          // && github.context.payload.action === 'opened'
           && reviewerList.length > 0) {
-          core.info('reviewerList: ' + JSON.stringify(reviewerList));
-          // const octokit = github.getOctokit(myToken);
-          // await octokit.pulls.createReviewRequest({
-          //   ...github.context.repo,
-          //   pull_number: prnumber,
-          //   reviewers: reviewerList
-          // });
+          // core.info('reviewerList: ' + JSON.stringify(reviewerList));
+          await octokit.pulls.createReviewRequest({
+            ...github.context.repo,
+            pull_number: prnumber,
+            reviewers: reviewerList
+          });
         }
       }
       

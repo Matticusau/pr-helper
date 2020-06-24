@@ -9,7 +9,7 @@
 //
 
 import { CoreModule, GitHubModule, Context } from './types' // , Client
-import { PRHelper, MessageHelper, IssueLabels, GlobHelper } from './classes'; // MatchConfig
+import { PRHelper, PRFileHelper, MessageHelper, IssueLabels, GlobHelper } from './classes'; // MatchConfig
 
 export default async function prLabelHandler(core: CoreModule, github: GitHubModule) {
 
@@ -21,6 +21,7 @@ export default async function prLabelHandler(core: CoreModule, github: GitHubMod
     if (core.getInput('enable-prlabel-automation') === 'true') {
 
       const prhelper = new PRHelper(core, github);
+      const filehelper = new PRFileHelper(core, github);
       const prnumber = prhelper.getPrNumber();
       if (!prnumber) {
         core.info('Could not get pull request number from context, exiting');
@@ -65,7 +66,7 @@ export default async function prLabelHandler(core: CoreModule, github: GitHubMod
             // should we check the glob paths
             if (core.getInput('enable-prmerge-automation') === 'true' && core.getInput('enable-prmerge-pathcheck') === 'true') {
               // get the changed files
-              const changedFiles: string[] = await prhelper.getChangedFiles(pullRequest);
+              const changedFiles: string[] = await filehelper.getChangedFileNames(pullRequest);
 
               // check the glob paths
               let globHelper : GlobHelper = new GlobHelper(core, github);

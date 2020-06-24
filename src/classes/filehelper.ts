@@ -51,9 +51,9 @@ export class PRFileHelper {
       
         const changedFiles = listFilesResponse.data.map(f => f.filename);
       
-        this.core.info('found changed files:');
+        // this.core.info('found changed files:');
         for (const file of changedFiles) {
-          this.core.info('  ' + file);
+        //   this.core.info('  ' + file);
         }
       
         return changedFiles;
@@ -71,7 +71,7 @@ export class PRFileHelper {
             , mediaType: {format: 'raw'}
             , ref: pullRequest.base.ref
         });
-        this.core.info('fileContentsResponse: ' + JSON.stringify(fileContentsResponse));
+        // this.core.info('fileContentsResponse: ' + JSON.stringify(fileContentsResponse));
         
         if (fileContentsResponse && fileContentsResponse.data) {
             return String(fileContentsResponse.data);
@@ -81,21 +81,21 @@ export class PRFileHelper {
     }
 
     async getReviewerListFromFrontMatter(pullRequest: PullsGetResponseData, file: PullRequestFilePayload): Promise<string[]> {
-        this.core.info('>> getChangedFileContent()');
+        this.core.debug('>> getChangedFileContent()');
 
         let results : string[] = [];
         const fileContents : string = await this.getChangedFileContent(pullRequest, file);
-        this.core.info('file contents: ' + fileContents);
+        // this.core.info('file contents: ' + fileContents);
 
         // get the frontmatter
         const frontmatter : FrontMatterResult<any> = fm(fileContents);
-        this.core.info('frontmatter: ' + JSON.stringify(frontmatter));
+        // this.core.info('frontmatter: ' + JSON.stringify(frontmatter));
 
         if (frontmatter && frontmatter.attributes) {
-            this.core.info('has attributes');
+            // this.core.debug('has attributes');
             // get the owner attribute
             if (frontmatter.attributes.owner) {
-                this.core.info('attributes.owner: ' + JSON.stringify(frontmatter.attributes.owner));
+                // this.core.debug('attributes.owner: ' + JSON.stringify(frontmatter.attributes.owner));
                 const reviewerList : string[] = String(frontmatter.attributes.owner).split(',');
                 // results.push(frontmatter.attributes.owner);
                 return reviewerList;
