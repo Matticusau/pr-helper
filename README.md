@@ -84,6 +84,17 @@ The method to use when merging the PRs
 
 Provide the path globs which will allow auto merge. JSON object as string, example format {"any":["docs/**"]}.
 
+### `prreviewer-authorkey`
+
+The key in the YAML front matter to define the article author(s), who will be assigned as reviewers. Defaults to `author`
+
+```yml
+---
+title: My great article
+authro: octocat
+---
+```
+
 ### `prlabel-default`
 
 The initial label to set on PRs when first created

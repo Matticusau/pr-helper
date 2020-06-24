@@ -256,25 +256,25 @@ export class PRHelper {
         }
     }
 
-    async getChangedFiles(pullRequest: PullsGetResponseData): Promise<string[]> {
-        this.core.debug('>> getChangedFiles()');
+    // async getChangedFiles(pullRequest: PullsGetResponseData): Promise<string[]> {
+    //     this.core.debug('>> getChangedFiles()');
 
-        const myToken = this.core.getInput('repo-token');
-        const octokit = this.github.getOctokit(myToken);
+    //     const myToken = this.core.getInput('repo-token');
+    //     const octokit = this.github.getOctokit(myToken);
 
-        const listFilesResponse = await octokit.pulls.listFiles({
-          owner: this.github.context.repo.owner,
-          repo: this.github.context.repo.repo,
-          pull_number: pullRequest.number
-        });
+    //     const listFilesResponse = await octokit.pulls.listFiles({
+    //       owner: this.github.context.repo.owner,
+    //       repo: this.github.context.repo.repo,
+    //       pull_number: pullRequest.number
+    //     });
       
-        const changedFiles = listFilesResponse.data.map(f => f.filename);
+    //     const changedFiles = listFilesResponse.data.map(f => f.filename);
       
-        this.core.info('found changed files:');
-        for (const file of changedFiles) {
-          this.core.info('  ' + file);
-        }
+    //     this.core.info('found changed files:');
+    //     for (const file of changedFiles) {
+    //       this.core.info('  ' + file);
+    //     }
       
-        return changedFiles;
-    }
+    //     return changedFiles;
+    // }
 }

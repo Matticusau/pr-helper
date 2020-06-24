@@ -17,6 +17,10 @@ inputs:
   enable-prlabel-automation:
     description: 'Set to true to enable the PR label automation'
     required: true
+  enable-prreviewer-frontmatter:
+    description: 'Set to true to enable reviewers to be set from owner in YAML front matter'
+    required: false
+    default: "false"
   enable-welcomemessage:
     description: 'Set to true to automatically send a welcome message to new contributors'
     required: true
@@ -39,6 +43,10 @@ inputs:
   permerge-allowpaths:
     description: 'Provide the path globs which will allow auto merge. JSON object as string, example format {"any":["docs/**"]}.'
     default: ''
+    required: false
+  prreviewer-authorkey:
+    description: 'The key in the YAML front matter to define the article author(s), who will be assigned as reviewers'
+    default: 'author'
     required: false
   prlabel-default:
     description: 'The initial label to set on PRs when first created'
