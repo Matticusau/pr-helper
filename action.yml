@@ -17,6 +17,10 @@ inputs:
   enable-prlabel-automation:
     description: 'Set to true to enable the PR label automation'
     required: true
+  enable-prreviewer-frontmatter:
+    description: 'Set to true to enable reviewers to be set from owner in YAML front matter'
+    required: false
+    default: "false"
   enable-welcomemessage:
     description: 'Set to true to automatically send a welcome message to new contributors'
     required: true

@@ -6,7 +6,7 @@
 // When         Who         What
 // ------------------------------------------------------------------------------------------
 //
-import { CoreModule, GitHubModule,Context, PullRequestPayload } from '../types';
+import { CoreModule, GitHubModule,Context, PullRequestPayload, PullRequestFilePayload } from '../types';
 import { IssueLabels, GlobHelper } from './index';
 import { PullsGetResponseData, OctokitResponse, PullsListFilesResponseData } from '@octokit/types/dist-types'
 import * as yaml from 'js-yaml';
@@ -59,7 +59,7 @@ export class PRFileHelper {
         return changedFiles;
     }
 
-    async getChangedFileContent(pullRequest: PullsGetResponseData, file: PullsListFilesResponseData): Promise<string> {
+    async getChangedFileContent(pullRequest: PullsGetResponseData, file: PullRequestFilePayload): Promise<string> {
         this.core.debug('>> getChangedFileContent()');
 
         const myToken = this.core.getInput('repo-token');
@@ -67,7 +67,7 @@ export class PRFileHelper {
 
         const fileContentsResponse = await octokit.repos.getContent({
             ...this.github.context.repo
-            , path: file[0].filename
+            , path: file.filename
         });
         
         if (fileContentsResponse && fileContentsResponse.data) {
@@ -77,7 +77,7 @@ export class PRFileHelper {
         return '';
     }
 
-    async getReviewerListFromFrontMatter(pullRequest: PullsGetResponseData, file: PullsListFilesResponseData): Promise<string[]> {
+    async getReviewerListFromFrontMatter(pullRequest: PullsGetResponseData, file: PullRequestFilePayload): Promise<string[]> {
         this.core.debug('>> getChangedFileContent()');
 
         let results : string[] = [];
@@ -90,7 +90,9 @@ export class PRFileHelper {
             // get the owner attribute
             if (frontmatter.attributes.owner) {
                 this.core.info('attributes.owner: ' + JSON.stringify(frontmatter.attributes.owner));
-                results.push(frontmatter.attributes.owner);
+                const reviewerList : string[] = String(frontmatter.attributes.owner).split(',');
+                // results.push(frontmatter.attributes.owner);
+                return reviewerList;
             }
         }
         
