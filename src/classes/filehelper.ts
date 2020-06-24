@@ -8,7 +8,7 @@
 //
 import { CoreModule, GitHubModule,Context, PullRequestPayload, PullRequestFilePayload } from '../types';
 import { IssueLabels, GlobHelper } from './index';
-import { PullsGetResponseData, OctokitResponse, PullsListFilesResponseData } from '@octokit/types/dist-types'
+import { PullsGetResponseData, OctokitResponse, PullsListFilesResponseData, ReposGetContentResponseData } from '@octokit/types/dist-types'
 import * as yaml from 'js-yaml';
 import fm, { FrontMatterResult } from 'front-matter/index';
 
@@ -73,7 +73,7 @@ export class PRFileHelper {
         this.core.info('fileContentsResponse: ' + JSON.stringify(fileContentsResponse));
         
         if (fileContentsResponse && fileContentsResponse.data) {
-            return fileContentsResponse.data.content;
+            return String(fileContentsResponse.data);
         }
         
         return '';
