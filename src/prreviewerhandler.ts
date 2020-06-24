@@ -14,8 +14,9 @@ export default async function prWelcomeHandler(core: CoreModule, github: GitHubM
 
   try {
     // only on new PR
-    if (github.context.eventName === 'pull_request' 
-        && github.context.payload.action === 'opened') {
+    // if (github.context.eventName === 'pull_request' 
+    //     && github.context.payload.action === 'opened') {
+    if (github.context.eventName === 'pull_request') {
 
       const prhelper = new PRHelper(core, github);
       const filehelper = new PRFileHelper(core, github);
