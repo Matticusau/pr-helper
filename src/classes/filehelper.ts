@@ -70,6 +70,7 @@ export class PRFileHelper {
             , path: file.filename
             , mediaType: {format: 'application/vnd.github.v3.raw'}
         });
+        this.core.info('fileContentsResponse: ' + JSON.stringify(fileContentsResponse));
         
         if (fileContentsResponse && fileContentsResponse.data) {
             return fileContentsResponse.data.content;
