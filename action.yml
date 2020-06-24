@@ -44,6 +44,10 @@ inputs:
     description: 'Provide the path globs which will allow auto merge. JSON object as string, example format {"any":["docs/**"]}.'
     default: ''
     required: false
+  prreviewer-authorkey:
+    description: 'The key in the YAML front matter to define the article author(s), who will be assigned as reviewers'
+    default: 'author'
+    required: false
   prlabel-default:
     description: 'The initial label to set on PRs when first created'
     default: 'pr-onhold'

@@ -94,9 +94,9 @@ export class PRFileHelper {
         if (frontmatter && frontmatter.attributes) {
             // this.core.debug('has attributes');
             // get the owner attribute
-            if (frontmatter.attributes.owner) {
-                // this.core.debug('attributes.owner: ' + JSON.stringify(frontmatter.attributes.owner));
-                const reviewerList : string[] = String(frontmatter.attributes.owner).split(',');
+            this.core.debug('attributes.owner: ' + JSON.stringify(frontmatter.attributes[this.core.getInput('prreviewer-authorkey')]));
+            if (frontmatter.attributes[this.core.getInput('prreviewer-authorkey')]) {
+                const reviewerList : string[] = String(frontmatter.attributes[this.core.getInput('prreviewer-authorkey')]).split(',');
                 // results.push(frontmatter.attributes.owner);
                 return reviewerList;
             }
