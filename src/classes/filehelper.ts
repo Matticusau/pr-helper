@@ -77,24 +77,27 @@ export class PRFileHelper {
         return '';
     }
 
-    async getReviewerListFromFrontMatter(pullRequest: PullsGetResponseData, file: PullsListFilesResponseData): Promise<string> {
+    async getReviewerListFromFrontMatter(pullRequest: PullsGetResponseData, file: PullsListFilesResponseData): Promise<string[]> {
         this.core.debug('>> getChangedFileContent()');
 
+        let results : string[] = [];
         const fileContents : string = await this.getChangedFileContent(pullRequest, file);
 
         // get the frontmatter
         const frontmatter : FrontMatterResult<any> = fm(fileContents);
         if (frontmatter && frontmatter.attributes) {
+            this.core.info('has attributes');
             // get the owner attribute
             if (frontmatter.attributes.owner) {
                 this.core.info('attributes.owner: ' + JSON.stringify(frontmatter.attributes.owner));
+                results.push(frontmatter.attributes.owner);
             }
         }
         
         // const myToken = this.core.getInput('repo-token');
         // const octokit = this.github.getOctokit(myToken);
 
-        return '';
+        return results;
     }
 
 }
