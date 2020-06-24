@@ -58,7 +58,7 @@ export default async function prReviewHandler(core: CoreModule, github: GitHubMo
           // && github.context.payload.action === 'opened'
           && reviewerList.length > 0) {
           // core.info('reviewerList: ' + JSON.stringify(reviewerList));
-          await octokit.pulls.createReviewRequest({
+          await octokit.pulls.requestReviewers({
             ...github.context.repo,
             pull_number: prnumber,
             reviewers: reviewerList
