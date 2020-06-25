@@ -12,6 +12,11 @@ import { CoreModule, GitHubModule,Context, PullRequestPayload } from '../types';
 import { IssueLabels } from './index';
 import { PullsGetResponseData } from '@octokit/types/dist-types'
 
+interface DeleteBranchConfig {
+    deny?: string[];
+    allow?: string[];
+}
+
 export class PRHelper {
     
     // properties
@@ -249,6 +254,70 @@ export class PRHelper {
             }
 
             return (checks.completed >= (checks.total - 1)) && (checks.success >= (checks.total - 1));
+
+        } catch (error) {
+            this.core.setFailed(error.message);
+            throw error;
+        }
+    }
+
+    private matchConfigFromActionInputYaml(json: string) : DeleteBranchConfig {
+        try{
+          // convert json to string array
+          this.core.info('json: ' + json);
+          //let pattern : string[] = JSON.parse(json);
+          let pattern : DeleteBranchConfig = JSON.parse(json);
+          this.core.info('json pattern: ' + JSON.stringify(pattern));
+  
+          return pattern;
+        } catch (error) {
+          this.core.setFailed(error.message);
+          throw error;
+        }
+    }
+
+    async isBranchDeleteReady(pullRequest: PullsGetResponseData) : Promise<boolean> {
+        try {
+            this.core.debug('>> isBranchDeleteReady()');
+
+            if (this.core.getInput('permerge-deletebranch') === 'true') {
+                if (pullRequest.head.repo.id === pullRequest.base.repo.id) {
+                    // not the default branch
+                    if (pullRequest.base.repo.default_branch !== pullRequest.head.ref) {
+                        const deleteBranchConfig : DeleteBranchConfig = this.matchConfigFromActionInputYaml(this.core.getInput('permerge-deletebranch-config'));
+                        // check denies
+                        if (deleteBranchConfig && deleteBranchConfig.deny && deleteBranchConfig.deny.length > 0) {
+                            for(let iBranch = 0; iBranch < deleteBranchConfig.deny.length; iBranch++) {
+                                this.core.info(deleteBranchConfig.deny[iBranch]);
+                                if (pullRequest.head.ref === deleteBranchConfig.deny[iBranch]) {
+                                    // we found a match so fail
+                                    return false;
+                                }
+                            }
+                        }
+                        // check allows
+                        if (deleteBranchConfig && deleteBranchConfig.allow && deleteBranchConfig.allow.length > 0) {
+                            for(let iBranch = 0; iBranch < deleteBranchConfig.allow.length; iBranch++) {
+                                this.core.info(deleteBranchConfig.allow[iBranch]);
+                                if (pullRequest.head.ref !== deleteBranchConfig.allow[iBranch]) {
+                                    // we found a non-match so fail
+                                    return false;
+                                }
+                            }
+                        }
+
+                        // check passed
+                        return true;
+                    } else {
+                        this.core.info('Base and Head are same branch, delete branch skipped.')
+                    }
+                } else {
+                    this.core.info('Base and Head not on same repo, delete branch skipped.')
+                }
+            }
+            
+            // failed test
+            return false;
 
         } catch (error) {
             this.core.setFailed(error.message);

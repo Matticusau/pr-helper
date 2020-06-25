@@ -80,6 +80,10 @@ The method to use when merging the PRs
 
 If true then the branch will be deleted on merge
 
+### `prmerge-deletebranch-config`
+
+Provide the branch patterns which will allow/deny auto delete on merge. JSON object as string, example format {"deny":["dev"]}.
+
 ### `permerge-allowpaths`
 
 Provide the path globs which will allow auto merge. JSON object as string, example format {"any":["docs/**"]}.

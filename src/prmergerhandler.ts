@@ -59,18 +59,16 @@ export default async function prMergeHandler(core: CoreModule, github: GitHubMod
                 merge_method: prhelper.mergemethod,
               });
               core.info('mergeResult.status: ' + mergeResult.status);
-
+              
               // delete the branch if required
               if (core.getInput('permerge-deletebranch') === 'true') {
-                if (pullRequest.head.repo.id === pullRequest.base.repo.id) {
+                if (await prhelper.isBranchDeleteReady(pullRequest)) {
                   core.info('Deleting pullRequest.head.ref: ' + pullRequest.head.ref);
                   await octokit.git.deleteRef({
                     ...github.context.repo,
                     ref: pullRequest.head.ref
                   });
                   core.info('Deleted');
-                } else {
-                  core.info('Base and Head not on same repo, delete branch skipped.')
                 }
               }
             }
