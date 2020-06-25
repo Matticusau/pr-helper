@@ -5,6 +5,7 @@
 //
 // When         Who         What
 // ------------------------------------------------------------------------------------------
+// 2020-06-24   MLavery     Added PullRequestFilePayload
 //
 import github from '@actions/github';
 import core from '@actions/core';
@@ -57,3 +58,16 @@ export interface PushPayload {
     ref: string
     after: string
 }
+
+export declare type PullRequestFilePayload = {
+    sha: string;
+    filename: string;
+    status: string;
+    additions: number;
+    deletions: number;
+    changes: number;
+    blob_url: string;
+    raw_url: string;
+    contents_url: string;
+    patch: string;
+};

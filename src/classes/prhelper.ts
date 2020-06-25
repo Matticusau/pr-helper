@@ -5,17 +5,28 @@
 //
 // When         Who         What
 // ------------------------------------------------------------------------------------------
+// 2020-06-22   Mlavery     Added check for Requested Changes in review #16
+// 2020-06-24   MLavery     Improved logic by moving core and github to properties
 //
 import { CoreModule, GitHubModule,Context, PullRequestPayload } from '../types';
 import { IssueLabels } from './index';
 import { PullsGetResponseData } from '@octokit/types/dist-types'
 
+interface DeleteBranchConfig {
+    deny?: string[];
+    allow?: string[];
+}
+
 export class PRHelper {
     
-    // ToDo: properties
+    // properties
+    private core: CoreModule;
+    private github: GitHubModule;
     mergemethod?: 'merge' | 'squash' | 'rebase'
 
-    constructor() {
+    constructor(core: CoreModule, github: GitHubModule) {
+        this.core = core;
+        this.github = github;
         this.mergemethod = "merge";
     }
 
@@ -29,18 +40,18 @@ export class PRHelper {
         }
     }
 
-    getPrNumber(context: Context): number | undefined {
+    getPrNumber(): number | undefined {
         var prNumber : number | undefined = undefined;
         // event will determine how we get this from the payload
-        switch (context.eventName) {
+        switch (this.github.context.eventName) {
             case 'issue_comment':
-                const issue = context.payload.issue;
+                const issue = this.github.context.payload.issue;
                 if (issue) {
                     prNumber = issue.number;
                 }
                 break;
             default:
-                const pullRequest = context.payload.pull_request;
+                const pullRequest = this.github.context.payload.pull_request;
                 if (pullRequest) {
                     prNumber = pullRequest.number;
                 } 
@@ -48,12 +59,12 @@ export class PRHelper {
         return prNumber;
     }
 
-    getCommentNumber(context: Context): number | undefined {
+    getCommentNumber(): number | undefined {
         var commentNumber : number | undefined = undefined;
         // event will determine how we get this from the payload
-        switch (context.eventName) {
+        switch (this.github.context.eventName) {
             case 'issue_comment':
-                const comment = context.payload.comment;
+                const comment = this.github.context.payload.comment;
                 if (comment) {
                     commentNumber = comment.id;
                 }
@@ -64,13 +75,13 @@ export class PRHelper {
         return commentNumber;
     }
 
-    isMergeReadyByState(core: CoreModule, pullRequest: PullsGetResponseData) : boolean {
+    isMergeReadyByState(pullRequest: PullsGetResponseData) : boolean {
         try {
-            core.debug('>> isMergeReadyByState()');
-            core.info('PR State: ' + pullRequest.state);
-            core.info('PR merged: ' + pullRequest.merged);
-            core.info('PR mergeable: ' + pullRequest.mergeable);
-            core.info('PR mergeable_state: ' + pullRequest.mergeable_state);
+            this.core.debug('>> isMergeReadyByState()');
+            this.core.info('PR State: ' + pullRequest.state);
+            this.core.info('PR merged: ' + pullRequest.merged);
+            this.core.info('PR mergeable: ' + pullRequest.mergeable);
+            this.core.info('PR mergeable_state: ' + pullRequest.mergeable_state);
 
             if (pullRequest.state !== 'closed') {
                 if (pullRequest.merged === false && pullRequest.mergeable === true) {
@@ -81,7 +92,7 @@ export class PRHelper {
 
                     // if blocked check for pending reviewers (this doesn't factor in that the review is approved or not)
                     if (pullRequest.mergeable_state === 'blocked' && (pullRequest.requested_reviewers.length === 0 && pullRequest.requested_teams.length === 0)) {
-                        core.info(`PR #${pullRequest.number} is blocked but has no outstanding reviews`);
+                        this.core.info(`PR #${pullRequest.number} is blocked but has no outstanding reviews`);
                         return true;
                     }
 
@@ -94,26 +105,26 @@ export class PRHelper {
             return false;
 
         } catch (error) {
-            core.setFailed(error.message);
+            this.core.setFailed(error.message);
             throw error;
         }
     }
 
-    async isMergeReadyByLabel(core: CoreModule, github: GitHubModule, pullRequest: PullsGetResponseData) : Promise<boolean> {
+    async isMergeReadyByLabel(pullRequest: PullsGetResponseData) : Promise<boolean> {
         try {
-            core.debug('>> isMergeReadyByLabel()');
+            this.core.debug('>> isMergeReadyByLabel()');
 
-            const myToken = core.getInput('repo-token');
-            const octokit = github.getOctokit(myToken);
+            const myToken = this.core.getInput('repo-token');
+            const octokit = this.github.getOctokit(myToken);
 
             // check the labels
             const { data: issueLabelsData } = await octokit.issues.listLabelsOnIssue({
-                ...github.context.repo,
+                ...this.github.context.repo,
                 issue_number: pullRequest.number,
             });
             var issueLabels = new IssueLabels(issueLabelsData);
-            const readyToMergeLabel = (issueLabels.hasLabelFromList([core.getInput('prlabel-ready')]));
-            const NotReadyToMergeLabel = (issueLabels.hasLabelFromList([core.getInput('prlabel-reviewrequired'), core.getInput('prlabel-onhold')]));
+            const readyToMergeLabel = (issueLabels.hasLabelFromList([this.core.getInput('prlabel-ready')]));
+            const NotReadyToMergeLabel = (issueLabels.hasLabelFromList([this.core.getInput('prlabel-reviewrequired'), this.core.getInput('prlabel-onhold')]));
             
             console.log('readyToMergeLabel:' + readyToMergeLabel);
             console.log('NotReadyToMergeLabel:' + NotReadyToMergeLabel);
@@ -124,28 +135,29 @@ export class PRHelper {
             return false;
 
         } catch (error) {
-            core.setFailed(error.message);
+            this.core.setFailed(error.message);
             throw error;
         }
     }
 
-    async isMergeReadyByReview(core: CoreModule, github: GitHubModule, pullRequest: PullsGetResponseData) : Promise<boolean> {
+    async isMergeReadyByReview(pullRequest: PullsGetResponseData) : Promise<boolean> {
         try {
-            core.debug('>> isMergeReadyByReview()');
+            this.core.debug('>> isMergeReadyByReview()');
 
-            const myToken = core.getInput('repo-token');
-            const octokit = github.getOctokit(myToken);
-            const requiredReviewCount : Number = Number.parseInt(core.getInput('prmerge-requirereviewcount'));
+            const myToken = this.core.getInput('repo-token');
+            const octokit = this.github.getOctokit(myToken);
+            const requiredReviewCount : Number = Number.parseInt(this.core.getInput('prmerge-requirereviewcount'));
             
             // check the labels
             const { data: reviewsData } = await octokit.pulls.listReviews({
-                ...github.context.repo,
+                ...this.github.context.repo,
                 pull_number: pullRequest.number,
             });
 
             let reviews = {
                 total: reviewsData.length,
-                approved: 0
+                approved: 0,
+                request_changes: 0
             };
             let result : boolean = false;
 
@@ -158,43 +170,46 @@ export class PRHelper {
             for(var iReview = 0; iReview < reviewsData.length; iReview++){
                 if (reviewsData[iReview].state === 'APPROVED') {
                     reviews.approved++;
-                }
+                } else if (reviewsData[iReview].state === 'REQUEST_CHANGES') {
+                    reviews.request_changes++;
+                } 
             }
             // check for reviews, and make sure no non-approved reviews
-            if (reviews.total > 0 && (reviews.total === reviews.approved) && ((requiredReviewCount >= 0 && reviews.approved >= requiredReviewCount) || requiredReviewCount < 0)) {
-                core.info(`PR #${pullRequest.number} is mergable based on reviews`);
+            // if (reviews.total > 0 && (reviews.total === reviews.approved) && ((requiredReviewCount >= 0 && reviews.approved >= requiredReviewCount) || requiredReviewCount < 0)) {
+            if (reviews.total > 0 && (reviews.total === reviews.approved) && (requiredReviewCount >= 0 && reviews.approved >= requiredReviewCount)) {
+                this.core.info(`PR #${pullRequest.number} is mergable based on reviews`);
                 result = true;
             }
 
-            // check for minimum number of required reviews
-            if (requiredReviewCount >= 0 && reviews.approved >= requiredReviewCount) {
-                core.info(`PR #${pullRequest.number} is mergable based on minimum required reviews`);
+            // check for minimum number of required reviews (no requested changes)
+            if (requiredReviewCount >= 0 && reviews.approved >= requiredReviewCount && reviews.request_changes === 0) {
+                this.core.info(`PR #${pullRequest.number} is mergable based on minimum required reviews`);
                 result = true;
             }
             
             return result;
 
         } catch (error) {
-            core.setFailed(error.message);
+            this.core.setFailed(error.message);
             throw error;
         }
     }
 
-    async isMergeReadyByChecks(core: CoreModule, github: GitHubModule, pullRequest: PullsGetResponseData) : Promise<boolean> {
+    async isMergeReadyByChecks(pullRequest: PullsGetResponseData) : Promise<boolean> {
         try {
-            core.debug('>> isMergeReadyByChecks()');
+            this.core.debug('>> isMergeReadyByChecks()');
             
-            const requireallchecks : boolean = (core.getInput('prmerge-requireallchecks') === 'true');
+            const requireallchecks : boolean = (this.core.getInput('prmerge-requireallchecks') === 'true');
 
             // not configured
             if (requireallchecks !== true) {
-                core.info('require checks is not enabled');
+                this.core.info('require checks is not enabled');
                 return true;
             }
             
             // need all checks
-            if (requireallchecks && await this.allChecksSucceeded(core, github, pullRequest)) {
-                core.info('required checks have all succeeded');
+            if (requireallchecks && await this.allChecksSucceeded(pullRequest)) {
+                this.core.info('required checks have all succeeded');
                 return true;
             }
 
@@ -202,21 +217,21 @@ export class PRHelper {
             return false;
 
         } catch (error) {
-            core.setFailed(error.message);
+            this.core.setFailed(error.message);
             throw error;
         }
     }
 
-    async allChecksSucceeded(core: CoreModule, github: GitHubModule, pullRequest: PullsGetResponseData) : Promise<boolean> {
+    async allChecksSucceeded(pullRequest: PullsGetResponseData) : Promise<boolean> {
         try {
-            core.debug('>> allChecksPassed()');
+            this.core.debug('>> allChecksPassed()');
 
-            const myToken = core.getInput('repo-token');
-            const octokit = github.getOctokit(myToken);
+            const myToken = this.core.getInput('repo-token');
+            const octokit = this.github.getOctokit(myToken);
 
             // check the labels
             const { data: checksData } = await octokit.checks.listForRef({
-                ...github.context.repo,
+                ...this.github.context.repo,
                 ref: pullRequest.merge_commit_sha
             });
 
@@ -241,8 +256,94 @@ export class PRHelper {
             return (checks.completed >= (checks.total - 1)) && (checks.success >= (checks.total - 1));
 
         } catch (error) {
-            core.setFailed(error.message);
+            this.core.setFailed(error.message);
             throw error;
         }
     }
+
+    private matchConfigFromActionInputYaml(json: string) : DeleteBranchConfig {
+        try{
+          // convert json to string array
+          this.core.debug('json: ' + json);
+          //let pattern : string[] = JSON.parse(json);
+          let pattern : DeleteBranchConfig = JSON.parse(json);
+          this.core.debug('json pattern: ' + JSON.stringify(pattern));
+  
+          return pattern;
+        } catch (error) {
+          this.core.setFailed(error.message);
+          throw error;
+        }
+    }
+
+    async isBranchDeleteReady(pullRequest: PullsGetResponseData) : Promise<boolean> {
+        try {
+            this.core.debug('>> isBranchDeleteReady()');
+
+            if (this.core.getInput('prmerge-deletebranch') === 'true') {
+                if (pullRequest.head.repo.id === pullRequest.base.repo.id) {
+                    // not the default branch
+                    if (pullRequest.base.repo.default_branch !== pullRequest.head.ref) {
+                        const deleteBranchConfig : DeleteBranchConfig = this.matchConfigFromActionInputYaml(this.core.getInput('prmerge-deletebranch-config'));
+                        // check denies
+                        if (deleteBranchConfig && deleteBranchConfig.deny && deleteBranchConfig.deny.length > 0) {
+                            for(let iBranch = 0; iBranch < deleteBranchConfig.deny.length; iBranch++) {
+                                // this.core.info(deleteBranchConfig.deny[iBranch]);
+                                if (pullRequest.head.ref === deleteBranchConfig.deny[iBranch]) {
+                                    // we found a match so fail
+                                    return false;
+                                }
+                            }
+                        }
+                        // check allows
+                        if (deleteBranchConfig && deleteBranchConfig.allow && deleteBranchConfig.allow.length > 0) {
+                            for(let iBranch = 0; iBranch < deleteBranchConfig.allow.length; iBranch++) {
+                                this.core.info(deleteBranchConfig.allow[iBranch]);
+                                if (pullRequest.head.ref !== deleteBranchConfig.allow[iBranch]) {
+                                    // we found a non-match so fail
+                                    return false;
+                                }
+                            }
+                        }
+
+                        // check passed
+                        return true;
+                    } else {
+                        this.core.info('Base and Head are same branch, delete branch skipped.')
+                    }
+                } else {
+                    this.core.info('Base and Head not on same repo, delete branch skipped.')
+                }
+            }
+            
+            // failed test
+            return false;
+
+        } catch (error) {
+            this.core.setFailed(error.message);
+            throw error;
+        }
+    }
+
+    // async getChangedFiles(pullRequest: PullsGetResponseData): Promise<string[]> {
+    //     this.core.debug('>> getChangedFiles()');
+
+    //     const myToken = this.core.getInput('repo-token');
+    //     const octokit = this.github.getOctokit(myToken);
+
+    //     const listFilesResponse = await octokit.pulls.listFiles({
+    //       owner: this.github.context.repo.owner,
+    //       repo: this.github.context.repo.repo,
+    //       pull_number: pullRequest.number
+    //     });
+      
+    //     const changedFiles = listFilesResponse.data.map(f => f.filename);
+      
+    //     this.core.info('found changed files:');
+    //     for (const file of changedFiles) {
+    //       this.core.info('  ' + file);
+    //     }
+      
+    //     return changedFiles;
+    // }
 }

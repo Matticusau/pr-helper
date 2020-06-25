@@ -34,10 +34,6 @@ The Action can respond to the following [workflow events](https://help.github.co
 
 Set the following inputs in the workflow file
 
-### `configuration-path`
-
-**Required** The path to the configuration file e.g. `.github/prhelper.yml`.
-
 ### `repo-token`
 
 **Required** The token to use for github authentication. Recommend using `${{ secrets.GITHUB_TOKEN }}`. If additional access is required use a PAT/Secret and set it as a secret. More info see [here](https://help.github.com/en/actions/configuring-and-managing-workflows/authenticating-with-the-github_token).
@@ -47,6 +43,10 @@ Set the following inputs in the workflow file
 ### `enable-prmerge-automation`
 
 **Required** Set to true to enable the auto merge capabilities
+
+### `enable-prmerge-pathcheck`
+
+Set to true to require a path check for auto merge capabilities
 
 ### `enable-prcomment-automation`
 
@@ -72,9 +72,32 @@ Set to true if all checks need to complete before auto merging
 
 Should match the setting in your GitHub repo. Set it to -1 to disable.
 
-### `permerge-method`
+### `prmerge-method`
 
 The method to use when merging the PRs
+
+### `prmerge-deletebranch`
+
+If true then the branch will be deleted on merge
+
+### `prmerge-deletebranch-config`
+
+Provide the branch patterns which will allow/deny auto delete on merge. JSON object as string, example format {"deny":["dev"]}.
+
+### `prmerge-allowpaths`
+
+Provide the path globs which will allow auto merge. JSON object as string, example format {"any":["docs/**"]}.
+
+### `prreviewer-authorkey`
+
+The key in the YAML front matter to define the article author(s), who will be assigned as reviewers. Defaults to `author`
+
+```yml
+---
+title: My great article
+authro: octocat
+---
+```
 
 ### `prlabel-default`
 
@@ -155,13 +178,23 @@ with:
   welcome-message: "Thanks for opening an issue! Make sure you've followed CONTRIBUTING.md."
   prmerge-requireallchecks: true
   prmerge-requirereviewcount: 1
-  permerge-method: 'merge'
+  prmerge-method: 'merge'
   prlabel-default: 'pr-onhold'
   prlabel-ready: 'pr-ready'
   prlabel-onhold: 'pr-onhold'
   prlabel-reviewrequired: 'review-required'
   prlabel-automerge: 'auto-merge'
 ```
+
+## Suggested Label Colors
+
+Labels will be created during the assignment if they do not exist. The following are suggested labels and colors:
+
+| Label | Color |
+| pr-onhold | #b60205 (red) |
+| review-required | #fbca04 (yellow) |
+| auto-merge | #0e8a16 (green) |
+| pr-ready | #0e8a16 (green) |
 
 ## Troubleshooting
 

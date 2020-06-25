@@ -5,6 +5,7 @@
 //
 // When         Who         What
 // ------------------------------------------------------------------------------------------
+// 2020-06-24   MLavery     Improved logic by moving core and github to properties
 //
 import { CoreModule, GitHubModule, Context } from '../types'
 import * as yaml from 'js-yaml';
@@ -34,29 +35,25 @@ interface Config {
 export class ConfigHelper {
     
     // properties
+    private core: CoreModule;
+    private github: GitHubModule;
     configuration : Config;
     
-    constructor(core: CoreModule,
-        github: GitHubModule) {
-            // initialize the config
-            this.configuration = {
-                welcomemessage : { check: false, message: '' },
-                prcomments : { check: false, prreadylabel: '', onholdlabel: ''},
-                prmerge : { check: false, labels : { initiallabel: '', automergelabel: '', readytomergelabel: '', reviewrequiredlabel: ''}, mergemethod: 'merge' },
-            };
-
+    constructor(core: CoreModule, github: GitHubModule) {
+        this.core = core;
+        this.github = github;
+        // initialize the config
+        this.configuration = {
+            welcomemessage : { check: false, message: '' },
+            prcomments : { check: false, prreadylabel: '', onholdlabel: ''},
+            prmerge : { check: false, labels : { initiallabel: '', automergelabel: '', readytomergelabel: '', reviewrequiredlabel: ''}, mergemethod: 'merge' },
+        };
     }
 
-    async loadConfig(
-        core: CoreModule,
-        github: GitHubModule
-    ) //: Promise<Map<string, Config>> {
+    async loadConfig() //: Promise<Map<string, Config>> {
     {
-        const configurationContent: string = await this.fetchContent(
-            core,
-            github
-        );
-      
+        const configurationContent: string = await this.fetchContent();
+        
         if (configurationContent.length > 0) {
             // loads (hopefully) a `{[label:string]: string | StringOrMatchConfig[]}`, but is `any`:
             const configObject: any = yaml.safeLoad(configurationContent);
@@ -88,24 +85,21 @@ export class ConfigHelper {
         }
     }
 
-    private async fetchContent(
-        core: CoreModule,
-        github: GitHubModule
-    ): Promise<string> {
+    private async fetchContent(): Promise<string> {
 
-        const configurationPath = core.getInput('configuration-path');
-        const myToken = core.getInput('repo-token');
-        const octokit = github.getOctokit(myToken);
-        core.debug('configurationPath: ' + configurationPath);
+        const configurationPath = this.core.getInput('configuration-path');
+        const myToken = this.core.getInput('repo-token');
+        const octokit = this.github.getOctokit(myToken);
+        this.core.debug('configurationPath: ' + configurationPath);
 
         // make sure we have a config path
         if (configurationPath.length === 0) {
-            core.info('No configuration file found. Defaults will be applied.');
+            this.core.info('No configuration file found. Defaults will be applied.');
             return '';
         } else {
             const response: any = await octokit.repos.getContent({
-                ...github.context.repo,
-                ref: github.context.sha,
+                ...this.github.context.repo,
+                ref: this.github.context.sha,
                 path: configurationPath,
             });
             // core.debug('fetchContent response: ' + JSON.stringify(response));

@@ -11,6 +11,7 @@
 import prWelcomeHandler from './prwelcomehandler';
 import prCommentHandler from './prcommenthandler';
 import prLabelHandler from './prlabelhandler';
+import prReviewHandler from './prreviewerhandler';
 import prMergeHandler from './prmergerhandler';
 import prMergeOnScheduleHandler from './prmergeronschedulehandler';
 import { CoreModule, GitHubModule } from './types';
@@ -30,6 +31,7 @@ export default async function main(core: CoreModule, github: GitHubModule) {
         case 'pull_request':
             // await prHandler(client, github.context, config)
             await prWelcomeHandler(core, github);
+            await prReviewHandler(core, github);
             await prLabelHandler(core, github);
             await prMergeHandler(core, github);
             break;

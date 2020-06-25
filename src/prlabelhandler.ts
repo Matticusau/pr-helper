@@ -9,7 +9,7 @@
 //
 
 import { CoreModule, GitHubModule, Context } from './types' // , Client
-import { PRHelper, MessageHelper, IssueLabels } from './classes';
+import { PRHelper, PRFileHelper, MessageHelper, IssueLabels, GlobHelper } from './classes'; // MatchConfig
 
 export default async function prLabelHandler(core: CoreModule, github: GitHubModule) {
 
@@ -20,8 +20,9 @@ export default async function prLabelHandler(core: CoreModule, github: GitHubMod
     // make sure we should proceed
     if (core.getInput('enable-prlabel-automation') === 'true') {
 
-      const prhelper = new PRHelper;
-      const prnumber = prhelper.getPrNumber(github.context);
+      const prhelper = new PRHelper(core, github);
+      const filehelper = new PRFileHelper(core, github);
+      const prnumber = prhelper.getPrNumber();
       if (!prnumber) {
         core.info('Could not get pull request number from context, exiting');
         return;
@@ -60,12 +61,33 @@ export default async function prLabelHandler(core: CoreModule, github: GitHubMod
 
         // make sure it hasn't merged
         if (pullRequest.merged === false) {
-          if (pullRequest.mergeable === true && (pullRequest.mergeable_state === 'clean' || pullRequest.mergeable_state === 'unstable')) {
-            issueLabels.addLabel(core.getInput('prlabel-automerge'));
+          if (pullRequest.mergeable === true && (pullRequest.mergeable_state === 'clean' || pullRequest.mergeable_state === 'unstable' || pullRequest.mergeable_state === 'blocked')) {
+            let autoMergeQualify : boolean = false;
+            // should we check the glob paths
+            if (core.getInput('enable-prmerge-automation') === 'true' && core.getInput('enable-prmerge-pathcheck') === 'true') {
+              // get the changed files
+              const changedFiles: string[] = await filehelper.getChangedFileNames(pullRequest);
+
+              // check the glob paths
+              let globHelper : GlobHelper = new GlobHelper(core, github);
+              // let matchConfig : MatchConfig = globHelper.matchConfigFromActionInputYaml(core.getInput('prmerge-allowpaths'));
+              if (globHelper.checkGlobs(changedFiles, globHelper.matchConfigFromActionInputYaml(core.getInput('prmerge-allowpaths')))) {
+                autoMergeQualify = true;
+              }
+            }
+            
+            if (autoMergeQualify) {
+              issueLabels.addLabel(core.getInput('prlabel-automerge'));
+            } else {
+              issueLabels.removeLabel(core.getInput('prlabel-automerge'));
+            }
+          } else {
+            // remove the auto merge label
+            issueLabels.removeLabel(core.getInput('prlabel-automerge'));
           }
           
           // check if we need reviews
-          if (await prhelper.isMergeReadyByReview(core, github, pullRequest)) {
+          if (await prhelper.isMergeReadyByReview(pullRequest)) {
             issueLabels.removeLabel(core.getInput('prlabel-reviewrequired'));
           } else {
             issueLabels.addLabel(core.getInput('prlabel-reviewrequired'));

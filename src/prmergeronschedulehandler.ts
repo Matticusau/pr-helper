@@ -18,12 +18,12 @@ export default async function prMergeOnScheduleHandler(core: CoreModule, github:
     // make sure we should proceed
     if (core.getInput('enable-prmerge-automation') === 'true') {
       
-      const prhelper = new PRHelper;
+      const prhelper = new PRHelper(core, github);
       const myToken = core.getInput('repo-token');
       const octokit = github.getOctokit(myToken);
 
       // make sure we have the correct merge method from config
-      prhelper.setMergeMethod(core.getInput('permerge-method'));
+      prhelper.setMergeMethod(core.getInput('prmerge-method'));
 
       // list the prs
       const { data: pullRequestList } = await octokit.pulls.list({
@@ -40,10 +40,10 @@ export default async function prMergeOnScheduleHandler(core: CoreModule, github:
         core.info('\n\npullRequest: ' + JSON.stringify(pullRequest));
 
         // merge the PR if criteria is met
-        if (prhelper.isMergeReadyByState(core, pullRequest)) {
-          if (await prhelper.isMergeReadyByLabel(core, github, pullRequest)) {
-            if (await prhelper.isMergeReadyByChecks(core, github, pullRequest)){
-              if (await prhelper.isMergeReadyByReview(core, github, pullRequest)){
+        if (prhelper.isMergeReadyByState(pullRequest)) {
+          if (await prhelper.isMergeReadyByLabel(pullRequest)) {
+            if (await prhelper.isMergeReadyByChecks(pullRequest)){
+              if (await prhelper.isMergeReadyByReview(pullRequest)){
                 core.info(`Merged PR #${pullRequest.number}`);
                 await octokit.pulls.merge({
                     owner: github.context.repo.owner,
