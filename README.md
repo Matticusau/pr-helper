@@ -6,20 +6,22 @@
 
 # pr-helper
 
-A [GitHub Action](https://github.com/features/actions) to help with managing PRs through automation of common tasks. Currently supports the following functionality:
+Most powerfull [GitHub Action](https://github.com/features/actions) to streamline management of PRs through automation of common tasks. Currently supports the following functionality:
 
 - Welcome message on new PR
 - Automatic Label assignment and removal
   - Based on Review criteria (required/provided)
   - If PRs qualify for automatic merge (___in preview___)
-- Welcome message on new PR
 - PR Comment automation
   - Welcome message with instructions on new PRs
   - Assign a label indicating if the PR is ready or on hold based on key words
+- Pull Request Reviewers
+  - Automatically assign reviewers from YAML front matter
 - Pull Request Merge
   - Automatically merge when criteria is met
   - Respect requested reviews (_i.e. CODEOWNERS_)
   - Respect a minimal review count (_for now configured by input param, repo setting on roadmap_)
+  - Delete branch (head ref) on merge
 
 ## Events
 

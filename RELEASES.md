@@ -1,5 +1,19 @@
 # Releases
 
+## v1.0.0
+
+Releasing the following functionality:
+
+- Delete branch on merge #14
+- Docs on Auto merge filters #15
+- Auto Merge Filter feature #18
+- Assign reviewers from YAML front matter (e.g. jekyll) #19
+
+Bug fixes:
+
+- Auto merge should not proceed if approved reviews greater than minimum required but requested changes exist #16
+- Multiple comment automation welcome messages #17
+
 ## v0.1
 
 Initial release providing the following functionality:
