@@ -1,8 +1,8 @@
 # Changelog
 
-## [Unreleased](https://github.com/matticusau/pr-helper/tree/HEAD)
+## [v1.0.0](https://github.com/matticusau/pr-helper/tree/v1.0.0) (2020-06-25)
 
-[Full Changelog](https://github.com/matticusau/pr-helper/compare/v0.1...HEAD)
+[Full Changelog](https://github.com/matticusau/pr-helper/compare/v0.1...v1.0.0)
 
 **Implemented enhancements:**
 
@@ -15,6 +15,8 @@
 
 **Merged pull requests:**
 
+- Releasing v1 [\#21](https://github.com/Matticusau/pr-helper/pull/21) ([Matticusau](https://github.com/Matticusau))
+- Update Changelog [\#13](https://github.com/Matticusau/pr-helper/pull/13) ([Matticusau](https://github.com/Matticusau))
 - Fix labels on Feature Request template [\#12](https://github.com/Matticusau/pr-helper/pull/12) ([Matticusau](https://github.com/Matticusau))
 
 ## [v0.1](https://github.com/matticusau/pr-helper/tree/v0.1) (2020-06-20)
