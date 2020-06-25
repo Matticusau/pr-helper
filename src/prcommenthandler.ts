@@ -48,7 +48,6 @@ export default async function prCommentHandler(core: CoreModule, github: GitHubM
             // core.debug('octokit: ' + JSON.stringify(octokit));
 
             // check if this is a new comment
-            core.info('github.context.payload.action: ' + github.context.payload.action);
             if (github.context.payload.action === 'created') {
 
                 // get the PR

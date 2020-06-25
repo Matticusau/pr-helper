@@ -264,10 +264,10 @@ export class PRHelper {
     private matchConfigFromActionInputYaml(json: string) : DeleteBranchConfig {
         try{
           // convert json to string array
-          this.core.info('json: ' + json);
+          this.core.debug('json: ' + json);
           //let pattern : string[] = JSON.parse(json);
           let pattern : DeleteBranchConfig = JSON.parse(json);
-          this.core.info('json pattern: ' + JSON.stringify(pattern));
+          this.core.debug('json pattern: ' + JSON.stringify(pattern));
   
           return pattern;
         } catch (error) {
@@ -288,7 +288,7 @@ export class PRHelper {
                         // check denies
                         if (deleteBranchConfig && deleteBranchConfig.deny && deleteBranchConfig.deny.length > 0) {
                             for(let iBranch = 0; iBranch < deleteBranchConfig.deny.length; iBranch++) {
-                                this.core.info(deleteBranchConfig.deny[iBranch]);
+                                // this.core.info(deleteBranchConfig.deny[iBranch]);
                                 if (pullRequest.head.ref === deleteBranchConfig.deny[iBranch]) {
                                     // we found a match so fail
                                     return false;

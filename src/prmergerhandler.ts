@@ -58,17 +58,16 @@ export default async function prMergeHandler(core: CoreModule, github: GitHubMod
                 sha : pullRequest.head.sha, // safe guard no other pushes since starting action
                 merge_method: prhelper.mergemethod,
               });
-              core.info('mergeResult..data.message: ' + mergeResult.data.message);
+              core.info('Merge Result: ' + mergeResult.data.message);
               
               // delete the branch if required
-              if (core.getInput('prmerge-deletebranch') === 'true') {
+              if (core.getInput('prmerge-deletebranch') === 'true' && mergeResult.data.message === 'Pull Request successfully merged') {
                 if (await prhelper.isBranchDeleteReady(pullRequest)) {
                   core.info('Deleting pullRequest.head.ref: ' + pullRequest.head.ref);
                   await octokit.git.deleteRef({
                     ...github.context.repo,
                     ref: 'heads/' + pullRequest.head.ref
                   });
-                  core.info('Deleted');
                 }
               }
             }
