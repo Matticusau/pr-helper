@@ -4,6 +4,16 @@
 
 Releasing the following functionality:
 
+- Documentation improvements
+
+Breaking Changes:
+
+- The configuration parameter `enable-prmerge-allowpaths` was renamed to `prmerge-allowpaths`
+
+## v1.0.0
+
+Releasing the following functionality:
+
 - Delete branch on merge #14
 - Docs on Auto merge filters #15
 - Auto Merge Filter feature #18
