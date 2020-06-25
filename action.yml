@@ -40,6 +40,10 @@ inputs:
     description: 'The method to use when merging the PRs'
     default: 'merge'
     required: false
+  permerge-deletebranch:
+    description: 'If true then the branch will be deleted on merge'
+    default: 'false'
+    required: false
   permerge-allowpaths:
     description: 'Provide the path globs which will allow auto merge. JSON object as string, example format {"any":["docs/**"]}.'
     default: ''

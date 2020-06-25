@@ -34,10 +34,6 @@ The Action can respond to the following [workflow events](https://help.github.co
 
 Set the following inputs in the workflow file
 
-### `configuration-path`
-
-**Required** The path to the configuration file e.g. `.github/prhelper.yml`.
-
 ### `repo-token`
 
 **Required** The token to use for github authentication. Recommend using `${{ secrets.GITHUB_TOKEN }}`. If additional access is required use a PAT/Secret and set it as a secret. More info see [here](https://help.github.com/en/actions/configuring-and-managing-workflows/authenticating-with-the-github_token).
@@ -79,6 +75,10 @@ Should match the setting in your GitHub repo. Set it to -1 to disable.
 ### `permerge-method`
 
 The method to use when merging the PRs
+
+### `permerge-deletebranch`
+
+If true then the branch will be deleted on merge
 
 ### `permerge-allowpaths`
 

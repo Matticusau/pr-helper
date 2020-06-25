@@ -6,6 +6,7 @@
 // When         Who         What
 // ------------------------------------------------------------------------------------------
 // 2020-06-20   MLavery     Config moved back to workflow file #3
+// 2020-06-25   MLavery     Added delete branch functionality #14
 //
 
 import { CoreModule, GitHubModule, Context } from './types' // , Client
@@ -50,13 +51,28 @@ export default async function prMergeHandler(core: CoreModule, github: GitHubMod
           if (await prhelper.isMergeReadyByChecks(pullRequest)){
             if (await prhelper.isMergeReadyByReview(pullRequest)){
               core.info(`Merged PR #${pullRequest.number}`);
-              await octokit.pulls.merge({
+              const mergeResult = await octokit.pulls.merge({
                 owner: github.context.repo.owner,
                 repo: github.context.repo.repo,
                 pull_number: pullRequest.number,
                 sha : pullRequest.head.sha, // safe guard no other pushes since starting action
                 merge_method: prhelper.mergemethod,
               });
+              core.info('mergeResult.status: ' + mergeResult.status);
+
+              // delete the branch if required
+              if (core.getInput('permerge-deletebranch') === 'true') {
+                if (pullRequest.head.repo.id === pullRequest.base.repo.id) {
+                  core.info('Deleting pullRequest.head.ref: ' + pullRequest.head.ref);
+                  await octokit.git.deleteRef({
+                    ...github.context.repo,
+                    ref: pullRequest.head.ref
+                  });
+                  core.info('Deleted');
+                } else {
+                  core.info('Base and Head not on same repo, delete branch skipped.')
+                }
+              }
             }
           } else {
             core.info(`PR #${prnumber} not all checks have completed, merge not possible at this time`);

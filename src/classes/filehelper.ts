@@ -60,53 +60,70 @@ export class PRFileHelper {
     }
 
     async getChangedFileContent(pullRequest: PullsGetResponseData, file: PullRequestFilePayload): Promise<string> {
-        this.core.debug('>> getChangedFileContent()');
-
-        const myToken = this.core.getInput('repo-token');
-        const octokit = this.github.getOctokit(myToken);
-
-        const fileContentsResponse = await octokit.repos.getContent({
-            ...this.github.context.repo
-            , path: file.filename
-            , mediaType: {format: 'raw'}
-            , ref: pullRequest.base.ref
-        });
-        // this.core.info('fileContentsResponse: ' + JSON.stringify(fileContentsResponse));
         
-        if (fileContentsResponse && fileContentsResponse.data) {
-            return String(fileContentsResponse.data);
+        try {
+        
+            this.core.debug('>> getChangedFileContent()');
+
+            this.core.info('file.status: ' + file.status);
+
+            const myToken = this.core.getInput('repo-token');
+            const octokit = this.github.getOctokit(myToken);
+
+            const fileContentsResponse = await octokit.repos.getContent({
+                ...this.github.context.repo
+                , path: file.filename
+                , mediaType: {format: 'raw'}
+                , ref: pullRequest.base.ref
+            });
+            // this.core.info('fileContentsResponse: ' + JSON.stringify(fileContentsResponse));
+            
+            if (fileContentsResponse && fileContentsResponse.data) {
+                return String(fileContentsResponse.data);
+            }
+            
+            return '';
+        } catch (error) {
+            this.core.info('error: ' + JSON.stringify(error));
+            this.core.setFailed(error.message);
+            throw error;
         }
-        
-        return '';
     }
 
     async getReviewerListFromFrontMatter(pullRequest: PullsGetResponseData, file: PullRequestFilePayload): Promise<string[]> {
         this.core.debug('>> getChangedFileContent()');
-
-        let results : string[] = [];
-        const fileContents : string = await this.getChangedFileContent(pullRequest, file);
-        // this.core.info('file contents: ' + fileContents);
-
-        // get the frontmatter
-        const frontmatter : FrontMatterResult<any> = fm(fileContents);
-        // this.core.info('frontmatter: ' + JSON.stringify(frontmatter));
-
-        if (frontmatter && frontmatter.attributes) {
-            // this.core.debug('has attributes');
-            // get the owner attribute
-            this.core.debug('prreviewer-authorkey: ' + this.core.getInput('prreviewer-authorkey'));
-            this.core.debug('attributes.owner: ' + JSON.stringify(frontmatter.attributes[this.core.getInput('prreviewer-authorkey')]));
-            if (frontmatter.attributes[this.core.getInput('prreviewer-authorkey')]) {
-                const reviewerList : string[] = String(frontmatter.attributes[this.core.getInput('prreviewer-authorkey')]).split(',');
-                // results.push(frontmatter.attributes.owner);
-                return reviewerList;
-            }
-        }
         
-        // const myToken = this.core.getInput('repo-token');
-        // const octokit = this.github.getOctokit(myToken);
+        let results : string[] = [];
 
-        return results;
+        try {
+            const fileContents : string = await this.getChangedFileContent(pullRequest, file);
+            // this.core.info('file contents: ' + fileContents);
+
+            // get the frontmatter
+            const frontmatter : FrontMatterResult<any> = fm(fileContents);
+            // this.core.info('frontmatter: ' + JSON.stringify(frontmatter));
+
+            if (frontmatter && frontmatter.attributes) {
+                // this.core.debug('has attributes');
+                // get the owner attribute
+                this.core.debug('prreviewer-authorkey: ' + this.core.getInput('prreviewer-authorkey'));
+                this.core.debug('attributes.owner: ' + JSON.stringify(frontmatter.attributes[this.core.getInput('prreviewer-authorkey')]));
+                if (frontmatter.attributes[this.core.getInput('prreviewer-authorkey')]) {
+                    const reviewerList : string[] = String(frontmatter.attributes[this.core.getInput('prreviewer-authorkey')]).split(',');
+                    // results.push(frontmatter.attributes.owner);
+                    return reviewerList;
+                }
+            }
+            
+            // const myToken = this.core.getInput('repo-token');
+            // const octokit = this.github.getOctokit(myToken);
+
+            return results;
+
+        } catch (error) {
+            this.core.setFailed(error.message);
+            throw error;
+        }
     }
 
 }
