@@ -66,7 +66,7 @@ export default async function prMergeHandler(core: CoreModule, github: GitHubMod
                   core.info('Deleting pullRequest.head.ref: ' + pullRequest.head.ref);
                   await octokit.git.deleteRef({
                     ...github.context.repo,
-                    ref: pullRequest.head.ref
+                    ref: 'heads/' + pullRequest.head.ref
                   });
                   core.info('Deleted');
                 }
