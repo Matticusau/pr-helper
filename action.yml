@@ -1,5 +1,5 @@
 name: 'PR Helper'
-description: 'Pull Request automation - auto labels, comment & review automation, auto merge on criteria'
+description: 'Powerful Pull Request automation - auto labels, comment & review automation, rule based auto merge'
 author: 'MatticusAu'
 inputs:
   repo-token:
@@ -8,9 +8,6 @@ inputs:
   enable-prmerge-automation:
     description: 'Set to true to enable the auto merge capabilities'
     required: true
-  enable-prmerge-pathcheck:
-    description: 'Set to true to require a path check for auto merge capabilities'
-    required: false
   enable-prcomment-automation:
     description: 'Set to true to enable the PR/Issue comment automation'
     required: true
@@ -20,7 +17,7 @@ inputs:
   enable-prreviewer-frontmatter:
     description: 'Set to true to enable reviewers to be set from owner in YAML front matter'
     required: false
-    default: "false"
+    default: 'false'
   enable-welcomemessage:
     description: 'Set to true to automatically send a welcome message to new contributors'
     required: true
@@ -30,7 +27,7 @@ inputs:
     required: false
   prmerge-requireallchecks:
     description: 'Set to true if all checks need to complete before auto merging'
-    default: false
+    default: 'false'
     required: false
   prmerge-requirereviewcount:
     description: 'Should match the setting in your GitHub repo. Set it to -1 to disable.'
@@ -40,16 +37,19 @@ inputs:
     description: 'The method to use when merging the PRs'
     default: 'merge'
     required: false
+  prmerge-pathcheck:
+    description: 'Set to true to require a path check for auto merge capabilities'
+    required: false
+  prmerge-allowpaths:
+    description: 'Provide the path globs which will allow auto merge. JSON object as string, example format {"any":["docs/**"]}.'
+    default: ''
+    required: false
   prmerge-deletebranch:
     description: 'If true then the branch will be deleted on merge'
     default: 'false'
     required: false
   prmerge-deletebranch-config:
     description: 'Provide the branch patterns which will allow/deny auto delete on merge. JSON object as string, example format {"deny":["dev"]}.'
-    default: ''
-    required: false
-  prmerge-allowpaths:
-    description: 'Provide the path globs which will allow auto merge. JSON object as string, example format {"any":["docs/**"]}.'
     default: ''
     required: false
   prreviewer-authorkey:

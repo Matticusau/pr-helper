@@ -64,7 +64,7 @@ export default async function prLabelHandler(core: CoreModule, github: GitHubMod
           if (pullRequest.mergeable === true && (pullRequest.mergeable_state === 'clean' || pullRequest.mergeable_state === 'unstable' || pullRequest.mergeable_state === 'blocked')) {
             let autoMergeQualify : boolean = false;
             // should we check the glob paths
-            if (core.getInput('enable-prmerge-automation') === 'true' && core.getInput('enable-prmerge-pathcheck') === 'true') {
+            if (core.getInput('enable-prmerge-automation') === 'true' && core.getInput('prmerge-pathcheck') === 'true') {
               // get the changed files
               const changedFiles: string[] = await filehelper.getChangedFileNames(pullRequest);
 
