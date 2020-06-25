@@ -58,6 +58,10 @@ Set to true to require a path check for auto merge capabilities
 
 **Required** Set to true to enable the PR label automation
 
+### `enable-prreviewer-frontmatter`
+
+Set to true to enable reviewers to be set from owner in YAML front matter.
+
 ### `enable-welcomemessage`
 
 **Required** Set to true to automatically send a welcome message to new contributors
