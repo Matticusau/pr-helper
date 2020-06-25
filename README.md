@@ -72,11 +72,11 @@ Set to true if all checks need to complete before auto merging
 
 Should match the setting in your GitHub repo. Set it to -1 to disable.
 
-### `permerge-method`
+### `prmerge-method`
 
 The method to use when merging the PRs
 
-### `permerge-deletebranch`
+### `prmerge-deletebranch`
 
 If true then the branch will be deleted on merge
 
@@ -84,7 +84,7 @@ If true then the branch will be deleted on merge
 
 Provide the branch patterns which will allow/deny auto delete on merge. JSON object as string, example format {"deny":["dev"]}.
 
-### `permerge-allowpaths`
+### `prmerge-allowpaths`
 
 Provide the path globs which will allow auto merge. JSON object as string, example format {"any":["docs/**"]}.
 
@@ -178,7 +178,7 @@ with:
   welcome-message: "Thanks for opening an issue! Make sure you've followed CONTRIBUTING.md."
   prmerge-requireallchecks: true
   prmerge-requirereviewcount: 1
-  permerge-method: 'merge'
+  prmerge-method: 'merge'
   prlabel-default: 'pr-onhold'
   prlabel-ready: 'pr-ready'
   prlabel-onhold: 'pr-onhold'

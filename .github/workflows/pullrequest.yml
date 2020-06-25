@@ -26,7 +26,7 @@ jobs:
         welcome-message: "Thanks for opening an issue! Make sure you've followed CONTRIBUTING.md."
         prmerge-requireallchecks: true
         prmerge-requirereviewcount: 1
-        permerge-method: 'merge'
+        prmerge-method: 'merge'
         prlabel-default: 'pr-onhold'
         prlabel-ready: 'pr-ready'
         prlabel-onhold: 'pr-onhold'

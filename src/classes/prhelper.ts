@@ -280,11 +280,11 @@ export class PRHelper {
         try {
             this.core.debug('>> isBranchDeleteReady()');
 
-            if (this.core.getInput('permerge-deletebranch') === 'true') {
+            if (this.core.getInput('prmerge-deletebranch') === 'true') {
                 if (pullRequest.head.repo.id === pullRequest.base.repo.id) {
                     // not the default branch
                     if (pullRequest.base.repo.default_branch !== pullRequest.head.ref) {
-                        const deleteBranchConfig : DeleteBranchConfig = this.matchConfigFromActionInputYaml(this.core.getInput('permerge-deletebranch-config'));
+                        const deleteBranchConfig : DeleteBranchConfig = this.matchConfigFromActionInputYaml(this.core.getInput('prmerge-deletebranch-config'));
                         // check denies
                         if (deleteBranchConfig && deleteBranchConfig.deny && deleteBranchConfig.deny.length > 0) {
                             for(let iBranch = 0; iBranch < deleteBranchConfig.deny.length; iBranch++) {

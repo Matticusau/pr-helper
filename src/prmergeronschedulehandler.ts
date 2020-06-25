@@ -23,7 +23,7 @@ export default async function prMergeOnScheduleHandler(core: CoreModule, github:
       const octokit = github.getOctokit(myToken);
 
       // make sure we have the correct merge method from config
-      prhelper.setMergeMethod(core.getInput('permerge-method'));
+      prhelper.setMergeMethod(core.getInput('prmerge-method'));
 
       // list the prs
       const { data: pullRequestList } = await octokit.pulls.list({

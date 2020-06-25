@@ -36,11 +36,11 @@ inputs:
     description: 'Should match the setting in your GitHub repo. Set it to -1 to disable.'
     default: '-1'
     required: false
-  permerge-method:
+  prmerge-method:
     description: 'The method to use when merging the PRs'
     default: 'merge'
     required: false
-  permerge-deletebranch:
+  prmerge-deletebranch:
     description: 'If true then the branch will be deleted on merge'
     default: 'false'
     required: false
@@ -48,7 +48,7 @@ inputs:
     description: 'Provide the branch patterns which will allow/deny auto delete on merge. JSON object as string, example format {"deny":["dev"]}.'
     default: ''
     required: false
-  permerge-allowpaths:
+  prmerge-allowpaths:
     description: 'Provide the path globs which will allow auto merge. JSON object as string, example format {"any":["docs/**"]}.'
     default: ''
     required: false

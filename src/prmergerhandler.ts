@@ -43,7 +43,7 @@ export default async function prMergeHandler(core: CoreModule, github: GitHubMod
       });
 
       // make sure we have the correct merge method from config
-      prhelper.setMergeMethod(core.getInput('permerge-method'));
+      prhelper.setMergeMethod(core.getInput('prmerge-method'));
 
       // merge the PR if criteria is met
       if (prhelper.isMergeReadyByState(pullRequest)) {
@@ -58,10 +58,10 @@ export default async function prMergeHandler(core: CoreModule, github: GitHubMod
                 sha : pullRequest.head.sha, // safe guard no other pushes since starting action
                 merge_method: prhelper.mergemethod,
               });
-              core.info('mergeResult.status: ' + mergeResult.status);
+              core.info('mergeResult..data.message: ' + mergeResult.data.message);
               
               // delete the branch if required
-              if (core.getInput('permerge-deletebranch') === 'true') {
+              if (core.getInput('prmerge-deletebranch') === 'true') {
                 if (await prhelper.isBranchDeleteReady(pullRequest)) {
                   core.info('Deleting pullRequest.head.ref: ' + pullRequest.head.ref);
                   await octokit.git.deleteRef({

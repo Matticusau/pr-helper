@@ -70,8 +70,8 @@ export default async function prLabelHandler(core: CoreModule, github: GitHubMod
 
               // check the glob paths
               let globHelper : GlobHelper = new GlobHelper(core, github);
-              // let matchConfig : MatchConfig = globHelper.matchConfigFromActionInputYaml(core.getInput('permerge-allowpaths'));
-              if (globHelper.checkGlobs(changedFiles, globHelper.matchConfigFromActionInputYaml(core.getInput('permerge-allowpaths')))) {
+              // let matchConfig : MatchConfig = globHelper.matchConfigFromActionInputYaml(core.getInput('prmerge-allowpaths'));
+              if (globHelper.checkGlobs(changedFiles, globHelper.matchConfigFromActionInputYaml(core.getInput('prmerge-allowpaths')))) {
                 autoMergeQualify = true;
               }
             }
