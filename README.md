@@ -6,12 +6,14 @@
 
 # pr-helper
 
-Most powerfull [GitHub Action](https://github.com/features/actions) to streamline management of PRs through automation of common tasks. Currently supports the following functionality:
+Extremely powerful [GitHub Action](https://github.com/features/actions) to streamline management of PRs through automation of common tasks. Very versatile with plenty of configuration settings to adapt to many different implementations.
+
+Currently supports the following functionality:
 
 - Welcome message on new PR
 - Automatic Label assignment and removal
   - Based on Review criteria (required/provided)
-  - If PRs qualify for automatic merge (___in preview___)
+  - If PRs qualify for automatic merge
 - PR Comment automation
   - Welcome message with instructions on new PRs
   - Assign a label indicating if the PR is ready or on hold based on key words
@@ -46,10 +48,6 @@ Set the following inputs in the workflow file
 
 **Required** Set to true to enable the auto merge capabilities
 
-### `enable-prmerge-pathcheck`
-
-Set to true to require a path check for auto merge capabilities
-
 ### `enable-prcomment-automation`
 
 **Required** Set to true to enable the PR/Issue comment automation
@@ -70,6 +68,8 @@ Set to true to enable reviewers to be set from owner in YAML front matter.
 
 The custom welcome message to send to new contributors
 
+Requires `enable-welcomemessage: true`
+
 ### `prmerge-requireallchecks`
 
 Set to true if all checks need to complete before auto merging
@@ -82,17 +82,29 @@ Should match the setting in your GitHub repo. Set it to -1 to disable.
 
 The method to use when merging the PRs
 
+### `prmerge-pathcheck`
+
+Set to true to require a path check for auto merge capabilities
+
+Requires `enable-prmerge-automation: true`
+
+### `prmerge-allowpaths`
+
+Provide the path globs which will allow auto merge. JSON object as string, example format {"any":["docs/**"]}.
+
+Requires `prmerge-pathcheck: true`
+
 ### `prmerge-deletebranch`
 
 If true then the branch will be deleted on merge
+
+Requires `enable-prmerge-automation: true`
 
 ### `prmerge-deletebranch-config`
 
 Provide the branch patterns which will allow/deny auto delete on merge. JSON object as string, example format {"deny":["dev"]}.
 
-### `prmerge-allowpaths`
-
-Provide the path globs which will allow auto merge. JSON object as string, example format {"any":["docs/**"]}.
+Requires `prmerge-deletebranch: true`
 
 ### `prreviewer-authorkey`
 
@@ -104,6 +116,8 @@ title: My great article
 authro: octocat
 ---
 ```
+
+Requires `enable-prreviewer-frontmatter: true`
 
 ### `prlabel-default`
 
@@ -180,6 +194,7 @@ with:
   enable-prmerge-automation: true
   enable-prcomment-automation: true
   enable-prlabel-automation: true
+  enable-prreviewer-frontmatter: false
   enable-welcomemessage: true
   welcome-message: "Thanks for opening an issue! Make sure you've followed CONTRIBUTING.md."
   prmerge-requireallchecks: true
