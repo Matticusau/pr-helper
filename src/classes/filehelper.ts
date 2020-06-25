@@ -66,25 +66,28 @@ export class PRFileHelper {
             this.core.debug('>> getChangedFileContent()');
 
             this.core.info('file.status: ' + file.status);
+            // skip new files = 404 error
+            if (file.status !== 'added') {
 
-            const myToken = this.core.getInput('repo-token');
-            const octokit = this.github.getOctokit(myToken);
+                const myToken = this.core.getInput('repo-token');
+                const octokit = this.github.getOctokit(myToken);
 
-            const fileContentsResponse = await octokit.repos.getContent({
-                ...this.github.context.repo
-                , path: file.filename
-                , mediaType: {format: 'raw'}
-                , ref: pullRequest.base.ref
-            });
-            // this.core.info('fileContentsResponse: ' + JSON.stringify(fileContentsResponse));
-            
-            if (fileContentsResponse && fileContentsResponse.data) {
-                return String(fileContentsResponse.data);
+                const fileContentsResponse = await octokit.repos.getContent({
+                    ...this.github.context.repo
+                    , path: file.filename
+                    , mediaType: {format: 'raw'}
+                    , ref: pullRequest.base.ref
+                });
+                // this.core.info('fileContentsResponse: ' + JSON.stringify(fileContentsResponse));
+                
+                if (fileContentsResponse && fileContentsResponse.data) {
+                    return String(fileContentsResponse.data);
+                }
             }
             
             return '';
         } catch (error) {
-            this.core.info('error: ' + JSON.stringify(error));
+            this.core.debug('error: ' + JSON.stringify(error));
             this.core.setFailed(error.message);
             throw error;
         }
