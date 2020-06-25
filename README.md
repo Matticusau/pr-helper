@@ -158,7 +158,7 @@ jobs:
     steps:
     - name: Run PR Helper
       id: runprhelper
-      uses: Matticusau/pr-helper@v1
+      uses: Matticusau/pr-helper@v1.1.0
       with:
         repo-token: ${{ secrets.GITHUB_TOKEN }}
 ```
