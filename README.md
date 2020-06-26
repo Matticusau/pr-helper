@@ -212,7 +212,7 @@ with:
 Labels will be created during the assignment if they do not exist. The following are suggested labels and colors:
 
 | Label | Description | Color |
-| --- | --- |
+| --- | --- | --- |
 | pr-onhold | Pull Request is not yet ready to process automatically or review | #b60205 (red) |
 | review-required | Pull Request or Issue requires review | #fbca04 (yellow) |
 | auto-merge | Pull Request qualifies for automatic merge | #0e8a16 (green) |
