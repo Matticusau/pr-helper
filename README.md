@@ -4,7 +4,7 @@
 [![Issues](https://img.shields.io/github/issues/Matticusau/pr-helper.svg?style=flat-square)](https://github.com/heinrichreimer/action-github-changelog-generator/issues)
 [![Pull requests](https://img.shields.io/github/issues-pr/Matticusau/pr-helper.svg?style=flat-square)](https://github.com/heinrichreimer/action-github-changelog-generator/pulls)
 
-![logo](./docs/images/logo.png)
+# pr-helper
 
 Extremely powerful [GitHub Action](https://github.com/features/actions) to streamline management of PRs through automation of common tasks. Very versatile with plenty of configuration settings to adapt to many different implementations.
 
