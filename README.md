@@ -212,6 +212,7 @@ with:
 Labels will be created during the assignment if they do not exist. The following are suggested labels and colors:
 
 | Label | Color |
+| --- | --- |
 | pr-onhold | #b60205 (red) |
 | review-required | #fbca04 (yellow) |
 | auto-merge | #0e8a16 (green) |
