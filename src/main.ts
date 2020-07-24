@@ -33,9 +33,7 @@ export default async function main(core: CoreModule, github: GitHubModule) {
             // await prHandler(client, github.context, config)
             await prWelcomeHandler(core, github);
             await prReviewHandler(core, github);
-            core.info('calling prLabelHandlerOnDemand');
             await prLabelHandlerOnDemand(core, github);
-            core.info('called prLabelHandlerOnDemand');
             await prMergeHandler(core, github);
             break;
         // case 'status':
