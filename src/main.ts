@@ -6,11 +6,12 @@
 // When         Who         What
 // ------------------------------------------------------------------------------------------
 // 2020-06-20   Mlavery     Config moved back to workflow file #3
+// 2020-07-24   MLavery     Extended label hanlding for both onDemand and onSchedule [issue #24]
 //
 
 import prWelcomeHandler from './prwelcomehandler';
 import prCommentHandler from './prcommenthandler';
-import prLabelHandler from './prlabelhandler';
+import { prLabelHandlerOnDemand, prLabelHandlerOnSchedule } from './prlabelhandler';
 import prReviewHandler from './prreviewerhandler';
 import prMergeHandler from './prmergerhandler';
 import prMergeOnScheduleHandler from './prmergeronschedulehandler';
@@ -32,14 +33,14 @@ export default async function main(core: CoreModule, github: GitHubModule) {
             // await prHandler(client, github.context, config)
             await prWelcomeHandler(core, github);
             await prReviewHandler(core, github);
-            await prLabelHandler(core, github);
+            await prLabelHandlerOnDemand(core, github);
             await prMergeHandler(core, github);
             break;
         // case 'status':
         //     await statusHandler(client, github.context, config)
         //     break
         case 'pull_request_review':
-            await prLabelHandler(core, github);
+            await prLabelHandlerOnDemand(core, github);
             await prMergeHandler(core, github);
             break;
         case 'issue_comment':
@@ -47,6 +48,7 @@ export default async function main(core: CoreModule, github: GitHubModule) {
             await prMergeHandler(core, github);
             break;
         case 'schedule':
+            await prLabelHandlerOnSchedule(core, github);
             await prMergeOnScheduleHandler(core, github);
             break;
         // case 'push':
