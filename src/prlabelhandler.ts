@@ -15,7 +15,7 @@ import { PRHelper, PRFileHelper, MessageHelper, IssueLabels, GlobHelper } from '
 // export async function prLabelHandler(core: CoreModule, github: GitHubModule, prnumber: number) {
 async function processLabels(core: CoreModule, github: GitHubModule, prnumber: number) {
   try {
-    
+    core.info(`processLabels`);
     const messageHelper = new MessageHelper;
 
     // make sure we should proceed
@@ -126,11 +126,11 @@ async function processLabels(core: CoreModule, github: GitHubModule, prnumber: n
 
 export async function prLabelHandlerOnDemand(core: CoreModule, github: GitHubModule) {
 
+  core.info(`prLabelHandlerOnDemand`);
+
   try {
     // make sure we should proceed
     if (core.getInput('enable-prlabel-automation') === 'true') {
-
-      core.info(`prLabelHandlerOnDemand`);
 
       const prhelper = new PRHelper(core, github);
       // const filehelper = new PRFileHelper(core, github);
@@ -154,12 +154,12 @@ export async function prLabelHandlerOnDemand(core: CoreModule, github: GitHubMod
 
 export async function prLabelHandlerOnSchedule(core: CoreModule, github: GitHubModule) {
 
+  core.info(`prLabelHandlerOnSchedule`);
+
   try {
     
     // make sure we should proceed
     if (core.getInput('enable-prlabel-automation') === 'true') {
-
-      core.info(`prLabelHandlerOnSchedule`);
 
       const prhelper = new PRHelper(core, github);
       const filehelper = new PRFileHelper(core, github);
