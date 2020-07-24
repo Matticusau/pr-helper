@@ -130,6 +130,8 @@ export async function prLabelHandlerOnDemand(core: CoreModule, github: GitHubMod
     // make sure we should proceed
     if (core.getInput('enable-prlabel-automation') === 'true') {
 
+      core.info(`prLabelHandlerOnDemand`);
+
       const prhelper = new PRHelper(core, github);
       // const filehelper = new PRFileHelper(core, github);
       const prnumber = prhelper.getPrNumber();
@@ -156,6 +158,8 @@ export async function prLabelHandlerOnSchedule(core: CoreModule, github: GitHubM
     
     // make sure we should proceed
     if (core.getInput('enable-prlabel-automation') === 'true') {
+
+      core.info(`prLabelHandlerOnSchedule`);
 
       const prhelper = new PRHelper(core, github);
       const filehelper = new PRFileHelper(core, github);
