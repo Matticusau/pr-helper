@@ -158,7 +158,7 @@ jobs:
     steps:
     - name: Run PR Helper
       id: runprhelper
-      uses: Matticusau/pr-helper@v1
+      uses: Matticusau/pr-helper@v1.1.0
       with:
         repo-token: ${{ secrets.GITHUB_TOKEN }}
 ```
@@ -211,11 +211,12 @@ with:
 
 Labels will be created during the assignment if they do not exist. The following are suggested labels and colors:
 
-| Label | Color |
-| pr-onhold | #b60205 (red) |
-| review-required | #fbca04 (yellow) |
-| auto-merge | #0e8a16 (green) |
-| pr-ready | #0e8a16 (green) |
+| Label | Description | Color |
+| --- | --- | --- |
+| pr-onhold | Pull Request is not yet ready to process automatically or review | #b60205 (red) |
+| review-required | Pull Request or Issue requires review | #fbca04 (yellow) |
+| auto-merge | Pull Request qualifies for automatic merge | #0e8a16 (green) |
+| pr-ready | Pull Request is ready to process or review | #0e8a16 (green) |
 
 ## Troubleshooting
 

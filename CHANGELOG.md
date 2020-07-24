@@ -1,5 +1,23 @@
 # Changelog
 
+## [v1.1.0](https://github.com/matticusau/pr-helper/tree/v1.1.0) (2020-06-25)
+
+[Full Changelog](https://github.com/matticusau/pr-helper/compare/v1.0.0...v1.1.0)
+
+**Implemented enhancements:**
+
+- Assign reviewers from YAML front matter \(e.g. jekyll\) [\#19](https://github.com/Matticusau/pr-helper/issues/19)
+- Delete branch on merge [\#14](https://github.com/Matticusau/pr-helper/issues/14)
+
+**Fixed bugs:**
+
+- Multiple comment automation welcome messages [\#17](https://github.com/Matticusau/pr-helper/issues/17)
+- Auto merge should not proceed if approved reviews greater than minimum required but requested changes exist [\#16](https://github.com/Matticusau/pr-helper/issues/16)
+
+**Merged pull requests:**
+
+- Updated docs and config param rename [\#22](https://github.com/Matticusau/pr-helper/pull/22) ([Matticusau](https://github.com/Matticusau))
+
 ## [v1.0.0](https://github.com/matticusau/pr-helper/tree/v1.0.0) (2020-06-25)
 
 [Full Changelog](https://github.com/matticusau/pr-helper/compare/v0.1...v1.0.0)
