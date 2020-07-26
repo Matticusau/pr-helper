@@ -103,7 +103,7 @@ export class PRFileHelper {
                     , mediaType: {format: 'raw'}
                     , ref: pullRequest.base.ref
                 });
-                // this.core.info('fileContentsResponse: ' + JSON.stringify(fileContentsResponse));
+                this.core.info('fileContentsResponse: ' + JSON.stringify(fileContentsResponse));
                 
                 if (fileContentsResponse && fileContentsResponse.data) {
                     return String(fileContentsResponse.data);
