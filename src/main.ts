@@ -48,6 +48,7 @@ export default async function main(core: CoreModule, github: GitHubModule) {
             break;
         case 'schedule':
             await prLabelHandler_OnSchedule(core, github);
+            await prReviewHandler_OnDemand(core, github);
             await prMergeHandler_OnSchedule(core, github);
             break;
         // case 'push':
@@ -56,5 +57,3 @@ export default async function main(core: CoreModule, github: GitHubModule) {
         //     break
     }
 }
-
-// run

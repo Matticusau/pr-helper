@@ -15,79 +15,70 @@ async function prReviewHandler(core: CoreModule, github: GitHubModule, prnumber:
 
   try {
 
-    // TODO: Come back to this and review for onschedule
+    // const prhelper = new PRHelper(core, github);
+    const filehelper = new PRFileHelper(core, github);
+    const messagehelper = new MessageHelper;
+    //const prnumber = prhelper.getPrNumber();
+    if (!prnumber) {
+      core.info('No pull request number parameter supplied, exiting');
+      return;
+    }
+    core.info(`Processing PR ${prnumber}!`);
 
-    // only on new PR
-    // if (github.context.eventName === 'pull_request' 
-    //     && github.context.payload.action === 'opened') {
-    if (github.context.eventName === 'pull_request') {
+    const myToken = core.getInput('repo-token');
+    const octokit = github.getOctokit(myToken);
 
-      // const prhelper = new PRHelper(core, github);
-      const filehelper = new PRFileHelper(core, github);
-      const messagehelper = new MessageHelper;
-      //const prnumber = prhelper.getPrNumber();
-      if (!prnumber) {
-        core.info('No pull request number parameter supplied, exiting');
-        return;
-      }
-      core.info(`Processing PR ${prnumber}!`);
-  
-      const myToken = core.getInput('repo-token');
-      const octokit = github.getOctokit(myToken);
+    // check if the reviewers need to be retrieved from the YAML front matter
+    if (core.getInput('enable-prreviewer-frontmatter') === 'true') {
+      
+      const { data: pullRequest } = await octokit.pulls.get({
+        ...github.context.repo,
+        pull_number: prnumber,
+      });
 
-      // check if the reviewers need to be retrieved from the YAML front matter
-      if (core.getInput('enable-prreviewer-frontmatter') === 'true') {
-        
-        const { data: pullRequest } = await octokit.pulls.get({
-          ...github.context.repo,
-          pull_number: prnumber,
-        });
+      // make sure the PR is open
+      if (pullRequest.state !== 'closed') {
 
-        // make sure the PR is open
-        if (pullRequest.state !== 'closed') {
+        // make sure it hasn't merged
+        if (pullRequest.merged === false) {
 
-          // make sure it hasn't merged
-          if (pullRequest.merged === false) {
+          const changedFiles = await filehelper.getChangedFiles(pullRequest);
+          const reviewerList : string[] = [];
+          // core.info('changedFiles: ' + JSON.stringify(changedFiles));
 
-            const changedFiles = await filehelper.getChangedFiles(pullRequest);
-            const reviewerList : string[] = [];
-            // core.info('changedFiles: ' + JSON.stringify(changedFiles));
+          // load the Jekyll Author file if required
+          await filehelper.prepareJekyllAuthorYAMLReader();
 
-            // load the Jekyll Author file if required
-            await filehelper.prepareJekyllAuthorYAMLReader();
-
-            // process the changed files
-            if (changedFiles) {
-              for(let iFile = 0; iFile < changedFiles.data.length; iFile++) {
-                const tmpReviewerList : string[] = await filehelper.getReviewerListFromFrontMatter(pullRequest, changedFiles.data[iFile]);
-                // core.info('tmpReviewerList: ' + JSON.stringify(tmpReviewerList));
-                tmpReviewerList.forEach(element => {
-                  reviewerList.push(element.trim());
-                });
-              }
-            }
-
-            // Add the reviewers
-            //if (github.context.eventName === 'pull_request' // redundant 2020-07-26
-              // && github.context.payload.action === 'opened'
-              // && reviewerList.length > 0) {
-              // core.info('reviewerList: ' + JSON.stringify(reviewerList));
-            if (reviewerList.length > 0) {
-              await octokit.pulls.requestReviewers({
-                ...github.context.repo,
-                pull_number: prnumber,
-                reviewers: reviewerList
+          // process the changed files
+          if (changedFiles) {
+            for(let iFile = 0; iFile < changedFiles.data.length; iFile++) {
+              const tmpReviewerList : string[] = await filehelper.getReviewerListFromFrontMatter(pullRequest, changedFiles.data[iFile]);
+              // core.info('tmpReviewerList: ' + JSON.stringify(tmpReviewerList));
+              tmpReviewerList.forEach(element => {
+                reviewerList.push(element.trim());
               });
             }
-          } else {
-            core.info(`PR #${prnumber} is merged, no reviewer automation taken`);
+          }
+
+          // Add the reviewers
+          //if (github.context.eventName === 'pull_request' // redundant 2020-07-26
+            // && github.context.payload.action === 'opened'
+            // && reviewerList.length > 0) {
+            // core.info('reviewerList: ' + JSON.stringify(reviewerList));
+          if (reviewerList.length > 0) {
+            await octokit.pulls.requestReviewers({
+              ...github.context.repo,
+              pull_number: prnumber,
+              reviewers: reviewerList
+            });
           }
         } else {
-          core.info(`PR #${prnumber} is closed, no reviewer automation taken`);
+          core.info(`PR #${prnumber} is merged, no reviewer automation taken`);
         }
+      } else {
+        core.info(`PR #${prnumber} is closed, no reviewer automation taken`);
       }
-      
-    }    
+    }
   }
   catch (error) {
     core.setFailed(error.message);
