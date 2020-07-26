@@ -140,6 +140,7 @@ export class PRFileHelper {
                     // authors could be an array, most of the time it would be single element
                     const authorList : string[] = String(frontmatter.attributes[this.core.getInput('prreviewer-authorkey')]).split(',');
                     const ghuserList : string[] = [];
+                    this.core.info('authorList: ' + JSON.stringify(authorList));
                     for (let iauthor = 0; iauthor < authorList.length; iauthor++) {
                         ghuserList.push(await this.authorYAMLReader.getAuthorGitHubUser(authorList[iauthor]));
                     }

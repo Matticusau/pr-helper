@@ -83,7 +83,7 @@ export class AuthorYAMLReader {
 
         let authorgithubuser = '';
         try {
-            if (authorname.length > 0) {
+            if (undefined !== authorname && authorname.length > 0) {
                 if (undefined !== this.authorFile[authorname] && this.authorFile[authorname].length > 0) {
                     if (undefined !== this.authorFile[authorname].github && this.authorFile[authorname].github.length > 0) {
                         authorgithubuser = this.authorFile[authorname].github
