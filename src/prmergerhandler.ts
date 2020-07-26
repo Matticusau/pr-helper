@@ -93,7 +93,7 @@ async function prMergeHandler(core: CoreModule, github: GitHubModule, prnumber: 
 //
 export async function prMergeHandler_OnDemand(core: CoreModule, github: GitHubModule) {
 
-  core.info('prLabelHandlerOnDemand');
+  core.debug('>> prMergeHandler_OnDemand');
 
   try {
     // make sure we should proceed
@@ -123,7 +123,7 @@ export async function prMergeHandler_OnDemand(core: CoreModule, github: GitHubMo
 //
 export async function prMergeHandler_OnSchedule(core: CoreModule, github: GitHubModule) {
 
-  core.info('prLabelHandlerOnSchedule');
+  core.debug('>> prMergeHandler_OnSchedule');
 
   try {
     

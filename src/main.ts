@@ -12,9 +12,8 @@
 import prWelcomeHandler from './prwelcomehandler';
 import prCommentHandler from './prcommenthandler';
 import { prLabelHandler_OnDemand, prLabelHandler_OnSchedule } from './prlabelhandler';
-import prReviewHandler from './prreviewerhandler';
+import { prReviewHandler_OnDemand } from './prreviewerhandler';
 import { prMergeHandler_OnDemand, prMergeHandler_OnSchedule } from './prmergerhandler';
-// import prMergeOnScheduleHandler from './prmergeronschedulehandler';
 import { CoreModule, GitHubModule } from './types';
 // import { ConfigHelper } from './classes';
 // import prHello from './hello'
@@ -32,7 +31,7 @@ export default async function main(core: CoreModule, github: GitHubModule) {
         case 'pull_request':
             // await prHandler(client, github.context, config)
             await prWelcomeHandler(core, github);
-            await prReviewHandler(core, github);
+            await prReviewHandler_OnDemand(core, github);
             await prLabelHandler_OnDemand(core, github);
             await prMergeHandler_OnDemand(core, github);
             break;

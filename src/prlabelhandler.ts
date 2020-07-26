@@ -106,11 +106,11 @@ async function prLabelHandler(core: CoreModule, github: GitHubModule, prnumber: 
             });
           }
         } else {
-          core.info(`PR #${prnumber} is merged, no action taken`);
+          core.info(`PR #${prnumber} is merged, no label automation taken`);
 
         }
       } else {
-        core.info(`PR #${prnumber} is closed, no action taken`);
+        core.info(`PR #${prnumber} is closed, no label automation taken`);
       }
     }
       
@@ -126,6 +126,8 @@ async function prLabelHandler(core: CoreModule, github: GitHubModule, prnumber: 
 // OnDemand
 //
 export async function prLabelHandler_OnDemand(core: CoreModule, github: GitHubModule) {
+
+  core.debug('>> prLabelHandler_OnDemand');
 
   try {
     // make sure we should proceed
@@ -154,6 +156,8 @@ export async function prLabelHandler_OnDemand(core: CoreModule, github: GitHubMo
 // OnSchedule
 //
 export async function prLabelHandler_OnSchedule(core: CoreModule, github: GitHubModule) {
+
+  core.debug('>> prLabelHandler_OnSchedule');
 
   try {
     
