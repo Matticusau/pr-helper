@@ -82,9 +82,10 @@ export class AuthorYAMLReader {
         let authorgithubuser = '';
         try {
             if (authorname.length > 0) {
-                if (undefined !== this.authorFile[authorname]) {
-                    if (undefined !== this.authorFile[authorname].github) {
+                if (undefined !== this.authorFile[authorname] && this.authorFile[authorname].length > 0) {
+                    if (undefined !== this.authorFile[authorname].github && this.authorFile[authorname].github.length > 0) {
                         authorgithubuser = this.authorFile[authorname].github
+                        this.core.info('getAuthorGitHubUser [' + authorname + '] = [' + authorgithubuser + ']');
                     } else {
                         this.core.info('getAuthorGitHubUser no github key defined for author [' + authorname + ']');
                     }
