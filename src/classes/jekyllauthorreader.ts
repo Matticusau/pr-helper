@@ -37,10 +37,10 @@ export class AuthorYAMLReader {
         
         if (authorContent.length > 0) {
             // loads (hopefully) a `{[label:string]: string | StringOrMatchConfig[]}`, but is `any`:
-            this.core.info('authorContent: ' + authorContent);
+            this.core.debug('authorContent: ' + authorContent);
             const authorFileObject: any = yaml.safeLoad(authorContent);
         
-            this.core.info('authorFileObject: ' + JSON.stringify(authorFileObject));
+            this.core.debug('authorFileObject: ' + JSON.stringify(authorFileObject));
             // transform `any` => `Map<string,StringOrMatchConfig[]>` or throw if yaml is malformed:
             // return getLabelGlobMapFromObject(authorFileObject);
             // return authorFileObject;
@@ -87,6 +87,7 @@ export class AuthorYAMLReader {
         let authorgithubuser = '';
         try {
             if (undefined !== authorname && authorname.length > 0) {
+                this.core.info('this.authorFile: ' + JSON.stringify(this.authorFile));
                 if (undefined !== this.authorFile[authorname] && this.authorFile[authorname].length > 0) {
                     if (undefined !== this.authorFile[authorname].github && this.authorFile[authorname].github.length > 0) {
                         authorgithubuser = this.authorFile[authorname].github;
