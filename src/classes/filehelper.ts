@@ -103,7 +103,7 @@ export class PRFileHelper {
                     , mediaType: {format: 'raw'}
                     , ref: pullRequest.base.ref
                 });
-                this.core.info('fileContentsResponse: ' + JSON.stringify(fileContentsResponse));
+                this.core.debug('fileContentsResponse: ' + JSON.stringify(fileContentsResponse));
                 
                 if (fileContentsResponse && fileContentsResponse.data) {
                     return String(fileContentsResponse.data);
@@ -140,7 +140,7 @@ export class PRFileHelper {
                     // authors could be an array, most of the time it would be single element
                     const authorList : string[] = String(frontmatter.attributes[this.core.getInput('prreviewer-authorkey')]).split(',');
                     const ghuserList : string[] = [];
-                    this.core.info('authorList: ' + JSON.stringify(authorList));
+                    this.core.debug('authorList: ' + JSON.stringify(authorList));
                     for (let iauthor = 0; iauthor < authorList.length; iauthor++) {
                         const tmpghuser = await this.authorYAMLReader.getAuthorGitHubUser(authorList[iauthor]);
                         if (undefined !== tmpghuser && tmpghuser.length > 0) {
@@ -148,7 +148,7 @@ export class PRFileHelper {
                         }
                     }
                     // const ghuser = this.authorYAMLReader.getAuthorGitHubUser(frontmatter.attributes[this.core.getInput('prreviewer-authorkey')]);
-                    this.core.info('ghuserList: ' + JSON.stringify(ghuserList));
+                    this.core.debug('ghuserList: ' + JSON.stringify(ghuserList));
                     return ghuserList;
                 } else {
                     if (frontmatter.attributes[this.core.getInput('prreviewer-authorkey')]) {
