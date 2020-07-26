@@ -142,7 +142,10 @@ export class PRFileHelper {
                     const ghuserList : string[] = [];
                     this.core.info('authorList: ' + JSON.stringify(authorList));
                     for (let iauthor = 0; iauthor < authorList.length; iauthor++) {
-                        ghuserList.push(await this.authorYAMLReader.getAuthorGitHubUser(authorList[iauthor]));
+                        const tmpghuser = await this.authorYAMLReader.getAuthorGitHubUser(authorList[iauthor]);
+                        if (undefined !== tmpghuser && tmpghuser.length > 0) {
+                            ghuserList.push(tmpghuser);
+                        }
                     }
                     // const ghuser = this.authorYAMLReader.getAuthorGitHubUser(frontmatter.attributes[this.core.getInput('prreviewer-authorkey')]);
                     this.core.info('ghuserList: ' + JSON.stringify(ghuserList));
