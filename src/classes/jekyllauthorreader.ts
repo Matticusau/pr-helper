@@ -58,11 +58,11 @@ export class AuthorYAMLReader {
         const authorFilePath = this.core.getInput('prreviewer-authorfilepath');
         const myToken = this.core.getInput('repo-token');
         const octokit = this.github.getOctokit(myToken);
-        this.core.debug('authorFilePath: ' + authorFilePath);
+        this.core.info('authorFilePath: ' + authorFilePath);
 
         // make sure we have an author file path
         if (authorFilePath.length === 0) {
-            this.core.info('No Author File found. Defaults will be applied.');
+            this.core.info('No Author File path set. Defaults will be applied.');
             return '';
         } else {
             const response: any = await octokit.repos.getContent({
