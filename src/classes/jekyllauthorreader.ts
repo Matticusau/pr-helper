@@ -88,6 +88,7 @@ export class AuthorYAMLReader {
         try {
             if (undefined !== authorname && authorname.length > 0) {
                 this.core.info('this.authorFile: ' + JSON.stringify(this.authorFile));
+                this.core.info('this.authorFile[authorname]: ' + JSON.stringify(this.authorFile[authorname]));
                 if (undefined !== this.authorFile[authorname] && this.authorFile[authorname].length > 0) {
                     if (undefined !== this.authorFile[authorname].github && this.authorFile[authorname].github.length > 0) {
                         authorgithubuser = this.authorFile[authorname].github;
