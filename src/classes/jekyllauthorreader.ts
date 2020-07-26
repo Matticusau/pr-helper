@@ -89,16 +89,16 @@ export class AuthorYAMLReader {
             if (undefined !== authorname && authorname.length > 0) {
                 this.core.info('this.authorFile: ' + JSON.stringify(this.authorFile));
                 this.core.info('this.authorFile[authorname]: ' + JSON.stringify(this.authorFile[authorname]));
-                if (undefined !== this.authorFile[authorname] && this.authorFile[authorname].length > 0) {
+                // if (undefined !== this.authorFile[authorname] && this.authorFile[authorname].length > 0) { // 2020-07-26 This check was always failing
                     if (undefined !== this.authorFile[authorname].github && this.authorFile[authorname].github.length > 0) {
                         authorgithubuser = this.authorFile[authorname].github;
                         this.core.info('getAuthorGitHubUser [' + authorname + '] = [' + authorgithubuser + ']');
                     } else {
                         this.core.info('getAuthorGitHubUser no github key defined for author [' + authorname + ']');
                     }
-                } else {
-                    this.core.info('getAuthorGitHubUser no entry for [' + authorname + '] in authorFile');
-                }
+                // } else {
+                //     this.core.info('getAuthorGitHubUser no entry for [' + authorname + '] in authorFile');
+                // }
             } else {
                 this.core.info('getAuthorGitHubUser no authorname param supplied');
             }
