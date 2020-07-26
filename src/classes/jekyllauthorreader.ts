@@ -55,7 +55,7 @@ export class AuthorYAMLReader {
     // TODO: Pull content from default branch or action asset from checkout 
     private async fetchContent(): Promise<string> {
 
-        const authorFilePath = this.core.getInput('author-file-path');
+        const authorFilePath = this.core.getInput('prreviewer-authorfilepath');
         const myToken = this.core.getInput('repo-token');
         const octokit = this.github.getOctokit(myToken);
         this.core.debug('authorFilePath: ' + authorFilePath);
