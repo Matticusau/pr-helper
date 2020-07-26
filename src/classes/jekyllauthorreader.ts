@@ -74,7 +74,8 @@ export class AuthorYAMLReader {
             });
             this.core.info('fetchContent response: ' + JSON.stringify(response));
             
-            return Buffer.from(response.data.content, response.data.encoding).toString();
+            // for RAW media type the path is response.data not response.data.content
+            return Buffer.from(response.data, response.data.encoding).toString();
         }
     }
 
