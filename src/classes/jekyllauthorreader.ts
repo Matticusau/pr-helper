@@ -67,9 +67,10 @@ export class AuthorYAMLReader {
         } else {
             this.core.info('getting content');
             const response: any = await octokit.repos.getContent({
-                ...this.github.context.repo,
-                // ref: this.github.context.sha, // removing should default to repo Default branch
-                path: authorFilePath,
+                ...this.github.context.repo
+                // , ref: this.github.context.sha, // removing should default to repo Default branch
+                , path: authorFilePath
+                , mediaType: {format: 'raw'}
             });
             this.core.info('fetchContent response: ' + JSON.stringify(response));
             
@@ -86,7 +87,7 @@ export class AuthorYAMLReader {
             if (undefined !== authorname && authorname.length > 0) {
                 if (undefined !== this.authorFile[authorname] && this.authorFile[authorname].length > 0) {
                     if (undefined !== this.authorFile[authorname].github && this.authorFile[authorname].github.length > 0) {
-                        authorgithubuser = this.authorFile[authorname].github
+                        authorgithubuser = this.authorFile[authorname].github;
                         this.core.info('getAuthorGitHubUser [' + authorname + '] = [' + authorgithubuser + ']');
                     } else {
                         this.core.info('getAuthorGitHubUser no github key defined for author [' + authorname + ']');
