@@ -56,6 +56,10 @@ inputs:
     description: 'The key in the YAML front matter to define the article author(s), who will be assigned as reviewers'
     default: 'author'
     required: false
+  prreviewer-githubuserfromauthorfile:
+    description: 'Enables the lookup of the author from the Jekyll style Author YAML file'
+    default: 'false'
+    required: false
   prlabel-default:
     description: 'The initial label to set on PRs when first created'
     default: 'pr-onhold'
