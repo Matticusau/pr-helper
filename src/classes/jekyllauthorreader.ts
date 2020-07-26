@@ -65,9 +65,10 @@ export class AuthorYAMLReader {
             this.core.info('No Author File path set. Defaults will be applied.');
             return '';
         } else {
+            this.core.info('getting content');
             const response: any = await octokit.repos.getContent({
                 ...this.github.context.repo,
-                ref: this.github.context.sha, // removing should default to repo Default branch
+                // ref: this.github.context.sha, // removing should default to repo Default branch
                 path: authorFilePath,
             });
             this.core.info('fetchContent response: ' + JSON.stringify(response));
