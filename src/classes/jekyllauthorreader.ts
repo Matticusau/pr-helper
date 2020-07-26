@@ -2,6 +2,7 @@
 // Author:  Matt Lavery
 // Date:    2020-07-26
 // Purpose: Helper class to read a Jekyll Author YAML file used to map authors friendly names to github account names, to enhance Reviewer assignment.
+//          [issue #23]
 // 
 // References used to build this functionality:
 //          https://stackabuse.com/reading-and-writing-yaml-to-a-file-in-node-js-javascript/
@@ -66,10 +67,10 @@ export class AuthorYAMLReader {
         } else {
             const response: any = await octokit.repos.getContent({
                 ...this.github.context.repo,
-                ref: this.github.context.sha,
+                // ref: this.github.context.sha, // removing should default to repo Default branch
                 path: authorFilePath,
             });
-            // core.debug('fetchContent response: ' + JSON.stringify(response));
+            this.core.info('fetchContent response: ' + JSON.stringify(response));
             
             return Buffer.from(response.data.content, response.data.encoding).toString();
         }

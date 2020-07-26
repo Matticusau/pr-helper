@@ -53,6 +53,10 @@ async function prReviewHandler(core: CoreModule, github: GitHubModule, prnumber:
             const reviewerList : string[] = [];
             // core.info('changedFiles: ' + JSON.stringify(changedFiles));
 
+            // load the Jekyll Author file if required
+            await filehelper.prepareJekyllAuthorYAMLReader();
+
+            // process the changed files
             if (changedFiles) {
               for(let iFile = 0; iFile < changedFiles.data.length; iFile++) {
                 const tmpReviewerList : string[] = await filehelper.getReviewerListFromFrontMatter(pullRequest, changedFiles.data[iFile]);
@@ -64,10 +68,11 @@ async function prReviewHandler(core: CoreModule, github: GitHubModule, prnumber:
             }
 
             // Add the reviewers
-            if (github.context.eventName === 'pull_request' 
+            //if (github.context.eventName === 'pull_request' // redundant 2020-07-26
               // && github.context.payload.action === 'opened'
-              && reviewerList.length > 0) {
+              // && reviewerList.length > 0) {
               // core.info('reviewerList: ' + JSON.stringify(reviewerList));
+            if (reviewerList.length > 0) {
               await octokit.pulls.requestReviewers({
                 ...github.context.repo,
                 pull_number: prnumber,
