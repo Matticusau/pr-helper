@@ -37,9 +37,10 @@ export class AuthorYAMLReader {
         
         if (authorContent.length > 0) {
             // loads (hopefully) a `{[label:string]: string | StringOrMatchConfig[]}`, but is `any`:
+            this.core.info('authorContent: ' + authorContent);
             const authorFileObject: any = yaml.safeLoad(authorContent);
         
-            // core.debug('authorFileObject: ' + JSON.stringify(authorFileObject));
+            this.core.info('authorFileObject: ' + JSON.stringify(authorFileObject));
             // transform `any` => `Map<string,StringOrMatchConfig[]>` or throw if yaml is malformed:
             // return getLabelGlobMapFromObject(authorFileObject);
             // return authorFileObject;
