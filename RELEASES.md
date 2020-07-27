@@ -1,5 +1,19 @@
 # Releases
 
+## v1.2.1
+
+Releasing the following functionality:
+
+- None
+
+Bug fixes:
+
+- Error when FrontMatter reviewer is enabled but file has no frontmatter #30
+
+Breaking changes:
+
+- None
+
 ## v1.2.0
 
 Releasing the following functionality:
