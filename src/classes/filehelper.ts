@@ -129,7 +129,7 @@ export class PRFileHelper {
 
             // get the frontmatter
             const frontmatter : FrontMatterResult<any> = fm(fileContents);
-            // this.core.info('frontmatter: ' + JSON.stringify(frontmatter));
+            this.core.info('frontmatter: ' + JSON.stringify(frontmatter));
 
             if (frontmatter && frontmatter.attributes) {
                 // this.core.debug('has attributes');
@@ -139,6 +139,8 @@ export class PRFileHelper {
                 if (this.core.getInput('prreviewer-githubuserfromauthorfile') === 'true') {
                     // authors could be an array, most of the time it would be single element
                     const authorList : string[] = String(frontmatter.attributes[this.core.getInput('prreviewer-authorkey')]).split(',');
+                    this.core.info('authorList: ' + JSON.stringify(authorList));
+// TODO Added check here to make sure we have Frontmatter and authors defined within
                     const ghuserList : string[] = [];
                     this.core.debug('authorList: ' + JSON.stringify(authorList));
                     for (let iauthor = 0; iauthor < authorList.length; iauthor++) {
