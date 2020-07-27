@@ -21,7 +21,15 @@ The main purpose this article will focus on is leveraging the `author` component
 
 ## FrontMatter vs GitHub CODEOWNERS
 
+> FrontMatter logic and CODEOWNERS configuration can co-exist, use the functionality that best suits your workflow.
+
 GitHub provides a native way of automatically assigning reviewers to Pull Requests based on the GLOB configuration in the [CODEOWNERS](https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/about-code-owners) file. The branch protection can also be configured that requires a CODEOWNER to review the pull request. This works well for modular code repositories and some content repositories where the owners are broken up by distinct paths.
+
+When using CODEOWNERS you also must have approval from an assigned CODEOWNER for an affected file(s). Particularly when there are multiple files with different CODEOWNERS each owner would need to approve. From [https://docs.github.com/en/github/administering-a-repository/about-required-reviews-for-pull-requests](https://docs.github.com/en/github/administering-a-repository/about-required-reviews-for-pull-requests)
+
+> _If review is required from a designated code owner and the pull request affects code that has a designated owner, approval from that owner is required._
+
+This may or may not suit your desired workflow, which is why we added FrontMatter functionality, which can work together with CODEOWNERS.
 
 When working with Jekyll or DocFX type sites where an article is often hosted in a directory containing many articles owned by different authors/owners. It can be very challenging to maintain the CODEOWNERS file. FrontMatter works around this by providing the ability to store the author/owner in the article. This however is not automatically detected by GitHub for reviewer assignment.
 
