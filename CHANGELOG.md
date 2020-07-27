@@ -1,5 +1,17 @@
 # Changelog
 
+## [v1.2.1](https://github.com/matticusau/pr-helper/tree/v1.2.1) (2020-07-27)
+
+[Full Changelog](https://github.com/matticusau/pr-helper/compare/v1.2.0...v1.2.1)
+
+**Fixed bugs:**
+
+- Error when FrontMatter reviewer is enabled but file has no frontmatter [\#30](https://github.com/Matticusau/pr-helper/issues/30)
+
+**Merged pull requests:**
+
+- Fixes \#30 [\#31](https://github.com/Matticusau/pr-helper/pull/31) ([Matticusau](https://github.com/Matticusau))
+
 ## [v1.2.0](https://github.com/matticusau/pr-helper/tree/v1.2.0) (2020-07-27)
 
 [Full Changelog](https://github.com/matticusau/pr-helper/compare/v1.1.0...v1.2.0)
