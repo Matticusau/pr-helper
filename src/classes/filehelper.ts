@@ -130,19 +130,19 @@ export class PRFileHelper {
             // get the frontmatter
             const frontmatter : FrontMatterResult<any> = fm(fileContents);
             this.core.debug('frontmatter: ' + JSON.stringify(frontmatter));
-
+            if (frontmatter.attributes === {}) {
+                this.core.info('frontmatter.attributes is {}');
+            }
             if (frontmatter && frontmatter.attributes) {
                 // get the owner attribute
-                this.core.info('prreviewer-authorkey: ' + this.core.getInput('prreviewer-authorkey'));
+                this.core.debug('prreviewer-authorkey: ' + this.core.getInput('prreviewer-authorkey'));
                 this.core.info('attributes.owner: ' + JSON.stringify(frontmatter.attributes[this.core.getInput('prreviewer-authorkey')]));
-                if (frontmatter.attributes[this.core.getInput('prreviewer-authorkey')]) {
+                if (undefined !== frontmatter.attributes[this.core.getInput('prreviewer-authorkey')]) {
                     if (this.core.getInput('prreviewer-githubuserfromauthorfile') === 'true') {
                         // authors could be an array, most of the time it would be single element
                         const authorList : string[] = String(frontmatter.attributes[this.core.getInput('prreviewer-authorkey')]).split(',');
-                        this.core.info('authorList: ' + JSON.stringify(authorList));
-    // TODO Added check here to make sure we have Frontmatter and authors defined within
-                        const ghuserList : string[] = [];
                         this.core.debug('authorList: ' + JSON.stringify(authorList));
+                        const ghuserList : string[] = [];
                         for (let iauthor = 0; iauthor < authorList.length; iauthor++) {
                             const tmpghuser = await this.authorYAMLReader.getAuthorGitHubUser(authorList[iauthor]);
                             if (undefined !== tmpghuser && tmpghuser.length > 0) {
@@ -158,7 +158,7 @@ export class PRFileHelper {
                         return reviewerList;
                     }
                 } else {
-                    this.core.info('no attributes set');
+                    this.core.info('frontmatter does not contain author key attribute');
                 }
             }
             
