@@ -242,7 +242,7 @@ If you are having issues running the action enable the debug logs as some additi
 
 ## Known issues
 
-### PRs from Forked private repo
+### PRs from Forked private repo [#24](https://github.com/Matticusau/pr-helper/issues/24)
 
 From [https://docs.github.com/en/actions/reference/events-that-trigger-workflows#pull-request-events-for-forked-repositories](https://docs.github.com/en/actions/reference/events-that-trigger-workflows#pull-request-events-for-forked-repositories)
 
@@ -290,4 +290,6 @@ jobs:
         prlabel-automerge: 'auto-merge'
 ```
 
-For more details see [Issue #24](https://github.com/Matticusau/pr-helper/issues/24)
+### Multiple files and CODEOWNERS will block auto merge [#27](https://github.com/Matticusau/pr-helper/issues/27)
+
+When using the CODEOWNERS feature and multiple files with different CODEOWNERS are modified. Even though you meet the minimum number of reviewers if there is still pending reviews from CODEOWNERS for files with no review yet, then this will block the merge and may throw an error on the action workflow.
