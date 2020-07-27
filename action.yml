@@ -82,7 +82,7 @@ inputs:
     required: false
   prlabel-automerge:
     description: 'The label to set on PRs when it qualifies for automatic merge by this action'
-    default: 'auto-merge'
+    default: 'qualifies-auto-merge'
     required: false
 runs:
   using: 'node12'

@@ -19,6 +19,7 @@ Currently supports the following functionality:
   - Assign a label indicating if the PR is ready or on hold based on key words
 - Pull Request Reviewers
   - Automatically assign reviewers from YAML front matter
+  - Name matching to github username via Jekyll or DocFX Author/People YAML file. More details [here](./docs/FrontMatter.md).
 - Pull Request Merge
   - Automatically merge when criteria is met
   - Respect requested reviews (_i.e. CODEOWNERS_)
@@ -113,11 +114,23 @@ The key in the YAML front matter to define the article author(s), who will be as
 ```yml
 ---
 title: My great article
-authro: octocat
+author: octocat
 ---
 ```
 
 Requires `enable-prreviewer-frontmatter: true`
+
+### `prreviewer-githubuserfromauthorfile`
+
+When set to `true` enables the lookup of the author from the Jekyll style Author YAML file
+
+Requires `enable-prreviewer-frontmatter: true`
+
+### `prreviewer-authorfilepath`
+
+Provides the ability to configure the path to the Jekyll authors YAML file to use in lookup. Default is `docs/_data/authors.yml`
+
+Requires `enable-prreviewer-frontmatter: true` and `prreviewer-githubuserfromauthorfile: true`
 
 ### `prlabel-default`
 
@@ -215,7 +228,7 @@ Labels will be created during the assignment if they do not exist. The following
 | --- | --- | --- |
 | pr-onhold | Pull Request is not yet ready to process automatically or review | #b60205 (red) |
 | review-required | Pull Request or Issue requires review | #fbca04 (yellow) |
-| auto-merge | Pull Request qualifies for automatic merge | #0e8a16 (green) |
+| qualifies-auto-merge | Pull Request qualifies for automatic merge | #0e8a16 (green) |
 | pr-ready | Pull Request is ready to process or review | #0e8a16 (green) |
 
 ## Troubleshooting
@@ -229,4 +242,50 @@ If you are having issues running the action enable the debug logs as some additi
 
 ## Known issues
 
-None
+### PRs from Forked private repo
+
+From [https://docs.github.com/en/actions/reference/events-that-trigger-workflows#pull-request-events-for-forked-repositories](https://docs.github.com/en/actions/reference/events-that-trigger-workflows#pull-request-events-for-forked-repositories)
+
+> Note: Workflows do not run on private base repositories when you open a pull request from a forked repository.
+
+To work around this use the schedule event. This action supports the schedule event for Label, Review, and Merge features. Currently the Welcome message functionality is only supported for pull_request events.
+
+Example YAML for running the action every day at 1am.
+
+```yml
+name: PR Merge on Schedule
+
+on:
+  schedule:
+    - cron: '* 1 * * *'
+
+jobs:
+  prhelper_schedule:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Run PR Helper on Schedule
+      id: runprhelperonschedule
+      uses: Matticusau/pr-helper@v1.1.0
+      with:
+        repo-token: ${{ secrets.GHACTION_PAT }}
+        enable-prmerge-automation: true
+        enable-prcomment-automation: false
+        enable-prlabel-automation: true
+        enable-prreviewer-frontmatter: true
+        enable-welcomemessage: false
+        prmerge-requireallchecks: true
+        prmerge-requirereviewcount: 1
+        prmerge-method: 'merge'
+        prmerge-deletebranch: 'true'
+        prmerge-deletebranch-config: ''
+        prmerge-pathcheck: true
+        prmerge-allowpaths: '{"any":["articles/**"]}'
+        prreviewer-authorkey: 'author'
+        prreviewer-githubuserfromauthorfile: true
+        prreviewer-authorfilepath: '_data/authors.yaml'
+        prlabel-default: 'pr-onhold'
+        prlabel-ready: 'pr-ready'
+        prlabel-onhold: 'pr-onhold'
+        prlabel-reviewrequired: 'review-required'
+        prlabel-automerge: 'auto-merge'
+```
