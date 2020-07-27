@@ -78,7 +78,7 @@ export class ConfigHelper {
                 },
                 prmerge : {
                     check: false,
-                    labels : { initiallabel: 'pr-onhold', automergelabel: 'auto-merge', readytomergelabel: 'pr-ready', reviewrequiredlabel: 'review-required'},
+                    labels : { initiallabel: 'pr-onhold', automergelabel: 'qualifies-auto-merge', readytomergelabel: 'pr-ready', reviewrequiredlabel: 'review-required'},
                     mergemethod: 'merge'
                 },
             };

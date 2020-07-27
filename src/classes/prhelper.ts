@@ -7,6 +7,7 @@
 // ------------------------------------------------------------------------------------------
 // 2020-06-22   Mlavery     Added check for Requested Changes in review #16
 // 2020-06-24   MLavery     Improved logic by moving core and github to properties
+// 2020-07-27   MLavery     Extended isMergeReadyByLabel() to check for qualifying label before merging [issue #28]
 //
 import { CoreModule, GitHubModule,Context, PullRequestPayload } from '../types';
 import { IssueLabels } from './index';
@@ -123,12 +124,14 @@ export class PRHelper {
                 issue_number: pullRequest.number,
             });
             var issueLabels = new IssueLabels(issueLabelsData);
+            const qualifiesForAutoMerge = (issueLabels.hasLabelFromList([this.core.getInput('prlabel-automerge')]));
             const readyToMergeLabel = (issueLabels.hasLabelFromList([this.core.getInput('prlabel-ready')]));
             const NotReadyToMergeLabel = (issueLabels.hasLabelFromList([this.core.getInput('prlabel-reviewrequired'), this.core.getInput('prlabel-onhold')]));
             
-            console.log('readyToMergeLabel:' + readyToMergeLabel);
-            console.log('NotReadyToMergeLabel:' + NotReadyToMergeLabel);
-            if (readyToMergeLabel && !NotReadyToMergeLabel) {
+            this.core.info('qualifiesForAutoMerge: ' + qualifiesForAutoMerge);
+            this.core.info('readyToMergeLabel:' + readyToMergeLabel);
+            this.core.info('NotReadyToMergeLabel:' + NotReadyToMergeLabel);
+            if (qualifiesForAutoMerge && readyToMergeLabel && !NotReadyToMergeLabel) {
                 return true;
             }
 

@@ -6,15 +6,15 @@
 // When         Who         What
 // ------------------------------------------------------------------------------------------
 // 2020-06-20   MLavery     Config moved back to workflow file #3
+// 2020-07-24   MLavery     Extended label handling for both onDemand and onSchedule [issue #24]
 //
 
 import { CoreModule, GitHubModule, Context } from './types' // , Client
 import { PRHelper, PRFileHelper, MessageHelper, IssueLabels, GlobHelper } from './classes'; // MatchConfig
 
-export default async function prLabelHandler(core: CoreModule, github: GitHubModule) {
-
+// export async function prLabelHandler(core: CoreModule, github: GitHubModule, prnumber: number) {
+async function prLabelHandler(core: CoreModule, github: GitHubModule, prnumber: number) {
   try {
-    
     const messageHelper = new MessageHelper;
 
     // make sure we should proceed
@@ -22,7 +22,7 @@ export default async function prLabelHandler(core: CoreModule, github: GitHubMod
 
       const prhelper = new PRHelper(core, github);
       const filehelper = new PRFileHelper(core, github);
-      const prnumber = prhelper.getPrNumber();
+      // const prnumber = prhelper.getPrNumber();
       if (!prnumber) {
         core.info('Could not get pull request number from context, exiting');
         return;
@@ -106,11 +106,11 @@ export default async function prLabelHandler(core: CoreModule, github: GitHubMod
             });
           }
         } else {
-          core.info(`PR #${prnumber} is merged, no action taken`);
+          core.info(`PR #${prnumber} is merged, no label automation taken`);
 
         }
       } else {
-        core.info(`PR #${prnumber} is closed, no action taken`);
+        core.info(`PR #${prnumber} is closed, no label automation taken`);
       }
     }
       
@@ -121,3 +121,68 @@ export default async function prLabelHandler(core: CoreModule, github: GitHubMod
   }
 }
 
+
+// 
+// OnDemand
+//
+export async function prLabelHandler_OnDemand(core: CoreModule, github: GitHubModule) {
+
+  core.debug('>> prLabelHandler_OnDemand');
+
+  try {
+    // make sure we should proceed
+    if (core.getInput('enable-prlabel-automation') === 'true') {
+
+      const prhelper = new PRHelper(core, github);
+      const prnumber = prhelper.getPrNumber();
+      if (!prnumber) {
+        core.info('Could not get pull request number from context, exiting');
+        return;
+      }
+      // core.info(`Processing PR ${prnumber}!`)
+      
+      // process the pull request
+      await prLabelHandler(core, github, prnumber);
+
+    }  
+  }
+  catch (error) {
+    core.setFailed(error.message);
+    throw error;
+  }
+}
+
+// 
+// OnSchedule
+//
+export async function prLabelHandler_OnSchedule(core: CoreModule, github: GitHubModule) {
+
+  core.debug('>> prLabelHandler_OnSchedule');
+
+  try {
+    
+    // make sure we should proceed
+    if (core.getInput('enable-prlabel-automation') === 'true') {
+
+      const myToken = core.getInput('repo-token');
+      const octokit = github.getOctokit(myToken);
+
+      // list the prs
+      const { data: pullRequestList } = await octokit.pulls.list({
+        ...github.context.repo,
+        state: 'open',
+      });
+
+      for(var iPr = 0; iPr < pullRequestList.length; iPr++){
+
+        // process the pull request
+        await prLabelHandler(core, github, pullRequestList[iPr].number);
+      
+      }
+    }
+  }
+  catch (error) {
+    core.setFailed(error.message);
+    throw error;
+  }
+}
