@@ -1,6 +1,26 @@
 # Releases
 
-## v1.0.0
+## v1.2.0
+
+Releasing the following functionality:
+
+- Auto merge not requiring qualify for auto merge label #28
+- Action not running on PRs from Forked repos (excludes welcome message) #24
+- Support for key value lookup file on front matter reviewers #23
+- Auto merge filters (initial GLOB support) #15
+- Documentation improvements
+- Added docs on FrontMatter support
+
+Bug fixes:
+
+- Bump lodash from 4.17.15 to 4.17.19 #25 
+- Action not running on PRs from Forked repos (excludes welcome message) #24
+
+Breaking changes:
+
+- Default `prlabel-automerge` label changed from `auto-merge` to `qualifies-auto-merge`. Use workflow config file to continue with your preferred label.
+
+## v1.1.0
 
 Releasing the following functionality:
 

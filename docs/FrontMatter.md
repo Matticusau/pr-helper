@@ -91,7 +91,7 @@ jobs:
     steps:
     - name: Run PR Helper on Schedule
       id: runprhelperonschedule
-      uses: Matticusau/pr-helper@v1.1.0
+      uses: Matticusau/pr-helper@v1.2.0
       with:
         repo-token: ${{ secrets.GHACTION_PAT }}
         enable-prmerge-automation: true

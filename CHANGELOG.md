@@ -1,5 +1,24 @@
 # Changelog
 
+## [v1.2.0](https://github.com/matticusau/pr-helper/tree/v1.2.0) (2020-07-27)
+
+[Full Changelog](https://github.com/matticusau/pr-helper/compare/v1.1.0...v1.2.0)
+
+**Implemented enhancements:**
+
+- Action not running on PRs from Forked repos [\#24](https://github.com/Matticusau/pr-helper/issues/24)
+- Support for key value lookup file on front matter reviewers [\#23](https://github.com/Matticusau/pr-helper/issues/23)
+- Support for Branch protection rules [\#7](https://github.com/Matticusau/pr-helper/issues/7)
+
+**Fixed bugs:**
+
+- Auto merge not requiring qualify for auto merge label [\#28](https://github.com/Matticusau/pr-helper/issues/28)
+
+**Merged pull requests:**
+
+- Releasing v1.2.0 [\#29](https://github.com/Matticusau/pr-helper/pull/29) ([Matticusau](https://github.com/Matticusau))
+- Bump lodash from 4.17.15 to 4.17.19 [\#25](https://github.com/Matticusau/pr-helper/pull/25) ([dependabot[bot]](https://github.com/apps/dependabot))
+
 ## [v1.1.0](https://github.com/matticusau/pr-helper/tree/v1.1.0) (2020-06-25)
 
 [Full Changelog](https://github.com/matticusau/pr-helper/compare/v1.0.0...v1.1.0)
