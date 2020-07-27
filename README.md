@@ -289,3 +289,5 @@ jobs:
         prlabel-reviewrequired: 'review-required'
         prlabel-automerge: 'auto-merge'
 ```
+
+For more details see [Issue #24](https://github.com/Matticusau/pr-helper/issues/24)
