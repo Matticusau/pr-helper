@@ -9,6 +9,7 @@
 //
 // When         Who         What
 // ------------------------------------------------------------------------------------------
+// 2020-07-27   MLavery     Added check that author element exists [issue #30]
 //
 
 import { CoreModule, GitHubModule, Context } from '../types'
@@ -87,13 +88,17 @@ export class AuthorYAMLReader {
         let authorgithubuser = '';
         try {
             if (undefined !== authorname && authorname.length > 0) {
-                // this.core.info('this.authorFile: ' + JSON.stringify(this.authorFile));
-                // this.core.info('this.authorFile[authorname]: ' + JSON.stringify(this.authorFile[authorname]));
-                if (undefined !== this.authorFile[authorname].github && this.authorFile[authorname].github.length > 0) {
-                    authorgithubuser = this.authorFile[authorname].github;
-                    this.core.debug('getAuthorGitHubUser [' + authorname + '] = [' + authorgithubuser + ']');
+                if (undefined !== this.authorFile[authorname]) {
+                    // this.core.info('this.authorFile: ' + JSON.stringify(this.authorFile));
+                    // this.core.info('this.authorFile[authorname]: ' + JSON.stringify(this.authorFile[authorname]));
+                    if (undefined !== this.authorFile[authorname].github && this.authorFile[authorname].github.length > 0) {
+                        authorgithubuser = this.authorFile[authorname].github;
+                        this.core.debug('getAuthorGitHubUser [' + authorname + '] = [' + authorgithubuser + ']');
+                    } else {
+                        this.core.info('getAuthorGitHubUser no github key defined for author [' + authorname + ']');
+                    }
                 } else {
-                    this.core.info('getAuthorGitHubUser no github key defined for author [' + authorname + ']');
+                    this.core.info('getAuthorGitHubUser no author configured in the author file for [' + authorname + ']');
                 }
             } else {
                 this.core.info('getAuthorGitHubUser no authorname param supplied');

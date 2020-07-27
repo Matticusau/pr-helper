@@ -129,33 +129,35 @@ export class PRFileHelper {
 
             // get the frontmatter
             const frontmatter : FrontMatterResult<any> = fm(fileContents);
-            // this.core.info('frontmatter: ' + JSON.stringify(frontmatter));
+            this.core.debug('frontmatter: ' + JSON.stringify(frontmatter));
 
             if (frontmatter && frontmatter.attributes) {
-                // this.core.debug('has attributes');
-                // get the owner attribute
+                
                 this.core.debug('prreviewer-authorkey: ' + this.core.getInput('prreviewer-authorkey'));
                 this.core.debug('attributes.owner: ' + JSON.stringify(frontmatter.attributes[this.core.getInput('prreviewer-authorkey')]));
-                if (this.core.getInput('prreviewer-githubuserfromauthorfile') === 'true') {
-                    // authors could be an array, most of the time it would be single element
-                    const authorList : string[] = String(frontmatter.attributes[this.core.getInput('prreviewer-authorkey')]).split(',');
-                    const ghuserList : string[] = [];
-                    this.core.debug('authorList: ' + JSON.stringify(authorList));
-                    for (let iauthor = 0; iauthor < authorList.length; iauthor++) {
-                        const tmpghuser = await this.authorYAMLReader.getAuthorGitHubUser(authorList[iauthor]);
-                        if (undefined !== tmpghuser && tmpghuser.length > 0) {
-                            ghuserList.push(tmpghuser);
+                // test the owner attribute
+                if (undefined !== frontmatter.attributes[this.core.getInput('prreviewer-authorkey')]) {
+                    if (this.core.getInput('prreviewer-githubuserfromauthorfile') === 'true') {
+                        // authors could be an array, most of the time it would be single element
+                        const authorList : string[] = String(frontmatter.attributes[this.core.getInput('prreviewer-authorkey')]).split(',');
+                        this.core.debug('authorList: ' + JSON.stringify(authorList));
+                        const ghuserList : string[] = [];
+                        for (let iauthor = 0; iauthor < authorList.length; iauthor++) {
+                            const tmpghuser = await this.authorYAMLReader.getAuthorGitHubUser(authorList[iauthor]);
+                            if (undefined !== tmpghuser && tmpghuser.length > 0) {
+                                ghuserList.push(tmpghuser);
+                            }
                         }
-                    }
-                    // const ghuser = this.authorYAMLReader.getAuthorGitHubUser(frontmatter.attributes[this.core.getInput('prreviewer-authorkey')]);
-                    this.core.debug('ghuserList: ' + JSON.stringify(ghuserList));
-                    return ghuserList;
-                } else {
-                    if (frontmatter.attributes[this.core.getInput('prreviewer-authorkey')]) {
+                        // const ghuser = this.authorYAMLReader.getAuthorGitHubUser(frontmatter.attributes[this.core.getInput('prreviewer-authorkey')]);
+                        this.core.debug('ghuserList: ' + JSON.stringify(ghuserList));
+                        return ghuserList;
+                    } else {
                         const reviewerList : string[] = String(frontmatter.attributes[this.core.getInput('prreviewer-authorkey')]).split(',');
                         // results.push(frontmatter.attributes.owner);
                         return reviewerList;
                     }
+                } else {
+                    this.core.info('frontmatter does not contain author key attribute');
                 }
             }
             
