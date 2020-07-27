@@ -130,13 +130,12 @@ export class PRFileHelper {
             // get the frontmatter
             const frontmatter : FrontMatterResult<any> = fm(fileContents);
             this.core.debug('frontmatter: ' + JSON.stringify(frontmatter));
-            if (frontmatter.attributes === {}) {
-                this.core.info('frontmatter.attributes is {}');
-            }
+
             if (frontmatter && frontmatter.attributes) {
-                // get the owner attribute
+                
                 this.core.debug('prreviewer-authorkey: ' + this.core.getInput('prreviewer-authorkey'));
-                this.core.info('attributes.owner: ' + JSON.stringify(frontmatter.attributes[this.core.getInput('prreviewer-authorkey')]));
+                this.core.debug('attributes.owner: ' + JSON.stringify(frontmatter.attributes[this.core.getInput('prreviewer-authorkey')]));
+                // test the owner attribute
                 if (undefined !== frontmatter.attributes[this.core.getInput('prreviewer-authorkey')]) {
                     if (this.core.getInput('prreviewer-githubuserfromauthorfile') === 'true') {
                         // authors could be an array, most of the time it would be single element
