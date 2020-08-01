@@ -1,5 +1,19 @@
 # Releases
 
+## v1.2.2
+
+Releasing the following functionality:
+
+- None
+
+Bug fixes:
+
+- Frontmatter reviewer does not filter/skip attempting to assign the same user as PR owner which results in error #32
+
+Breaking changes:
+
+- None
+
 ## v1.2.1
 
 Releasing the following functionality:

@@ -6,6 +6,7 @@
 // When         Who         What
 // ------------------------------------------------------------------------------------------
 // 2020-07-26   MLavery     Extended merge handling for both onDemand and onSchedule [issue #24]
+// 2020-07-31   MLavery     Added check to avoid assigning PR author as reviewer [Issue #32]
 //
 
 import { CoreModule, GitHubModule, Context } from './types' // , Client
@@ -39,9 +40,11 @@ async function prReviewHandler(core: CoreModule, github: GitHubModule, prnumber:
       // make sure the PR is open
       if (pullRequest.state !== 'closed') {
 
+        core.info('PR Author: ' + pullRequest.user.login);
+        
         // make sure it hasn't merged
         if (pullRequest.merged === false) {
-
+          
           const changedFiles = await filehelper.getChangedFiles(pullRequest);
           const reviewerList : string[] = [];
           // core.info('changedFiles: ' + JSON.stringify(changedFiles));
@@ -52,10 +55,17 @@ async function prReviewHandler(core: CoreModule, github: GitHubModule, prnumber:
           // process the changed files
           if (changedFiles) {
             for(let iFile = 0; iFile < changedFiles.data.length; iFile++) {
+              core.info('Processing file: ' + changedFiles.data[iFile].filename);
               const tmpReviewerList : string[] = await filehelper.getReviewerListFromFrontMatter(pullRequest, changedFiles.data[iFile]);
               // core.info('tmpReviewerList: ' + JSON.stringify(tmpReviewerList));
               tmpReviewerList.forEach(element => {
-                reviewerList.push(element.trim());
+                // make sure this is not the owner of the PR
+                if (pullRequest.user.login.toLowerCase() !== element.trim().toLowerCase()) {
+                  reviewerList.push(element.trim());
+                  core.info('Reviewer [' + element.trim() + '] added to array');
+                } else {
+                  core.info('Reviewer [' + element.trim() + '] skipped, PR author cannot review');
+                }
               });
             }
           }
