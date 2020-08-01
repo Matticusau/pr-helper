@@ -40,6 +40,9 @@ async function prReviewHandler(core: CoreModule, github: GitHubModule, prnumber:
       // make sure the PR is open
       if (pullRequest.state !== 'closed') {
 
+        core.info('PR Author: ' + pullRequest.user.login);
+        core.info('pullRequest.user: ' + JSON.stringify(pullRequest.user));
+
         // make sure it hasn't merged
         if (pullRequest.merged === false) {
           
