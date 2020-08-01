@@ -41,8 +41,7 @@ async function prReviewHandler(core: CoreModule, github: GitHubModule, prnumber:
       if (pullRequest.state !== 'closed') {
 
         core.info('PR Author: ' + pullRequest.user.login);
-        core.info('pullRequest.user: ' + JSON.stringify(pullRequest.user));
-
+        
         // make sure it hasn't merged
         if (pullRequest.merged === false) {
           
@@ -61,7 +60,7 @@ async function prReviewHandler(core: CoreModule, github: GitHubModule, prnumber:
               // core.info('tmpReviewerList: ' + JSON.stringify(tmpReviewerList));
               tmpReviewerList.forEach(element => {
                 // make sure this is not the owner of the PR
-                if (pullRequest.user.login !== element.trim()) {
+                if (pullRequest.user.login.toLowerCase() !== element.trim().toLowerCase()) {
                   reviewerList.push(element.trim());
                   core.info('Reviewer [' + element.trim() + '] added to array');
                 } else {
