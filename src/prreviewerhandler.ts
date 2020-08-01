@@ -53,12 +53,14 @@ async function prReviewHandler(core: CoreModule, github: GitHubModule, prnumber:
           // process the changed files
           if (changedFiles) {
             for(let iFile = 0; iFile < changedFiles.data.length; iFile++) {
+              core.info('Processing file: ' + changedFiles.data[iFile].filename);
               const tmpReviewerList : string[] = await filehelper.getReviewerListFromFrontMatter(pullRequest, changedFiles.data[iFile]);
               // core.info('tmpReviewerList: ' + JSON.stringify(tmpReviewerList));
               tmpReviewerList.forEach(element => {
                 // make sure this is not the owner of the PR
                 if (pullRequest.user.login !== element.trim()) {
                   reviewerList.push(element.trim());
+                  core.info('Reviewer [' + element.trim() + '] added to array');
                 } else {
                   core.info('Reviewer [' + element.trim() + '] skipped, PR author cannot review');
                 }
