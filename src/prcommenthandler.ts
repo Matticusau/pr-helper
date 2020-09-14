@@ -133,7 +133,7 @@ export default async function prCommentHandler(core: CoreModule, github: GitHubM
     catch (error) {
         // check for Not Found and soft exit, this might happen when an issue comment is detected
         if (error.message === 'Not Found') {
-            core.info('prCommentHandler Error: ' + error.message);
+            core.info('prCommentHandler: Could not find PR. Might be triggered from an Issue.');
             return;
         } else {
             core.setFailed(error.message);

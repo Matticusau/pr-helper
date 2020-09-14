@@ -8,6 +8,7 @@
 // 2020-06-20   MLavery     Config moved back to workflow file #3
 // 2020-06-25   MLavery     Added delete branch functionality #14
 // 2020-07-24   MLavery     Extended merge handling for both onDemand and onSchedule [issue #24]
+// 2020-09-14   MLavery     Added check for Not Found error and soft exit [issue #37]
 //
 
 import { CoreModule, GitHubModule, Context } from './types' // , Client
@@ -82,8 +83,14 @@ async function prMergeHandler(core: CoreModule, github: GitHubModule, prnumber: 
       }
     }
   } catch (error) {
-    core.setFailed(error.message);
-    throw error;
+    // check for Not Found and soft exit, this might happen when an issue comment is detected
+    if (error.message === 'Not Found') {
+      core.info('prMergeHandler: Could not find PR. Might be triggered from an Issue.');
+      return;
+    } else {
+      core.setFailed(error.message);
+      throw error;
+    }
   }
 }
 
