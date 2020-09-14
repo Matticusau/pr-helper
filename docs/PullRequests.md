@@ -86,6 +86,7 @@ NOTE: This won't allow the actions to run if happens at first load
 ```
 
 A PR which contains **renamed Files** will contain the following payload
+This was investigated in [Issue #35](https://github.com/Matticusau/pr-helper/issues/35). Unfortunately OctoKit doesn't support the previous_filename in the payload at this time.
 
 ```json
 [
@@ -102,4 +103,4 @@ A PR which contains **renamed Files** will contain the following payload
         "previous_filename": "docs/index3.md"
     }
 ]
-``` 
+```
