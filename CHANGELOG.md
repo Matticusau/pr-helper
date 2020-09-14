@@ -1,28 +1,40 @@
 # Changelog
 
-## [v1.2.2](https://github.com/Matticusau/pr-helper/tree/v1.2.2) (2020-08-01)
+## [v1.2.3](https://github.com/matticusau/pr-helper/tree/v1.2.3) (2020-09-14)
 
-[Full Changelog](https://github.com/Matticusau/pr-helper/compare/v1.2.1...v1.2.2)
+[Full Changelog](https://github.com/matticusau/pr-helper/compare/v1.2.2...v1.2.3)
 
-**Merged pull requests:**
+**Implemented enhancements:**
 
-- Fixes for Frontmatter reviewer does not filter/skip attempting to assign the same user as PR owner which results in error \#32 [\#33](https://github.com/Matticusau/pr-helper/pull/33) ([Matticusau](https://github.com/Matticusau))
-
-## [v1.2.1](https://github.com/Matticusau/pr-helper/tree/v1.2.1) (2020-07-27)
-
-[Full Changelog](https://github.com/Matticusau/pr-helper/compare/v1.2.0...v1.2.1)
+- Improving error handling and rename file handling [\#39](https://github.com/Matticusau/pr-helper/pull/39) ([Matticusau](https://github.com/Matticusau))
 
 **Fixed bugs:**
 
-- Error when FrontMatter reviewer is enabled but file has no frontmatter [\#30](https://github.com/Matticusau/pr-helper/issues/30)
+- Frontmatter reviewer does not filter/skip attempting to assign the same user as PR owner which results in error [\#32](https://github.com/Matticusau/pr-helper/issues/32)
 
 **Merged pull requests:**
 
 - Fixes \#30 [\#31](https://github.com/Matticusau/pr-helper/pull/31) ([Matticusau](https://github.com/Matticusau))
 
-## [v1.2.0](https://github.com/Matticusau/pr-helper/tree/v1.2.0) (2020-07-27)
+## [v1.2.2](https://github.com/matticusau/pr-helper/tree/v1.2.2) (2020-08-01)
 
-[Full Changelog](https://github.com/Matticusau/pr-helper/compare/v1.1.0...v1.2.0)
+[Full Changelog](https://github.com/matticusau/pr-helper/compare/v1.2.1...v1.2.2)
+
+**Merged pull requests:**
+
+- Fixes for Frontmatter reviewer does not filter/skip attempting to assign the same user as PR owner which results in error \#32 [\#33](https://github.com/Matticusau/pr-helper/pull/33) ([Matticusau](https://github.com/Matticusau))
+
+## [v1.2.1](https://github.com/matticusau/pr-helper/tree/v1.2.1) (2020-07-27)
+
+[Full Changelog](https://github.com/matticusau/pr-helper/compare/v1.2.0...v1.2.1)
+
+**Fixed bugs:**
+
+- Error when FrontMatter reviewer is enabled but file has no frontmatter [\#30](https://github.com/Matticusau/pr-helper/issues/30)
+
+## [v1.2.0](https://github.com/matticusau/pr-helper/tree/v1.2.0) (2020-07-27)
+
+[Full Changelog](https://github.com/matticusau/pr-helper/compare/v1.1.0...v1.2.0)
 
 **Implemented enhancements:**
 
@@ -36,12 +48,11 @@
 
 **Merged pull requests:**
 
-- Releasing v1.2.0 [\#29](https://github.com/Matticusau/pr-helper/pull/29) ([Matticusau](https://github.com/Matticusau))
 - Bump lodash from 4.17.15 to 4.17.19 [\#25](https://github.com/Matticusau/pr-helper/pull/25) ([dependabot[bot]](https://github.com/apps/dependabot))
 
-## [v1.1.0](https://github.com/Matticusau/pr-helper/tree/v1.1.0) (2020-06-25)
+## [v1.1.0](https://github.com/matticusau/pr-helper/tree/v1.1.0) (2020-06-25)
 
-[Full Changelog](https://github.com/Matticusau/pr-helper/compare/v1.0.0...v1.1.0)
+[Full Changelog](https://github.com/matticusau/pr-helper/compare/v1.0.0...v1.1.0)
 
 **Implemented enhancements:**
 
@@ -57,9 +68,9 @@
 
 - Updated docs and config param rename [\#22](https://github.com/Matticusau/pr-helper/pull/22) ([Matticusau](https://github.com/Matticusau))
 
-## [v1.0.0](https://github.com/Matticusau/pr-helper/tree/v1.0.0) (2020-06-25)
+## [v1.0.0](https://github.com/matticusau/pr-helper/tree/v1.0.0) (2020-06-25)
 
-[Full Changelog](https://github.com/Matticusau/pr-helper/compare/v0.1...v1.0.0)
+[Full Changelog](https://github.com/matticusau/pr-helper/compare/v0.1...v1.0.0)
 
 **Implemented enhancements:**
 
@@ -72,13 +83,14 @@
 
 **Merged pull requests:**
 
+- Releasing v1.2.0 [\#29](https://github.com/Matticusau/pr-helper/pull/29) ([Matticusau](https://github.com/Matticusau))
 - Releasing v1 [\#21](https://github.com/Matticusau/pr-helper/pull/21) ([Matticusau](https://github.com/Matticusau))
 - Update Changelog [\#13](https://github.com/Matticusau/pr-helper/pull/13) ([Matticusau](https://github.com/Matticusau))
 - Fix labels on Feature Request template [\#12](https://github.com/Matticusau/pr-helper/pull/12) ([Matticusau](https://github.com/Matticusau))
 
-## [v0.1](https://github.com/Matticusau/pr-helper/tree/v0.1) (2020-06-20)
+## [v0.1](https://github.com/matticusau/pr-helper/tree/v0.1) (2020-06-20)
 
-[Full Changelog](https://github.com/Matticusau/pr-helper/compare/37ebf728140f171cdf3adaae799d27975612e095...v0.1)
+[Full Changelog](https://github.com/matticusau/pr-helper/compare/37ebf728140f171cdf3adaae799d27975612e095...v0.1)
 
 **Implemented enhancements:**
 
