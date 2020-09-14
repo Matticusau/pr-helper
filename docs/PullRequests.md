@@ -84,3 +84,22 @@ NOTE: This won't allow the actions to run if happens at first load
     "merged_by": null,
 }
 ```
+
+A PR which contains **renamed Files** will contain the following payload
+
+```json
+[
+    {
+        "sha": "<<REDACTED>>",
+        "filename": "docs/index3-rename.md",
+        "status": "renamed",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0,
+        "blob_url": "https://github.com/Matticusau/pr-helper-demo/blob/3e05e6895b10c655b76a88cd8e38901fb8d834a8/docs/index3-rename.md",
+        "raw_url": "https://github.com/Matticusau/pr-helper-demo/raw/3e05e6895b10c655b76a88cd8e38901fb8d834a8/docs/index3-rename.md",
+        "contents_url": "https://api.github.com/repos/Matticusau/pr-helper-demo/contents/docs/index3-rename.md?ref=3e05e6895b10c655b76a88cd8e38901fb8d834a8",
+        "previous_filename": "docs/index3.md"
+    }
+]
+``` 

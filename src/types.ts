@@ -6,7 +6,9 @@
 // When         Who         What
 // ------------------------------------------------------------------------------------------
 // 2020-06-24   MLavery     Added PullRequestFilePayload
+// 2020-09-14   MLavery     Added previous_filename [issue #35]
 //
+
 import github from '@actions/github';
 import core from '@actions/core';
 
@@ -70,4 +72,5 @@ export declare type PullRequestFilePayload = {
     raw_url: string;
     contents_url: string;
     patch: string;
+    // previous_filename: string;
 };
