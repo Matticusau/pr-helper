@@ -7,6 +7,7 @@
 // ------------------------------------------------------------------------------------------
 // 2020-06-20   MLavery     Config moved back to workflow file #3
 // 2020-07-24   MLavery     Extended label handling for both onDemand and onSchedule [issue #24]
+// 2020-09-14   MLavery     Allowed Auto Merge when Path Check disabled [issue #15]
 //
 
 import { CoreModule, GitHubModule, Context } from './types' // , Client
@@ -74,6 +75,9 @@ async function prLabelHandler(core: CoreModule, github: GitHubModule, prnumber: 
               if (globHelper.checkGlobs(changedFiles, globHelper.matchConfigFromActionInputYaml(core.getInput('prmerge-allowpaths')))) {
                 autoMergeQualify = true;
               }
+            } else if (core.getInput('enable-prmerge-automation') === 'true') {
+              // we are processing with auto merge so need the label
+              autoMergeQualify = true;
             }
             
             if (autoMergeQualify) {

@@ -6,6 +6,7 @@
 // When         Who         What
 // ------------------------------------------------------------------------------------------
 // 2020-06-20   MLavery     Config moved back to workflow file #3
+// 2020-09-14   MLavery     Added check for Not Found error and soft exit [issue #37]
 //
 
 import { CoreModule, GitHubModule, Context } from './types'; // , Client
@@ -55,7 +56,7 @@ export default async function prCommentHandler(core: CoreModule, github: GitHubM
                     ...github.context.repo,
                     pull_number: issuenumber,
                 });
-
+                
                 if (!pullRequest) {
                     core.error('Could not get pull request, exiting');
                     return;
@@ -130,7 +131,13 @@ export default async function prCommentHandler(core: CoreModule, github: GitHubM
         }
     }
     catch (error) {
-      core.setFailed(error.message);
-      throw error;
+        // check for Not Found and soft exit, this might happen when an issue comment is detected
+        if (error.message === 'Not Found') {
+            core.info('prCommentHandler: Could not find PR. Might be triggered from an Issue.');
+            return;
+        } else {
+            core.setFailed(error.message);
+            throw error;
+        }
     }
 }

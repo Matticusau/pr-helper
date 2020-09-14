@@ -6,6 +6,7 @@
 // When         Who         What
 // ------------------------------------------------------------------------------------------
 // 2020-07-26   MLavery     Added prepareJekyllAuthorYAMLReader, Extended getReviewerListFromFrontMatter [issue #23]
+// 2020-09-14   MLavery     Added handler for renaming of files. Octokit currently doesnt support previous_filename in payload [issue #35]
 //
 import { CoreModule, GitHubModule,Context, PullRequestPayload, PullRequestFilePayload } from '../types';
 import { IssueLabels, GlobHelper, AuthorYAMLReader } from './index';
@@ -91,15 +92,20 @@ export class PRFileHelper {
             this.core.debug('>> getChangedFileContent()');
 
             this.core.info('file.status: ' + file.status);
+            this.core.info('file.patch: ' + file.patch);
             // skip new files = 404 error
-            if (file.status !== 'added') {
+            // if (file.status === 'modified' || file.status === 'renamed') {
+            if (file.status === 'modified') {
+
+                let fileName = file.filename;
+                //if (file.status === 'renamed') { fileName = file.previous_filename; };
 
                 const myToken = this.core.getInput('repo-token');
                 const octokit = this.github.getOctokit(myToken);
 
                 const fileContentsResponse = await octokit.repos.getContent({
                     ...this.github.context.repo
-                    , path: file.filename
+                    , path: fileName
                     , mediaType: {format: 'raw'}
                     , ref: pullRequest.base.ref
                 });
