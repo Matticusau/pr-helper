@@ -171,7 +171,7 @@ jobs:
     steps:
     - name: Run PR Helper
       id: runprhelper
-      uses: Matticusau/pr-helper@v1.2.2
+      uses: Matticusau/pr-helper@v1.2.3
       with:
         repo-token: ${{ secrets.GITHUB_TOKEN }}
 ```
@@ -265,7 +265,7 @@ jobs:
     steps:
     - name: Run PR Helper on Schedule
       id: runprhelperonschedule
-      uses: Matticusau/pr-helper@v1.2.2
+      uses: Matticusau/pr-helper@v1.2.3
       with:
         repo-token: ${{ secrets.GHACTION_PAT }}
         enable-prmerge-automation: true
