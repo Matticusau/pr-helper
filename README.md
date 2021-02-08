@@ -132,6 +132,12 @@ Provides the ability to configure the path to the Jekyll authors YAML file to us
 
 Requires `enable-prreviewer-frontmatter: true` and `prreviewer-githubuserfromauthorfile: true`
 
+### `prreviewer-bypassforfileowner`
+
+Provides the ability to by pass review checks when all the changed files are owned by the author of the PR.
+
+Requires `enable-prreviewer-frontmatter: true`
+
 ### `prlabel-default`
 
 The initial label to set on PRs when first created
