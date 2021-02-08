@@ -8,9 +8,10 @@
 // 2020-06-22   Mlavery     Added check for Requested Changes in review #16
 // 2020-06-24   MLavery     Improved logic by moving core and github to properties
 // 2020-07-27   MLavery     Extended isMergeReadyByLabel() to check for qualifying label before merging [issue #28]
+// 2021-02-08   Mlavery     Added check for isAllChangedFilesOwnedByPRAuthor() in isMergeReadyByReview() [issue #36]
 //
 import { CoreModule, GitHubModule,Context, PullRequestPayload } from '../types';
-import { IssueLabels } from './index';
+import { IssueLabels, PRFileHelper } from './index';
 import { PullsGetResponseData } from '@octokit/types/dist-types'
 
 interface DeleteBranchConfig {
@@ -146,50 +147,56 @@ export class PRHelper {
     async isMergeReadyByReview(pullRequest: PullsGetResponseData) : Promise<boolean> {
         try {
             this.core.debug('>> isMergeReadyByReview()');
-
-            const myToken = this.core.getInput('repo-token');
-            const octokit = this.github.getOctokit(myToken);
-            const requiredReviewCount : Number = Number.parseInt(this.core.getInput('prmerge-requirereviewcount'));
-            
-            // check the labels
-            const { data: reviewsData } = await octokit.pulls.listReviews({
-                ...this.github.context.repo,
-                pull_number: pullRequest.number,
-            });
-
-            let reviews = {
-                total: reviewsData.length,
-                approved: 0,
-                request_changes: 0
-            };
             let result : boolean = false;
 
-            // No outstanding reviews (this doesn't check for approval vs comment so only valid if requiredReviewCount disabled)
-            if (pullRequest.requested_reviewers.length === 0 && pullRequest.requested_teams.length === 0 && requiredReviewCount < 0) {
-                result = true;
-            }
-            
-            // get the number of reviews
-            for(var iReview = 0; iReview < reviewsData.length; iReview++){
-                if (reviewsData[iReview].state === 'APPROVED') {
-                    reviews.approved++;
-                } else if (reviewsData[iReview].state === 'REQUEST_CHANGES') {
-                    reviews.request_changes++;
-                } 
-            }
-            // check for reviews, and make sure no non-approved reviews
-            // if (reviews.total > 0 && (reviews.total === reviews.approved) && ((requiredReviewCount >= 0 && reviews.approved >= requiredReviewCount) || requiredReviewCount < 0)) {
-            if (reviews.total > 0 && (reviews.total === reviews.approved) && (requiredReviewCount >= 0 && reviews.approved >= requiredReviewCount)) {
-                this.core.info(`PR #${pullRequest.number} is mergable based on reviews`);
-                result = true;
+            // first we need to check if we should by pass if all files are owned by author
+            const filehelper = new PRFileHelper(this.core, this.github);
+            result = await filehelper.isAllChangedFilesOwnedByPRAuthor(pullRequest);
+            if ( !result ) {
+
+                const myToken = this.core.getInput('repo-token');
+                const octokit = this.github.getOctokit(myToken);
+                const requiredReviewCount : Number = Number.parseInt(this.core.getInput('prmerge-requirereviewcount'));
+                
+                // check the labels
+                const { data: reviewsData } = await octokit.pulls.listReviews({
+                    ...this.github.context.repo,
+                    pull_number: pullRequest.number,
+                });
+
+                let reviews = {
+                    total: reviewsData.length,
+                    approved: 0,
+                    request_changes: 0
+                };
+                
+                // No outstanding reviews (this doesn't check for approval vs comment so only valid if requiredReviewCount disabled)
+                if (pullRequest.requested_reviewers.length === 0 && pullRequest.requested_teams.length === 0 && requiredReviewCount < 0) {
+                    result = true;
+                }
+                
+                // get the number of reviews
+                for(var iReview = 0; iReview < reviewsData.length; iReview++){
+                    if (reviewsData[iReview].state === 'APPROVED') {
+                        reviews.approved++;
+                    } else if (reviewsData[iReview].state === 'REQUEST_CHANGES') {
+                        reviews.request_changes++;
+                    } 
+                }
+                // check for reviews, and make sure no non-approved reviews
+                // if (reviews.total > 0 && (reviews.total === reviews.approved) && ((requiredReviewCount >= 0 && reviews.approved >= requiredReviewCount) || requiredReviewCount < 0)) {
+                if (reviews.total > 0 && (reviews.total === reviews.approved) && (requiredReviewCount >= 0 && reviews.approved >= requiredReviewCount)) {
+                    this.core.info(`PR #${pullRequest.number} is mergable based on reviews`);
+                    result = true;
+                }
+
+                // check for minimum number of required reviews (no requested changes)
+                if (requiredReviewCount >= 0 && reviews.approved >= requiredReviewCount && reviews.request_changes === 0) {
+                    this.core.info(`PR #${pullRequest.number} is mergable based on minimum required reviews`);
+                    result = true;
+                }
             }
 
-            // check for minimum number of required reviews (no requested changes)
-            if (requiredReviewCount >= 0 && reviews.approved >= requiredReviewCount && reviews.request_changes === 0) {
-                this.core.info(`PR #${pullRequest.number} is mergable based on minimum required reviews`);
-                result = true;
-            }
-            
             return result;
 
         } catch (error) {

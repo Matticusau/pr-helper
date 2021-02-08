@@ -51,7 +51,7 @@ async function prMergeHandler(core: CoreModule, github: GitHubModule, prnumber: 
         if (await prhelper.isMergeReadyByLabel(pullRequest)) {
           if (await prhelper.isMergeReadyByChecks(pullRequest)){
             if (await prhelper.isMergeReadyByReview(pullRequest)){
-              core.info(`Merged PR #${pullRequest.number}`);
+              core.info(`Merging PR #${pullRequest.number}`);
               const mergeResult = await octokit.pulls.merge({
                 owner: github.context.repo.owner,
                 repo: github.context.repo.repo,

@@ -7,6 +7,7 @@
 // ------------------------------------------------------------------------------------------
 // 2020-07-26   MLavery     Added prepareJekyllAuthorYAMLReader, Extended getReviewerListFromFrontMatter [issue #23]
 // 2020-09-14   MLavery     Added handler for renaming of files. Octokit currently doesnt support previous_filename in payload [issue #35]
+// 2021-02-08   MLavery     Added isAllChangedFilesOwnedByPRAuthor [issue #36]
 //
 import { CoreModule, GitHubModule,Context, PullRequestPayload, PullRequestFilePayload } from '../types';
 import { IssueLabels, GlobHelper, AuthorYAMLReader } from './index';
@@ -171,6 +172,46 @@ export class PRFileHelper {
             // const octokit = this.github.getOctokit(myToken);
 
             return results;
+
+        } catch (error) {
+            this.core.setFailed(error.message);
+            throw error;
+        }
+    }
+
+    async isAllChangedFilesOwnedByPRAuthor(pullRequest: PullsGetResponseData): Promise<boolean> {
+        this.core.debug('>> isAllChangedFilesOwnedByPRAuthor()');
+        
+        let result : boolean = true;
+
+        try {
+            // make sure we need to check this
+            if (this.core.getInput('enable-prreviewer-frontmatter') === 'true' && this.core.getInput('prreviewer-bypassforfileowner') === 'true') {
+
+                // get the PR author
+                const prAuthor = pullRequest.user.login;
+                // load the Jekyll Author file if required
+                await this.prepareJekyllAuthorYAMLReader();
+
+                let changedFiles = await this.getChangedFiles(pullRequest);
+                if (changedFiles) {
+                    for(let iFile = 0; iFile < changedFiles.data.length; iFile++) {
+                    this.core.info('Processing file: ' + changedFiles.data[iFile].filename);
+                    const tmpReviewerList : string[] = await this.getReviewerListFromFrontMatter(pullRequest, changedFiles.data[iFile]);
+                    
+                        if (tmpReviewerList.indexOf(prAuthor) <= 0) {
+                            // couldn't find the author for this file
+                            result = false;
+                            break;
+                        }
+                    }
+                }
+            } else {
+                // we need to check individual reviewers
+                result = false;
+            }
+
+            return result;
 
         } catch (error) {
             this.core.setFailed(error.message);
