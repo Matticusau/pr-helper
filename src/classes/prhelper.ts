@@ -152,6 +152,7 @@ export class PRHelper {
             // first we need to check if we should by pass if all files are owned by author
             const filehelper = new PRFileHelper(this.core, this.github);
             result = await filehelper.isAllChangedFilesOwnedByPRAuthor(pullRequest);
+            this.core.info('isAllChangedFilesOwnedByPRAuthor result: ' + result);
             if ( !result ) {
 
                 const myToken = this.core.getInput('repo-token');
