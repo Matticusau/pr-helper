@@ -198,7 +198,8 @@ export class PRFileHelper {
                     for(let iFile = 0; iFile < changedFiles.data.length; iFile++) {
                     this.core.info('Processing file: ' + changedFiles.data[iFile].filename);
                     const tmpReviewerList : string[] = await this.getReviewerListFromFrontMatter(pullRequest, changedFiles.data[iFile]);
-                    
+                    this.core.info('tmpReviewerList: ' + JSON.stringify(tmpReviewerList));
+                    this.core.info('prAuthor: ' + JSON.stringify(prAuthor));
                         if (tmpReviewerList.indexOf(prAuthor) <= 0) {
                             // couldn't find the author for this file
                             result = false;
