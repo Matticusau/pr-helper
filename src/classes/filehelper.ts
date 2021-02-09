@@ -187,7 +187,7 @@ export class PRFileHelper {
         try {
             // make sure we need to check this
             if (this.core.getInput('enable-prreviewer-frontmatter') === 'true' && this.core.getInput('prreviewer-bypassforfileowner') === 'true') {
-
+                this.core.info('checking if all files owned by author');
                 // get the PR author
                 const prAuthor = pullRequest.user.login;
                 // load the Jekyll Author file if required
@@ -206,6 +206,7 @@ export class PRFileHelper {
                         }
                     }
                 }
+                if (result) {this.core.info('all files owned by author - no reviewer required');};
             } else {
                 // we need to check individual reviewers
                 result = false;
