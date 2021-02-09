@@ -135,6 +135,7 @@ Requires `enable-prreviewer-frontmatter: true` and `prreviewer-githubuserfromaut
 ### `prreviewer-bypassforfileowner`
 
 Provides the ability to by pass review checks when all the changed files are owned by the author of the PR.
+If you configure [Branch Protection](https://docs.github.com/en/github/administering-a-repository/about-protected-branches) within GitHub security, then it may block this setting from working. Configuring the `prmerge-requirereviewcount` setting in it's place will not affect this setting.
 
 Requires `enable-prreviewer-frontmatter: true`
 
