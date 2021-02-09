@@ -36,7 +36,7 @@
 
 - Error when FrontMatter reviewer is enabled but file has no frontmatter [\#30](https://github.com/Matticusau/pr-helper/issues/30)
 
-**Merged pull requests:**
+## [v1.2.0](https://github.com/matticusau/pr-helper/tree/v1.2.0) (2020-07-27)
 
 - Fixes \#30 [\#31](https://github.com/Matticusau/pr-helper/pull/31) ([Matticusau](https://github.com/Matticusau))
 
@@ -56,7 +56,6 @@
 
 **Merged pull requests:**
 
-- Releasing v1.2.0 [\#29](https://github.com/Matticusau/pr-helper/pull/29) ([Matticusau](https://github.com/Matticusau))
 - Bump lodash from 4.17.15 to 4.17.19 [\#25](https://github.com/Matticusau/pr-helper/pull/25) ([dependabot[bot]](https://github.com/apps/dependabot))
 
 ## [v1.1.0](https://github.com/matticusau/pr-helper/tree/v1.1.0) (2020-06-25)
@@ -92,6 +91,7 @@
 
 **Merged pull requests:**
 
+- Releasing v1.2.0 [\#29](https://github.com/Matticusau/pr-helper/pull/29) ([Matticusau](https://github.com/Matticusau))
 - Releasing v1 [\#21](https://github.com/Matticusau/pr-helper/pull/21) ([Matticusau](https://github.com/Matticusau))
 - Update Changelog [\#13](https://github.com/Matticusau/pr-helper/pull/13) ([Matticusau](https://github.com/Matticusau))
 - Fix labels on Feature Request template [\#12](https://github.com/Matticusau/pr-helper/pull/12) ([Matticusau](https://github.com/Matticusau))

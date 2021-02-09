@@ -1,5 +1,20 @@
 # Releases
 
+## v1.2.3
+
+Releasing the following functionality:
+
+- None
+
+Bug fixes:
+
+- Improving the error handling of Not Found for #37
+- Added logic to exclude frontmatter check on file rename #35
+
+Breaking changes:
+
+- None
+
 ## v1.2.2
 
 Releasing the following functionality:
