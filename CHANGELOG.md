@@ -1,5 +1,13 @@
 # Changelog
 
+## [Unreleased](https://github.com/matticusau/pr-helper/tree/HEAD)
+
+[Full Changelog](https://github.com/matticusau/pr-helper/compare/v1.2.3...HEAD)
+
+**Fixed bugs:**
+
+- Commenting on an Issue is resulting in a 'Not Found' error [\#37](https://github.com/Matticusau/pr-helper/issues/37)
+
 ## [v1.2.3](https://github.com/matticusau/pr-helper/tree/v1.2.3) (2020-09-14)
 
 [Full Changelog](https://github.com/matticusau/pr-helper/compare/v1.2.2...v1.2.3)
@@ -11,10 +19,6 @@
 **Fixed bugs:**
 
 - Frontmatter reviewer does not filter/skip attempting to assign the same user as PR owner which results in error [\#32](https://github.com/Matticusau/pr-helper/issues/32)
-
-**Merged pull requests:**
-
-- Fixes \#30 [\#31](https://github.com/Matticusau/pr-helper/pull/31) ([Matticusau](https://github.com/Matticusau))
 
 ## [v1.2.2](https://github.com/matticusau/pr-helper/tree/v1.2.2) (2020-08-01)
 
@@ -31,6 +35,10 @@
 **Fixed bugs:**
 
 - Error when FrontMatter reviewer is enabled but file has no frontmatter [\#30](https://github.com/Matticusau/pr-helper/issues/30)
+
+## [v1.2.0](https://github.com/matticusau/pr-helper/tree/v1.2.0) (2020-07-27)
+
+- Fixes \#30 [\#31](https://github.com/Matticusau/pr-helper/pull/31) ([Matticusau](https://github.com/Matticusau))
 
 ## [v1.2.0](https://github.com/matticusau/pr-helper/tree/v1.2.0) (2020-07-27)
 

@@ -7,6 +7,7 @@
 // ------------------------------------------------------------------------------------------
 // 2020-07-26   MLavery     Added prepareJekyllAuthorYAMLReader, Extended getReviewerListFromFrontMatter [issue #23]
 // 2020-09-14   MLavery     Added handler for renaming of files. Octokit currently doesnt support previous_filename in payload [issue #35]
+// 2021-02-08   MLavery     Added isAllChangedFilesOwnedByPRAuthor [issue #36]
 //
 import { CoreModule, GitHubModule,Context, PullRequestPayload, PullRequestFilePayload } from '../types';
 import { IssueLabels, GlobHelper, AuthorYAMLReader } from './index';
@@ -171,6 +172,57 @@ export class PRFileHelper {
             // const octokit = this.github.getOctokit(myToken);
 
             return results;
+
+        } catch (error) {
+            this.core.setFailed(error.message);
+            throw error;
+        }
+    }
+
+    async isAllChangedFilesOwnedByPRAuthor(pullRequest: PullsGetResponseData): Promise<boolean> {
+        this.core.info('>> isAllChangedFilesOwnedByPRAuthor()');
+        
+        let result : boolean = true;
+
+        try {
+            // make sure we need to check this
+            if (this.core.getInput('enable-prreviewer-frontmatter') === 'true' && this.core.getInput('prreviewer-bypassforfileowner') === 'true') {
+                this.core.info('checking if all files owned by author');
+                // get the PR author
+                const prAuthor = pullRequest.user.login;
+                // load the Jekyll Author file if required
+                await this.prepareJekyllAuthorYAMLReader();
+
+                let changedFiles = await this.getChangedFiles(pullRequest);
+                if (changedFiles) {
+                    for(let iFile = 0; iFile < changedFiles.data.length; iFile++) {
+                        this.core.info('Processing file: ' + changedFiles.data[iFile].filename);
+                        const tmpReviewerList : string[] = await this.getReviewerListFromFrontMatter(pullRequest, changedFiles.data[iFile]);
+                        this.core.info('tmpReviewerList: ' + JSON.stringify(tmpReviewerList));
+                        this.core.info('prAuthor: ' + JSON.stringify(prAuthor));
+                        // if (tmpReviewerList.indexOf(prAuthor) <= 0) {
+                        //     // couldn't find the author for this file
+                        //     result = false;
+                        //     break;
+                        // }
+                        let blnAuthorIsOwner: boolean = false;
+                        tmpReviewerList.forEach(element => {
+                            // make sure this is not the owner of the PR
+                            if (prAuthor.toLowerCase() === element.trim().toLowerCase()) {
+                                blnAuthorIsOwner = true;
+                                //break;
+                            }
+                        });
+                        if (!blnAuthorIsOwner) {result = false; break; }
+                    }
+                }
+                if (result) {this.core.info('all files owned by author - no reviewer required');};
+            } else {
+                // we need to check individual reviewers
+                result = false;
+            }
+
+            return result;
 
         } catch (error) {
             this.core.setFailed(error.message);

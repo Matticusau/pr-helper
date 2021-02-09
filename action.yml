@@ -64,6 +64,10 @@ inputs:
     description: 'Provides the ability to configure the path to the Jekyll authors YAML file to use in lookup'
     default: 'docs\_data\authors.yml'
     required: false
+  prreviewer-bypassforfileowner:
+    description: 'If set to true, bypass review checks when all the changed files are owned by the author of the PR.'
+    default: 'false'
+    required: false
   prlabel-default:
     description: 'The initial label to set on PRs when first created'
     default: 'pr-onhold'
