@@ -196,15 +196,24 @@ export class PRFileHelper {
                 let changedFiles = await this.getChangedFiles(pullRequest);
                 if (changedFiles) {
                     for(let iFile = 0; iFile < changedFiles.data.length; iFile++) {
-                    this.core.info('Processing file: ' + changedFiles.data[iFile].filename);
-                    const tmpReviewerList : string[] = await this.getReviewerListFromFrontMatter(pullRequest, changedFiles.data[iFile]);
-                    this.core.info('tmpReviewerList: ' + JSON.stringify(tmpReviewerList));
-                    this.core.info('prAuthor: ' + JSON.stringify(prAuthor));
-                        if (tmpReviewerList.indexOf(prAuthor) <= 0) {
-                            // couldn't find the author for this file
-                            result = false;
-                            break;
-                        }
+                        this.core.info('Processing file: ' + changedFiles.data[iFile].filename);
+                        const tmpReviewerList : string[] = await this.getReviewerListFromFrontMatter(pullRequest, changedFiles.data[iFile]);
+                        this.core.info('tmpReviewerList: ' + JSON.stringify(tmpReviewerList));
+                        this.core.info('prAuthor: ' + JSON.stringify(prAuthor));
+                        // if (tmpReviewerList.indexOf(prAuthor) <= 0) {
+                        //     // couldn't find the author for this file
+                        //     result = false;
+                        //     break;
+                        // }
+                        let blnAuthorIsOwner: boolean = false;
+                        tmpReviewerList.forEach(element => {
+                            // make sure this is not the owner of the PR
+                            if (prAuthor.toLowerCase() === element.trim().toLowerCase()) {
+                                blnAuthorIsOwner = true;
+                                //break;
+                            }
+                        });
+                        if (!blnAuthorIsOwner) {result = false; break; }
                     }
                 }
                 if (result) {this.core.info('all files owned by author - no reviewer required');};
