@@ -1,5 +1,21 @@
 # Releases
 
+## v1.2.4
+
+Releasing the following functionality:
+
+- Bypassing reviewer check on files owned by PR author
+
+Bug fixes:
+
+- None
+
+Breaking changes:
+
+- None
+
+
+
 ## v1.2.3
 
 Releasing the following functionality:
