@@ -180,7 +180,7 @@ export class PRFileHelper {
     }
 
     async isAllChangedFilesOwnedByPRAuthor(pullRequest: PullsGetResponseData): Promise<boolean> {
-        this.core.debug('>> isAllChangedFilesOwnedByPRAuthor()');
+        this.core.info('>> isAllChangedFilesOwnedByPRAuthor()');
         
         let result : boolean = true;
 
