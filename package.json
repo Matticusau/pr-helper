@@ -1,6 +1,6 @@
 {
   "name": "pr-helper",
-  "version": "1.2.4",
+  "version": "1.2.5",
   "description": "A GitHub Action to help with managing PRs",
   "main": "lib/main.js",
   "scripts": {

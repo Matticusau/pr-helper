@@ -1,5 +1,19 @@
 # Releases
 
+## v1.2.5
+
+Releasing the following functionality:
+
+- None
+
+Bug fixes:
+
+- Fixing the dependabot security alerts
+
+Breaking changes:
+
+- None
+
 ## v1.2.4
 
 Releasing the following functionality:
@@ -13,7 +27,6 @@ Bug fixes:
 Breaking changes:
 
 - None
-
 
 
 ## v1.2.3
