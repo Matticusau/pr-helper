@@ -252,6 +252,7 @@ export class PRHelper {
                 success: 0
             };
 
+            this.core.info('checksData.check_runs.length: ' + checksData.check_runs.length);
             if (checksData && checksData.check_runs.length > 0) {
                 checksData.check_runs.forEach(element => {
                     if (element.status === "completed") {
@@ -263,6 +264,9 @@ export class PRHelper {
                     }
                 });
             }
+            this.core.info('checks.total: ' + checks.total);
+            this.core.info('checks.completed: ' + checks.completed);
+            this.core.info('checks.success: ' + checks.success);
 
             return (checks.completed >= (checks.total - 1)) && (checks.success >= (checks.total - 1));
 
