@@ -1,5 +1,19 @@
 # Releases
 
+## v1.2.6
+
+Releasing the following functionality:
+
+- Additional info for troubleshooting
+
+Bug fixes:
+
+- None
+
+Breaking changes:
+
+- None
+
 ## v1.2.5
 
 Releasing the following functionality:
