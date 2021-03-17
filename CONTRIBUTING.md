@@ -31,6 +31,17 @@ Reference [https://help.github.com/en/actions/creating-actions/creating-a-javasc
 
 ### Releases
 
+#### Automated approach
+
+1. Commit all staged changes
+1. Bump the version as needed (major, minor, patch) `npm version minor`
+1. Build, and Commit
+
+More info at https://travishorn.com/semantic-versioning-with-git-tags-1ef2d4aeede6
+
+
+#### Manual approach
+
 When time comes for a release assign a tag
 
 ```bash
