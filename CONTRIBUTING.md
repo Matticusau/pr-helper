@@ -31,6 +31,22 @@ Reference [https://help.github.com/en/actions/creating-actions/creating-a-javasc
 
 ### Releases
 
+When time comes for a release first bump the version number as needed:
+
+```bash
+npm version patch
+```
+
+Now push the tags
+
+```bash
+git push --follow-tags
+```
+
+The RELEASES.md should also be updated to describe the change log.
+
+**Old Steps**
+
 When time comes for a release assign a tag
 
 ```bash
