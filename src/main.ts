@@ -7,6 +7,7 @@
 // ------------------------------------------------------------------------------------------
 // 2020-06-20   Mlavery     Config moved back to workflow file #3
 // 2020-07-24   MLavery     Extended handlers for both onDemand and onSchedule events [issue #24]
+// 2021-06-14   MLavery     Added support for workflow_run [issue #50]
 //
 
 import prWelcomeHandler from './prwelcomehandler';
@@ -47,6 +48,11 @@ export default async function main(core: CoreModule, github: GitHubModule) {
             await prMergeHandler_OnDemand(core, github);
             break;
         case 'schedule':
+            await prLabelHandler_OnSchedule(core, github);
+            await prReviewHandler_OnDemand(core, github);
+            await prMergeHandler_OnSchedule(core, github);
+            break;
+        case 'workflow_run':
             await prLabelHandler_OnSchedule(core, github);
             await prReviewHandler_OnDemand(core, github);
             await prMergeHandler_OnSchedule(core, github);
