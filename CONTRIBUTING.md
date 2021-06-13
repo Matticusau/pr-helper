@@ -31,21 +31,16 @@ Reference [https://help.github.com/en/actions/creating-actions/creating-a-javasc
 
 ### Releases
 
-When time comes for a release first bump the version number as needed:
+#### Automated approach
 
-```bash
-npm version patch
-```
+1. Commit all staged changes
+1. Bump the version as needed (major, minor, patch) `npm version minor`
+1. Build, and Commit
+1. Push the changes following tags `git push --follow-tags`
 
-Now push the tags
+More info at https://travishorn.com/semantic-versioning-with-git-tags-1ef2d4aeede6
 
-```bash
-git push --follow-tags
-```
-
-The RELEASES.md should also be updated to describe the change log.
-
-**Old Steps**
+#### Manual approach
 
 When time comes for a release assign a tag
 
