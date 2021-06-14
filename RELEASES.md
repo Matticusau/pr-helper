@@ -1,5 +1,19 @@
 # Releases
 
+## v1.3.0
+
+Releasing the following functionality:
+
+- Added support for workflow_run event trigger
+
+Bug fixes:
+
+- None
+
+Breaking changes:
+
+- None
+
 ## v1.2.6
 
 Releasing the following functionality:

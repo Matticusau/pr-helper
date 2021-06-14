@@ -36,9 +36,9 @@ Reference [https://help.github.com/en/actions/creating-actions/creating-a-javasc
 1. Commit all staged changes
 1. Bump the version as needed (major, minor, patch) `npm version minor`
 1. Build, and Commit
+1. Push the changes following tags `git push --follow-tags`
 
 More info at https://travishorn.com/semantic-versioning-with-git-tags-1ef2d4aeede6
-
 
 #### Manual approach
 
