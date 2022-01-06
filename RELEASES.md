@@ -1,5 +1,19 @@
 # Releases
 
+## v1.3.1
+
+Releasing the following functionality:
+
+- Improved error handling for adding reviewers to prevent workflow failure trigger [Issue #55]
+
+Bug fixes:
+
+- None
+
+Breaking changes:
+
+- None
+
 ## v1.3.0
 
 Releasing the following functionality:
