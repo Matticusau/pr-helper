@@ -83,7 +83,7 @@ async function prReviewHandler(core: CoreModule, github: GitHubModule, prnumber:
                 pull_number: prnumber,
                 reviewers: reviewerList
               });
-            } catch (error: any) {
+            } catch (error) {
               core.error(`PR #${prnumber} cannot set reviewers. ${error.message}`);
             }
           }
@@ -95,7 +95,7 @@ async function prReviewHandler(core: CoreModule, github: GitHubModule, prnumber:
       }
     }
   }
-  catch (error: any) {
+  catch (error) {
     core.setFailed(error.message);
     throw error;
   }
@@ -129,7 +129,7 @@ export async function prReviewHandler_OnDemand(core: CoreModule, github: GitHubM
     }
 
   }
-  catch (error: any) {
+  catch (error) {
     core.setFailed(error.message);
     throw error;
   }
@@ -163,7 +163,7 @@ export async function prReviewHandler_OnSchedule(core: CoreModule, github: GitHu
       }
     }
   }
-  catch (error: any) {
+  catch (error) {
     core.setFailed(error.message);
     throw error;
   }
