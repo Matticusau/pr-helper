@@ -7,6 +7,7 @@
 // ------------------------------------------------------------------------------------------
 // 2020-07-26   MLavery     Extended merge handling for both onDemand and onSchedule [issue #24]
 // 2020-07-31   MLavery     Added check to avoid assigning PR author as reviewer [Issue #32]
+// 2022-01-06   MLavery     Added try/catch to handle reviewer errors [Issue #55]
 //
 
 import { CoreModule, GitHubModule, Context } from './types' // , Client
@@ -76,11 +77,15 @@ async function prReviewHandler(core: CoreModule, github: GitHubModule, prnumber:
             // && reviewerList.length > 0) {
             // core.info('reviewerList: ' + JSON.stringify(reviewerList));
           if (reviewerList.length > 0) {
-            await octokit.pulls.requestReviewers({
-              ...github.context.repo,
-              pull_number: prnumber,
-              reviewers: reviewerList
-            });
+            try {
+              await octokit.pulls.requestReviewers({
+                ...github.context.repo,
+                pull_number: prnumber,
+                reviewers: reviewerList
+              });
+            } catch (error: any) {
+              core.error(`PR #${prnumber} cannot set reviewers. ${error.message}`);
+            }
           }
         } else {
           core.info(`PR #${prnumber} is merged, no reviewer automation taken`);
@@ -90,7 +95,7 @@ async function prReviewHandler(core: CoreModule, github: GitHubModule, prnumber:
       }
     }
   }
-  catch (error) {
+  catch (error: any) {
     core.setFailed(error.message);
     throw error;
   }
@@ -124,7 +129,7 @@ export async function prReviewHandler_OnDemand(core: CoreModule, github: GitHubM
     }
 
   }
-  catch (error) {
+  catch (error: any) {
     core.setFailed(error.message);
     throw error;
   }
@@ -158,7 +163,7 @@ export async function prReviewHandler_OnSchedule(core: CoreModule, github: GitHu
       }
     }
   }
-  catch (error) {
+  catch (error: any) {
     core.setFailed(error.message);
     throw error;
   }

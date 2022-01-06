@@ -71,7 +71,7 @@ export default async function prWelcomeHandler(core: CoreModule, github: GitHubM
       }
     }    
   }
-  catch (error) {
+  catch (error: any) {
     core.setFailed(error.message);
     throw error;
   }
