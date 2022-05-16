@@ -1,5 +1,19 @@
 # Releases
 
+## v1.3.2
+
+Releasing the following functionality:
+
+- Includes some extra logging to troubleshoot issue in #59
+
+Bug fixes:
+
+- None
+
+Breaking changes:
+
+- None
+
 ## v1.3.1
 
 Releasing the following functionality:
