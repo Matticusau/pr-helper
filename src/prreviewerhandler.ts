@@ -8,6 +8,7 @@
 // 2020-07-26   MLavery     Extended merge handling for both onDemand and onSchedule [issue #24]
 // 2020-07-31   MLavery     Added check to avoid assigning PR author as reviewer [Issue #32]
 // 2022-01-06   MLavery     Added try/catch to handle reviewer errors [Issue #55]
+// 2022-05-16   MLavery     Added extra logging [issue #59]
 //
 
 import { CoreModule, GitHubModule, Context } from './types' // , Client
@@ -96,6 +97,7 @@ async function prReviewHandler(core: CoreModule, github: GitHubModule, prnumber:
     }
   }
   catch (error) {
+    core.info('prReviewHandler: Error caught and thrown.');
     core.setFailed(error.message);
     throw error;
   }
@@ -130,6 +132,7 @@ export async function prReviewHandler_OnDemand(core: CoreModule, github: GitHubM
 
   }
   catch (error) {
+    core.info('prReviewHandler_OnDemand: Error caught and thrown.');
     core.setFailed(error.message);
     throw error;
   }
@@ -164,6 +167,7 @@ export async function prReviewHandler_OnSchedule(core: CoreModule, github: GitHu
     }
   }
   catch (error) {
+    core.info('prReviewHandler_OnSchedule: Error caught and thrown.');
     core.setFailed(error.message);
     throw error;
   }

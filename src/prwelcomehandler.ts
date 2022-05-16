@@ -7,6 +7,7 @@
 // ------------------------------------------------------------------------------------------
 // 2020-06-20   MLavery     Config moved back to workflow file #3
 // 2020-06-22   Mlavery     Fixed multiple comment message #17
+// 2022-05-16   MLavery     Added extra logging [issue #59]
 //
 
 import { CoreModule, GitHubModule, Context } from './types' // , Client
@@ -72,6 +73,7 @@ export default async function prWelcomeHandler(core: CoreModule, github: GitHubM
     }    
   }
   catch (error) {
+    core.info('prWelcomeHandler: Error caught and thrown.');
     core.setFailed(error.message);
     throw error;
   }

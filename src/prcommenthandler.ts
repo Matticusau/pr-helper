@@ -7,6 +7,7 @@
 // ------------------------------------------------------------------------------------------
 // 2020-06-20   MLavery     Config moved back to workflow file #3
 // 2020-09-14   MLavery     Added check for Not Found error and soft exit [issue #37]
+// 2022-05-16   MLavery     Added extra logging [issue #59]
 //
 
 import { CoreModule, GitHubModule, Context } from './types'; // , Client
@@ -136,6 +137,7 @@ export default async function prCommentHandler(core: CoreModule, github: GitHubM
             core.info('prCommentHandler: Could not find PR. Might be triggered from an Issue.');
             return;
         } else {
+            core.info('prCommentHandler: error caught and thrown.');
             core.setFailed(error.message);
             throw error;
         }

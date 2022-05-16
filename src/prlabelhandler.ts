@@ -8,6 +8,7 @@
 // 2020-06-20   MLavery     Config moved back to workflow file #3
 // 2020-07-24   MLavery     Extended label handling for both onDemand and onSchedule [issue #24]
 // 2020-09-14   MLavery     Allowed Auto Merge when Path Check disabled [issue #15]
+// 2022-05-16   MLavery     Added extra logging [issue #59]
 //
 
 import { CoreModule, GitHubModule, Context } from './types' // , Client
@@ -120,6 +121,7 @@ async function prLabelHandler(core: CoreModule, github: GitHubModule, prnumber: 
       
   }
   catch (error) {
+    core.info('prLabelHandler: Error caught and thrown.');
     core.setFailed(error.message);
     throw error;
   }
@@ -151,6 +153,7 @@ export async function prLabelHandler_OnDemand(core: CoreModule, github: GitHubMo
     }  
   }
   catch (error) {
+    core.info('prLabelHandler: Error caught and thrown.');
     core.setFailed(error.message);
     throw error;
   }
@@ -186,6 +189,7 @@ export async function prLabelHandler_OnSchedule(core: CoreModule, github: GitHub
     }
   }
   catch (error) {
+    core.info('prLabelHandler: Error caught and thrown.');
     core.setFailed(error.message);
     throw error;
   }
