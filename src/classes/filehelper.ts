@@ -80,6 +80,7 @@ export class PRFileHelper {
 
             }
         } catch (error) {
+            this.core.info('prepareJekyllAuthorYAMLReader: Error caught and thrown.');
             this.core.debug('error: ' + JSON.stringify(error));
             this.core.setFailed(error.message);
             throw error;
@@ -119,7 +120,8 @@ export class PRFileHelper {
             
             return '';
         } catch (error) {
-            this.core.debug('error: ' + JSON.stringify(error));
+            this.core.info('getChangedFileContent: Error caught and thrown.');
+            this.core.info('error: ' + JSON.stringify(error));
             this.core.setFailed(error.message);
             throw error;
         }
@@ -174,6 +176,7 @@ export class PRFileHelper {
             return results;
 
         } catch (error) {
+            this.core.info('getReviewerListFromFrontMatter: Error caught and thrown.');
             this.core.setFailed(error.message);
             throw error;
         }
@@ -225,6 +228,7 @@ export class PRFileHelper {
             return result;
 
         } catch (error) {
+            this.core.info('isAllChangedFilesOwnedByPRAuthor: Error caught and thrown.');
             this.core.setFailed(error.message);
             throw error;
         }
