@@ -7,6 +7,7 @@
 // ------------------------------------------------------------------------------------------
 // 2020-06-20   MLavery     Config moved back to workflow file #3
 // 2020-07-25   MLavery     Logic has moved to prmergehandler.ts [issue #24]
+// 2022-05-16   MLavery     Added extra logging [issue #59]
 //
 
 import { CoreModule, GitHubModule, Context } from './types' // , Client
@@ -66,6 +67,7 @@ export default async function prMergeOnScheduleHandler(core: CoreModule, github:
       }
     }
   } catch (error) {
+    core.info('prMergeOnScheduleHandler: Error caught and thrown.');
     core.setFailed(error.message);
     throw error;
   }

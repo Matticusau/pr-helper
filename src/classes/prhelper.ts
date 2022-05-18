@@ -107,6 +107,7 @@ export class PRHelper {
             return false;
 
         } catch (error) {
+            this.core.info('isMergeReadyByState: Error caught and thrown.');
             this.core.setFailed(error.message);
             throw error;
         }
@@ -139,6 +140,7 @@ export class PRHelper {
             return false;
 
         } catch (error) {
+            this.core.info('isMergeReadyByLabel: Error caught and thrown.');
             this.core.setFailed(error.message);
             throw error;
         }
@@ -201,6 +203,7 @@ export class PRHelper {
             return result;
 
         } catch (error) {
+            this.core.info('isMergeReadyByReview: Error caught and thrown.');
             this.core.setFailed(error.message);
             throw error;
         }
@@ -228,6 +231,7 @@ export class PRHelper {
             return false;
 
         } catch (error) {
+            this.core.info('isMergeReadyByChecks: Error caught and thrown.');
             this.core.setFailed(error.message);
             throw error;
         }
@@ -271,6 +275,7 @@ export class PRHelper {
             return (checks.completed >= (checks.total - 1)) && (checks.success >= (checks.total - 1));
 
         } catch (error) {
+            this.core.info('allChecksSucceeded: Error caught and thrown.');
             this.core.setFailed(error.message);
             throw error;
         }
@@ -286,6 +291,7 @@ export class PRHelper {
   
           return pattern;
         } catch (error) {
+          this.core.info('matchConfigFromActionInputYaml: Error caught and thrown.');
           this.core.setFailed(error.message);
           throw error;
         }
@@ -335,6 +341,7 @@ export class PRHelper {
             return false;
 
         } catch (error) {
+            this.core.info('isBranchDeleteReady: Error caught and thrown.');
             this.core.setFailed(error.message);
             throw error;
         }
