@@ -91,7 +91,7 @@ Requires `enable-prmerge-automation: true`
 
 ### `prmerge-allowpaths`
 
-Provide the path globs which will allow auto merge. JSON object as string, example format {"any":["docs/**"]}.
+Provide the path globs which will allow auto merge. JSON object as string, example format {"any":["docs/**"]}. Exclusions can be specified as {"any":["!docs/**]}.
 
 Requires `prmerge-pathcheck: true`
 
